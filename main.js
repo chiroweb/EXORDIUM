@@ -161,7 +161,7 @@ if (curtain) {
         opacity: 0,
         duration: 0.4,
         ease: 'power2.in'
-    }, '+=0.3');
+    }, '+=0.7');
 
     // Phase 3: Curtains split open
     entranceTL.to(curtainLeft, {
