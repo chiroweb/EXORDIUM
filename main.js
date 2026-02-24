@@ -14,6 +14,12 @@ gsap.defaults({
     duration: 0.8
 });
 
+// 새로고침 시 항상 히어로 섹션(최상단)으로 강제 이동
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+
 
 /* ══════════════════════════════════════════════════
    NAVIGATION
@@ -236,93 +242,139 @@ if (curtain) {
 }
 
 
+
 /* ══════════════════════════════════════════════════
-   SECTION 02: PROJECT — Horizontal Scroll
+   SECTION 02: BUILDING REVEAL
    ══════════════════════════════════════════════════ */
 
-const projectHorizontal = document.getElementById('projectHorizontal');
-const projectPanels = document.querySelectorAll('.project__panel');
-const totalPanels = projectPanels.length;
+function initBuildingReveal() {
+    const section = document.querySelector('.br-section');
+    if (!section) return;
 
-if (projectHorizontal && totalPanels > 0) {
+    const buildingRise  = document.getElementById('brBuildingRise');
+    const hotspots      = document.querySelectorAll('.br__hs');
+    const hint          = document.getElementById('brHint');
+    const infoPanels    = document.querySelectorAll('.br__info-panel');
+    const titleLines    = section.querySelectorAll('.br__title-line');
+    const titleEyebrow  = section.querySelector('.br__title-eyebrow');
+    const titleSub      = section.querySelector('.br__title-sub');
+    const popup         = document.getElementById('brPopup');
+    const popupClose    = document.getElementById('brPopupClose');
+    const popupFloor    = document.getElementById('brPopupFloor');
+    const popupLabel    = document.getElementById('brPopupLabel');
+    const popupDesc     = document.getElementById('brPopupDesc');
+    const popupImgWrap  = document.getElementById('brPopupImgWrap');
+    const popupImg      = document.getElementById('brPopupImg');
 
-    // ① Pin — 가로 스크롤 완료 후 70vh 더 유지 (Panel 2에서 자연스럽게 머물다가 넘어감)
+    if (!buildingRise) return;
+
+    // ── 초기 상태 (CSS에서도 opacity:0이지만 GSAP 상태로도 명시) ──
+    gsap.set(buildingRise, { yPercent: 105 });
+    gsap.set(hotspots,     { opacity: 0, scale: 0 });
+    gsap.set(hint,         { opacity: 0 });
+    gsap.set(infoPanels,   { opacity: 0 });
+    gsap.set(titleLines,   { yPercent: 120, opacity: 0 });
+    if (titleEyebrow) gsap.set(titleEyebrow, { opacity: 0 });
+    if (titleSub)     gsap.set(titleSub,     { opacity: 0 });
+
     ScrollTrigger.create({
-        trigger: '.project',
-        start: 'top top',
-        end: () => `+=${window.innerWidth * (totalPanels - 1) + window.innerHeight * 0.7}`,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-    });
+        trigger: section,
+        start: 'top 90%',
+        once: true,
+        onEnter: () => {
+            const tl = gsap.timeline();
 
-    // ② 가로 이동 애니메이션 — 원래 거리에서 완료, 이후 Panel 2에서 정지
-    gsap.to(projectHorizontal, {
-        xPercent: -((totalPanels - 1) * 100 / totalPanels),
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '.project',
-            start: 'top top',
-            end: () => `+=${window.innerWidth * (totalPanels - 1)}`,
-            scrub: 0.8,
-            invalidateOnRefresh: true,
+            // 아이브로우
+            if (titleEyebrow) tl.to(titleEyebrow, { opacity: 1, duration: 0.8 }, 0);
+
+            // 타이틀 라인 클립 리빌
+            titleLines.forEach((line, i) => {
+                tl.to(line, { yPercent: 0, opacity: 1, duration: 1.1, ease: 'power3.out' }, 0.2 + i * 0.2);
+            });
+
+            // 서브 타이틀
+            if (titleSub) tl.to(titleSub, { opacity: 1, duration: 0.8 }, 0.8);
+
+            // 건물 상승 (0.7s 후, 2.4s)
+            tl.to(buildingRise, { yPercent: 0, duration: 2.4, ease: 'power4.out' }, 0.7);
+
+            // 정보 패널 등장 (좌우 동시, 건물 올라온 직후)
+            tl.to(infoPanels, { opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.12 }, 2.6);
+
+            // 핫스팟 등장
+            tl.to(hotspots, { opacity: 1, scale: 1, duration: 0.6, stagger: 0.18, ease: 'back.out(1.7)' }, 4.0);
+
+            // 힌트 텍스트
+            if (hint) tl.to(hint, { opacity: 1, duration: 0.8 }, 4.4);
         }
     });
 
-    // Panel 1: Story — line reveal
-    const projectLines = document.querySelectorAll('.project__heading .line');
-    projectLines.forEach((line, i) => {
-        ScrollTrigger.create({
-            trigger: '.project',
-            start: 'top 80%',
-            onEnter: () => {
-                gsap.to(line, {
-                    clipPath: 'inset(0 0% 0 0)',
-                    duration: 0.8,
-                    delay: i * 0.15,
-                    ease: 'power3.out'
-                });
-            },
-            once: true
-        });
-    });
+    // ── 핫스팟 클릭 → 팝업 ──
+    if (!popup) return;
+    let activeHs = null;
 
-    // Panel 1: Body reveal
-    gsap.from('.project__body', {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        scrollTrigger: {
-            trigger: '.project__body',
-            start: 'top 85%',
-            once: true
-        }
-    });
-
-    // Panel 2: Facts stagger reveal — horizontal scroll progress 연동
-    const projectFacts = document.querySelectorAll('.project__fact');
-    if (projectFacts.length > 0) {
-        gsap.set(projectFacts, { opacity: 0, x: 30 });
-        let factsRevealed = false;
-        ScrollTrigger.create({
-            trigger: '.project',
-            start: 'top top',
-            end: () => `+=${window.innerWidth * (totalPanels - 1)}`,
-            onUpdate: (self) => {
-                if (!factsRevealed && self.progress >= 0.45) {
-                    factsRevealed = true;
-                    gsap.to(projectFacts, {
-                        opacity: 1,
-                        x: 0,
-                        duration: 0.7,
-                        ease: 'power3.out',
-                        stagger: 0.12
-                    });
-                }
+    hotspots.forEach(hs => {
+        hs.addEventListener('click', e => {
+            e.stopPropagation();
+            if (activeHs === hs && popup.classList.contains('br__popup--open')) {
+                closePopup();
+                return;
             }
+            activeHs = hs;
+            openPopup(hs);
         });
+    });
+
+    if (popupClose) popupClose.addEventListener('click', e => {
+        e.stopPropagation();
+        closePopup();
+    });
+
+    document.addEventListener('click', e => {
+        if (popup.classList.contains('br__popup--open') && !popup.contains(e.target)) {
+            closePopup();
+        }
+    });
+
+    function openPopup(hs) {
+        const hsRect  = hs.getBoundingClientRect();
+        const secRect = section.getBoundingClientRect();
+        const cx = hsRect.left - secRect.left + hsRect.width  / 2;
+        const cy = hsRect.top  - secRect.top  + hsRect.height / 2;
+        const goRight = cx < section.offsetWidth * 0.55;
+
+        popupFloor.textContent = hs.dataset.floor;
+        popupLabel.textContent = hs.dataset.label;
+        popupDesc.textContent  = hs.dataset.desc;
+
+        // 이미지 처리
+        if (hs.dataset.img) {
+            popupImg.src = hs.dataset.img;
+            popupImgWrap.style.display = '';
+            popupImgWrap.classList.remove('br__popup-img-wrap--empty');
+        } else {
+            popupImg.src = '';
+            popupImgWrap.style.display = '';
+            popupImgWrap.classList.add('br__popup-img-wrap--empty');
+        }
+
+        popup.style.top       = cy + 'px';
+        popup.style.left      = goRight ? (cx + 20) + 'px' : 'auto';
+        popup.style.right     = goRight ? 'auto' : (section.offsetWidth - cx + 20) + 'px';
+        popup.style.transform = 'translateY(-50%)';
+
+        popup.classList.remove('br__popup--open');
+        void popup.offsetWidth;
+        popup.classList.add('br__popup--open');
+    }
+
+    function closePopup() {
+        popup.classList.remove('br__popup--open');
+        activeHs = null;
     }
 }
+
+initBuildingReveal();
 
 
 /* ══════════════════════════════════════════════════
@@ -362,7 +414,7 @@ if (facadeSection) {
     ScrollTrigger.create({
         trigger: '.facade',
         start: 'top top',
-        end: () => `+=${window.innerWidth}`,
+        end: () => `+=${window.innerWidth * 1.7}`,
         pin: '.facade__pin-wrap',
         pinSpacing: true,
         invalidateOnRefresh: true
@@ -373,8 +425,8 @@ if (facadeSection) {
         scrollTrigger: {
             trigger: '.facade',
             start: 'top top',
-            end: () => `+=${window.innerWidth}`,
-            scrub: 0.6,
+            end: () => `+=${window.innerWidth * 1.7}`,
+            scrub: 0.8,
             invalidateOnRefresh: true
         }
     });
