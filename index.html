@@ -132,8 +132,17 @@
 
   <!-- ═══════════ CINEMATIC CURTAIN ═══════════ -->
   <div class="curtain" id="curtain">
-    <div class="curtain__left"></div>
-    <div class="curtain__right"></div>
+    <div class="curtain__left">
+      <!-- 인트로 영상 URL을 아래 src에 넣어주세요 -->
+      <video class="curtain__video" id="curtainVideoL" muted playsinline preload="auto">
+        <source src="/intro-video.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="curtain__right">
+      <video class="curtain__video" id="curtainVideoR" muted playsinline preload="auto">
+        <source src="/intro-video.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="curtain__brand">EXORDIUM</div>
   </div>
 
@@ -410,7 +419,7 @@
   <footer class="footer">
     <div class="footer__info">
       <span>사업주체: 주식회사 수영산업개발</span>
-      <span>시공사: 대우산업개발 주식회사</span>
+      <span>시공예정사: 대우산업개발 주식회사</span>
       <span>대표전화: 1661-0299</span>
     </div>
     <p class="footer__legal">

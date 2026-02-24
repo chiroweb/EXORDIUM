@@ -490,7 +490,21 @@ button {
   height: 100%;
   background: var(--bg-dark);
   will-change: transform;
+  overflow: hidden;
+  position: relative;
 }
+
+/* 인트로 영상: 각 패널이 전체 화면의 절반만 클리핑 */
+.curtain__video {
+  position: absolute;
+  top: 0;
+  width: 200%;      /* 패널 너비(50vw) × 2 = 100vw */
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.curtain__left .curtain__video  { left: 0; }
+.curtain__right .curtain__video { right: 0; }
 
 .curtain__brand {
   position: absolute;
@@ -2662,4 +2676,826 @@ button {
   .press-item__date {
     grid-column: 2;
   }
+}
+
+
+/* ══════════════════════════════════════════════════
+   동호수 배치도 — Unit Layout Grid
+   ══════════════════════════════════════════════════ */
+
+.ul-dong-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.ul-dong-tab {
+  flex: 1;
+  padding: 12px 8px 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: var(--neutral-mid);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.2;
+}
+
+.ul-dong-tab span {
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.55;
+  letter-spacing: 0.02em;
+}
+
+.ul-dong-tab:hover {
+  background: rgba(200,169,110,0.08);
+  border-color: rgba(200,169,110,0.3);
+  color: var(--text-light);
+}
+
+.ul-dong-tab.active {
+  background: rgba(200,169,110,0.14);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.ul-range-filter {
+  display: none;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 768px) {
+  .ul-range-filter { display: flex; }
+}
+
+.ul-range-btn {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  color: var(--neutral-mid);
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ul-range-btn.active {
+  background: rgba(59,130,246,0.18);
+  border-color: rgba(59,130,246,0.45);
+  color: #93c5fd;
+}
+
+/* ── 건물 컨테이너 ── */
+.ul-building-outer {
+  background: linear-gradient(170deg, #0a1628 0%, #0e0e0e 65%, #12100e 100%);
+  border-radius: 12px;
+  padding: 16px 12px 16px 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ul-building {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 340px;
+}
+
+/* ── 헤더 행 ── */
+.ul-header-row {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.ul-header-label {
+  width: 32px;
+  min-width: 32px;
+  flex-shrink: 0;
+}
+
+.ul-header-ho {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.02em;
+}
+
+/* ── 층 행 ── */
+.ul-floor-row {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+}
+
+/* ── 층 라벨 ── */
+.ul-floor-label {
+  width: 36px;
+  min-width: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.3);
+  white-space: nowrap;
+}
+
+/* ── 유닛 셀 — 3D 버튼 기본 ── */
+.ul-unit {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -2px 0 rgba(0,0,0,0.28),
+    0 2px 4px rgba(0,0,0,0.35);
+}
+
+@media (max-width: 768px) {
+  .ul-unit { height: 32px; font-size: 12px; }
+}
+
+/* 공동주택 */
+.ul-unit--apt {
+  background: rgba(59,130,246,0.13);
+  border: 1px solid rgba(59,130,246,0.28);
+  color: rgba(147,197,253,0.88);
+}
+
+.ul-unit--apt:hover {
+  transform: translateY(-2px);
+  background: rgba(59,130,246,0.26);
+  border-color: rgba(59,130,246,0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 5px 14px rgba(59,130,246,0.22),
+    0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* 숙박시설 */
+.ul-unit--hotel {
+  background: rgba(168,85,247,0.13);
+  border: 1px solid rgba(168,85,247,0.28);
+  color: rgba(216,180,254,0.88);
+  cursor: default;
+}
+
+.ul-unit--hotel.clickable {
+  cursor: pointer;
+}
+
+.ul-unit--hotel.clickable:hover {
+  transform: translateY(-2px);
+  background: rgba(168,85,247,0.26);
+  border-color: rgba(168,85,247,0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 5px 14px rgba(168,85,247,0.22),
+    0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* pressed 상태 */
+.ul-unit--apt:active {
+  transform: translateY(1px) scale(0.97);
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,0.45),
+    0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* 선택됨 */
+.ul-unit.selected {
+  border-color: var(--accent-gold) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    0 0 0 1px rgba(200,169,110,0.45),
+    0 4px 16px rgba(200,169,110,0.18) !important;
+}
+
+/* ── 피난안전구역 ── */
+.ul-refuge-cell {
+  flex: 1;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245,158,11,0.18);
+  border: 1px solid rgba(245,158,11,0.38);
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(253,211,77,0.92);
+  letter-spacing: 0.1em;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    0 2px 8px rgba(245,158,11,0.12);
+}
+
+/* ── 저층부·필로티 merged ── */
+.ul-merged-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 3px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+.ul-merged-cell--podium {
+  height: 44px;
+  background: rgba(34,197,94,0.09);
+  border: 1px solid rgba(34,197,94,0.22);
+  color: rgba(134,239,172,0.8);
+}
+
+.ul-merged-cell--piloti {
+  height: 26px;
+  background: rgba(100,100,100,0.1);
+  border: 1px solid rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.35);
+}
+
+/* ── 범례 ── */
+.ul-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.ul-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+}
+
+.ul-legend-item i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.ul-legend--apt    i { background: rgba(59,130,246,0.55);  border: 1px solid rgba(59,130,246,0.75); }
+.ul-legend--hotel  i { background: rgba(168,85,247,0.55);  border: 1px solid rgba(168,85,247,0.75); }
+.ul-legend--refuge i { background: rgba(245,158,11,0.55);  border: 1px solid rgba(245,158,11,0.75); }
+.ul-legend--podium i { background: rgba(34,197,94,0.4);    border: 1px solid rgba(34,197,94,0.6);   }
+
+/* ── 선택 유닛 정보 패널 ── */
+.ul-info {
+  position: relative;
+  margin-top: 14px;
+  padding: 16px 20px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,169,110,0.28);
+  border-radius: 8px;
+}
+
+.ul-info[hidden] { display: none; }
+
+.ul-info__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.ul-info__close:hover { color: var(--text-light); }
+
+.ul-info__unit-num {
+  font-family: var(--font-body);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.ul-info__meta {
+  display: flex;
+  gap: 14px 20px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.ul-info__meta-item {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+}
+
+.ul-info__meta-item strong {
+  color: var(--text-light);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.ul-info__type-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.ul-info__type-badge--84A { background: rgba(59,130,246,0.18); color: #93c5fd; border: 1px solid rgba(59,130,246,0.38); }
+.ul-info__type-badge--59  { background: rgba(34,197,94,0.18);  color: #86efac; border: 1px solid rgba(34,197,94,0.38);  }
+.ul-info__type-badge--84B { background: rgba(168,85,247,0.18); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.38); }
+
+.ul-info__link {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--accent-gold);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(200,169,110,0.28);
+  padding-bottom: 1px;
+  transition: opacity 0.2s;
+}
+
+.ul-info__link:hover { opacity: 0.65; }
+
+/* ══════════════════════════════════════════════════
+   103동 — 층별 구조 존 다이어그램
+   ══════════════════════════════════════════════════ */
+
+.ul-zone-diagram {
+  padding: 0;
+}
+
+.ul-zone-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 2fr auto 1fr auto auto auto;
+  gap: 6px;
+  min-height: 380px;
+}
+
+/* 존 블록 */
+.ul-zblock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 8px;
+  text-align: center;
+  padding: 16px 8px;
+  font-family: var(--font-body);
+}
+
+.ul-zblock--apt-high {
+  background: rgba(59, 130, 246, 0.22);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+.ul-zblock--apt-mid {
+  background: rgba(99, 155, 246, 0.17);
+  border: 1px solid rgba(99, 155, 246, 0.32);
+}
+.ul-zblock--hotel-high {
+  background: rgba(75, 85, 130, 0.25);
+  border: 1px solid rgba(100, 115, 165, 0.38);
+}
+.ul-zblock--hotel-mid {
+  background: rgba(75, 85, 130, 0.18);
+  border: 1px solid rgba(100, 115, 165, 0.28);
+}
+
+.ul-zblock__sub {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.04em;
+}
+
+.ul-zblock--apt-high  .ul-zblock__range,
+.ul-zblock--apt-mid   .ul-zblock__range { color: rgba(147, 197, 253, 0.95); }
+.ul-zblock--hotel-high .ul-zblock__range,
+.ul-zblock--hotel-mid  .ul-zblock__range { color: rgba(200, 210, 235, 0.9); }
+
+.ul-zblock__range {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.ul-zblock--apt-high  .ul-zblock__use,
+.ul-zblock--apt-mid   .ul-zblock__use { color: rgba(147, 197, 253, 0.78); }
+.ul-zblock--hotel-high .ul-zblock__use,
+.ul-zblock--hotel-mid  .ul-zblock__use { color: rgba(200, 210, 235, 0.72); }
+
+.ul-zblock__use {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 14F 피난 셀 */
+.ul-zrefuge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.42);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(253, 211, 77, 0.95);
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+/* 저층부·필로티 full-span */
+.ul-zfull {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 16px;
+}
+
+.ul-zfull--podium {
+  height: 48px;
+  background: rgba(167, 139, 250, 0.18);
+  border: 1px solid rgba(167, 139, 250, 0.32);
+  color: rgba(221, 214, 254, 0.88);
+}
+
+.ul-zfull--piloti {
+  height: 32px;
+  background: rgba(70, 70, 70, 0.2);
+  border: 1px solid rgba(150, 150, 150, 0.18);
+  color: rgba(200, 200, 200, 0.5);
+}
+
+/* 동 라벨 행 */
+.ul-zlabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding-top: 10px;
+  font-family: var(--font-body);
+}
+
+.ul-zlabel strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-light);
+  letter-spacing: 0.04em;
+}
+
+.ul-zlabel span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+/* 범례 */
+.ul-zlegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ul-zleg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ul-zleg-i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.ul-zleg-i--apt    { background: rgba(59,  130, 246, 0.8);  border: 1px solid rgba(59,  130, 246, 1);   }
+.ul-zleg-i--hotel  { background: rgba(75,  85,  130, 0.8);  border: 1px solid rgba(100, 115, 165, 1);   }
+.ul-zleg-i--refuge { background: rgba(245, 158, 11,  0.8);  border: 1px solid rgba(245, 158, 11,  1);   }
+.ul-zleg-i--podium { background: rgba(167, 139, 250, 0.6);  border: 1px solid rgba(167, 139, 250, 0.9); }
+
+/* 안내 텍스트 */
+.ul-zdisclaimer {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* ══════════════════════════════════════════════════
+   101·102동 듀얼 그리드 레이아웃
+   ══════════════════════════════════════════════════ */
+
+.ul-dual-wrap {
+  width: 100%;
+}
+
+/* 헤더 바: "101동 162세대" — 배지 — "102동 162세대" */
+.ul-dual-headers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.ul-dual-dong-hd {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-light);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.ul-dual-dong-hd em {
+  font-style: normal;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+  font-weight: 400;
+}
+
+/* 타입 배지 */
+.ul-type-badges {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.ul-tbadge {
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.ul-tbadge--84A { background: rgba(59,130,246,0.18); color: #93c5fd; border: 1px solid rgba(59,130,246,0.38); }
+.ul-tbadge--59  { background: rgba(34,197,94,0.18);  color: #86efac; border: 1px solid rgba(34,197,94,0.38);  }
+.ul-tbadge--84B { background: rgba(168,85,247,0.18); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.38); }
+
+/* 두 그리드를 나란히 */
+.ul-dual-grids {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.ul-sub-grid {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* 구분선 */
+.ul-dual-sep {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 5px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+/* 듀얼 모드에서 셀 크기 축소 */
+.ul-sub-grid .ul-floor-label {
+  width: 28px;
+  min-width: 28px;
+  font-size: 12px;
+}
+
+.ul-sub-grid .ul-unit {
+  height: 34px;
+  font-size: 12px;
+  border-radius: 2px;
+}
+
+.ul-sub-grid .ul-header-ho {
+  font-size: 12px;
+}
+
+.ul-sub-grid .ul-refuge-cell {
+  height: 26px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.ul-sub-grid .ul-merged-cell--podium { height: 40px; }
+.ul-sub-grid .ul-merged-cell--piloti { height: 22px; }
+
+/* 탭도 2개짜리로 너비 조정 */
+.ul-dong-tabs:has(.ul-dong-tab:nth-child(2):last-child) .ul-dong-tab {
+  font-size: 13px;
+}
+
+/* ══════════════════════════════════════════════════
+   공동주택 유닛 그리드 — 아이보리 라이트 테마
+   ══════════════════════════════════════════════════ */
+
+/* 컨테이너 아이보리 배경 */
+.ul-building-light {
+  background: #faf7f0;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+/* 층 라벨 — 어두운 텍스트 */
+.ul-building-light .ul-floor-label {
+  color: rgba(30, 25, 15, 0.45);
+}
+
+/* 헤더 호수 라벨 */
+.ul-building-light .ul-header-ho {
+  color: rgba(30, 25, 15, 0.38);
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+.ul-building-light .ul-header-row {
+  border-bottom-color: rgba(0, 0, 0, 0.09);
+}
+
+/* ─ 유닛 셀 기본 리셋 (라이트 모드) ─ */
+.ul-building-light .ul-unit--apt {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.09);
+  color: #333;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.07),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ─ 호수별 배경 색상 ─ */
+
+/* 1호 — 파란색 */
+.ul-building-light .ul-unit[data-ho="1"] {
+  background: rgba(59, 100, 220, 0.13);
+  border-color: rgba(59, 100, 220, 0.28);
+  color: #1a3fa0;
+}
+
+/* 2,3호 — 빨간색 */
+.ul-building-light .ul-unit[data-ho="2"],
+.ul-building-light .ul-unit[data-ho="3"] {
+  background: rgba(220, 45, 45, 0.11);
+  border-color: rgba(220, 45, 45, 0.24);
+  color: #b52020;
+}
+
+/* 4호 — 파란색 */
+.ul-building-light .ul-unit[data-ho="4"] {
+  background: rgba(59, 100, 220, 0.13);
+  border-color: rgba(59, 100, 220, 0.28);
+  color: #1a3fa0;
+}
+
+/* 5,6호 — 초록색 */
+.ul-building-light .ul-unit[data-ho="5"],
+.ul-building-light .ul-unit[data-ho="6"] {
+  background: rgba(30, 160, 80, 0.11);
+  border-color: rgba(30, 160, 80, 0.24);
+  color: #1a6b38;
+}
+
+/* ─ hover (라이트 모드) ─ */
+.ul-building-light .ul-unit[data-ho="1"]:hover,
+.ul-building-light .ul-unit[data-ho="4"]:hover {
+  transform: translateY(-2px);
+  background: rgba(59, 100, 220, 0.23);
+  box-shadow: 0 4px 10px rgba(59, 100, 220, 0.18), 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.ul-building-light .ul-unit[data-ho="2"]:hover,
+.ul-building-light .ul-unit[data-ho="3"]:hover {
+  transform: translateY(-2px);
+  background: rgba(220, 45, 45, 0.2);
+  box-shadow: 0 4px 10px rgba(220, 45, 45, 0.16), 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.ul-building-light .ul-unit[data-ho="5"]:hover,
+.ul-building-light .ul-unit[data-ho="6"]:hover {
+  transform: translateY(-2px);
+  background: rgba(30, 160, 80, 0.2);
+  box-shadow: 0 4px 10px rgba(30, 160, 80, 0.16), 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* ─ pressed ─ */
+.ul-building-light .ul-unit--apt:active {
+  transform: translateY(1px) scale(0.97);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* ─ 선택됨 ─ */
+.ul-building-light .ul-unit.selected {
+  outline: 2px solid #c8a97e;
+  outline-offset: 1px;
+  box-shadow: 0 4px 14px rgba(200, 169, 110, 0.28) !important;
+}
+
+/* ─ 피난안전구역 (라이트 모드) ─ */
+.ul-building-light .ul-refuge-cell {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(200, 130, 0, 0.3);
+  color: #8a5a00;
+  box-shadow: none;
+}
+
+/* ─ 저층부 (라이트 모드) ─ */
+.ul-building-light .ul-merged-cell--podium {
+  background: rgba(140, 90, 220, 0.09);
+  border-color: rgba(140, 90, 220, 0.2);
+  color: #6b3fa0;
+}
+
+/* ─ 필로티 (라이트 모드) ─ */
+.ul-building-light .ul-merged-cell--piloti {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.09);
+  color: rgba(30, 25, 15, 0.38);
+}
+
+/* ─ 구분선 (라이트 모드) ─ */
+.ul-building-light .ul-dual-sep {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ─ 동 헤더 텍스트 (라이트 모드) ─ */
+.ul-building-light ~ * .ul-dual-dong-hd,
+.ul-dual-dong-hd {
+  color: var(--text-light);
 }

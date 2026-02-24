@@ -140,19 +140,40 @@ if (curtain) {
     const curtainLeft = curtain.querySelector('.curtain__left');
     const curtainRight = curtain.querySelector('.curtain__right');
     const curtainBrand = curtain.querySelector('.curtain__brand');
+    const curtainVideoL = document.getElementById('curtainVideoL');
+    const curtainVideoR = document.getElementById('curtainVideoR');
 
     const heroLetters = document.querySelectorAll('.hero__letter');
     const heroGoldLine = document.getElementById('heroGoldLine');
     const heroTitleSub = document.getElementById('heroTitleSub');
     const heroVideo = document.querySelector('.hero__video');
 
-    // Master entrance timeline
-    const entranceTL = gsap.timeline({ delay: 0.3 });
+    // ── 인트로 영상 재생 시간 (초) — 원하는 시간으로 조절 ──
+    const INTRO_DURATION = 5;
 
-    // Phase 1: Curtain brand text fade in
+    // 두 패널 영상 동시 재생 + 동기화
+    function playIntroVideos() {
+        if (curtainVideoL && curtainVideoR) {
+            curtainVideoL.currentTime = 0;
+            curtainVideoR.currentTime = 0;
+            curtainVideoL.play().catch(() => {});
+            curtainVideoR.play().catch(() => {});
+        }
+    }
+
+    // 영상 재생 준비 후 시작, 실패해도 커튼 정상 동작
+    window.addEventListener('load', () => {
+        playIntroVideos();
+        if (heroVideo) heroVideo.play().catch(() => {});
+    });
+
+    // Master entrance timeline — INTRO_DURATION 후 스플릿 시작
+    const entranceTL = gsap.timeline({ delay: INTRO_DURATION });
+
+    // Phase 1: Curtain brand text fade in (영상 끝 직전 오버레이)
     entranceTL.to(curtainBrand, {
         opacity: 1,
-        duration: 0.8,
+        duration: 0.6,
         ease: 'power2.inOut'
     });
 
@@ -161,9 +182,9 @@ if (curtain) {
         opacity: 0,
         duration: 0.4,
         ease: 'power2.in'
-    }, '+=0.7');
+    }, '+=0.5');
 
-    // Phase 3: Curtains split open
+    // Phase 3: Curtains split open — 영상이 두 쪽으로 찢어지며 히어로 등장
     entranceTL.to(curtainLeft, {
         xPercent: -100,
         duration: 1.2,
@@ -210,16 +231,8 @@ if (curtain) {
         ease: 'power3.out'
     }, '-=0.3');
 
-
-    // Phase 8: Hide curtain
+    // Phase 7: Hide curtain
     entranceTL.set(curtain, { display: 'none' });
-
-    // Hero video autoplay on load
-    window.addEventListener('load', () => {
-        if (heroVideo) {
-            heroVideo.play().catch(() => { });
-        }
-    });
 }
 
 
@@ -603,3 +616,270 @@ window.addEventListener('resize', () => {
         ScrollTrigger.refresh();
     }, 250);
 });
+
+
+/* ══════════════════════════════════════════════════
+   동호수 배치도 — Interactive Unit Layout Grid
+   ══════════════════════════════════════════════════ */
+
+function initUnitLayout() {
+    const building = document.getElementById('ulBuilding');
+    if (!building) return;
+
+    // 호수별 타입: 1호~2호=84A, 3호=59, 4~6호=84B
+    const UNIT_TYPES = ['84A', '84A', '59', '84B', '84B', '84B'];
+
+    const TYPE_INFO = {
+        '84A': { area: '84.99㎡', rooms: '방 3 · 욕실 2', plan: 'plans.html#units' },
+        '59':  { area: '59.97㎡', rooms: '방 2 · 욕실 1', plan: 'plans.html#units' },
+        '84B': { area: '84.96㎡', rooms: '방 3 · 욕실 2', plan: 'plans.html#units' },
+    };
+
+    let currentDong = 'apt';
+    let currentRange = 'high';
+    let selectedUnit = null;
+
+    function buildGrid(dong) {
+        building.innerHTML = '';
+        const rf = document.querySelector('.ul-range-filter');
+        const outer = building.closest('.ul-building-outer');
+
+        if (dong === '103') {
+            buildZoneDiagram();
+            if (rf) rf.style.display = 'none';
+            if (outer) outer.classList.remove('ul-building-light');
+            return;
+        }
+
+        // 공동주택 — 아이보리 라이트 테마
+        if (outer) outer.classList.add('ul-building-light');
+        if (rf) rf.style.display = '';
+        buildDualGrid();
+    }
+
+    /* ── 101·102동 나란히 렌더 ── */
+    function buildDualGrid() {
+        function floorRowsHTML(dong) {
+            let h = '';
+            // 호수 헤더
+            h += '<div class="ul-header-row">';
+            h += '<div class="ul-floor-label"></div>';
+            for (let u = 1; u <= 6; u++) h += `<div class="ul-header-ho">${u}호</div>`;
+            h += '</div>';
+            // 층
+            for (let f = 32; f >= 1; f--) {
+                if (f === 3 || f === 2) continue;
+                if (f === 14) {
+                    h += `<div class="ul-floor-row" data-zone="refuge">
+                        <div class="ul-floor-label">14F</div>
+                        <div class="ul-refuge-cell" style="font-size:8px">피난안전구역</div></div>`;
+                } else if (f === 4) {
+                    h += `<div class="ul-floor-row" data-zone="base">
+                        <div class="ul-floor-label" style="font-size:6px">2~4F</div>
+                        <div class="ul-merged-cell ul-merged-cell--podium" style="font-size:8px;padding:0 4px">생활형숙박시설 / 근린생활시설 / 커뮤니티</div></div>`;
+                } else if (f === 1) {
+                    h += `<div class="ul-floor-row" data-zone="base">
+                        <div class="ul-floor-label">1F</div>
+                        <div class="ul-merged-cell ul-merged-cell--piloti">필로티</div></div>`;
+                } else {
+                    const zone = f >= 15 ? 'high' : 'mid';
+                    let cells = `<div class="ul-floor-label">${f}F</div>`;
+                    for (let u = 1; u <= 6; u++) {
+                        const unitNum = f * 100 + u;
+                        const typeName = UNIT_TYPES[u - 1];
+                        cells += `<div class="ul-unit ul-unit--apt"
+                            data-unit="${unitNum}" data-floor="${f}"
+                            data-ho="${u}" data-dong="${dong}" data-type="${typeName}"
+                            title="${dong}동 ${unitNum}호 · ${typeName}타입">${unitNum}</div>`;
+                    }
+                    h += `<div class="ul-floor-row" data-zone="${zone}">${cells}</div>`;
+                }
+            }
+            return h;
+        }
+
+        building.innerHTML = `
+        <div class="ul-dual-wrap">
+          <div class="ul-dual-headers">
+            <div class="ul-dual-dong-hd">101동<em>162세대</em></div>
+            <div class="ul-type-badges">
+              <span class="ul-tbadge ul-tbadge--84A">84A</span>
+              <span class="ul-tbadge ul-tbadge--59">59</span>
+              <span class="ul-tbadge ul-tbadge--84B">84B</span>
+            </div>
+            <div class="ul-dual-dong-hd">102동<em>162세대</em></div>
+          </div>
+          <div class="ul-dual-grids">
+            <div class="ul-sub-grid">${floorRowsHTML('101')}</div>
+            <div class="ul-dual-sep"></div>
+            <div class="ul-sub-grid">${floorRowsHTML('102')}</div>
+          </div>
+        </div>`;
+
+        applyRangeFilter(currentRange);
+        attachUnitListeners();
+    }
+
+    function buildZoneDiagram() {
+        building.innerHTML = `
+        <div class="ul-zone-diagram">
+          <div class="ul-zone-grid">
+            <!-- 고층부 -->
+            <div class="ul-zblock ul-zblock--apt-high">
+              <div class="ul-zblock__sub">고층부</div>
+              <div class="ul-zblock__range">15~32F</div>
+              <div class="ul-zblock__use">공동주택</div>
+            </div>
+            <div class="ul-zblock ul-zblock--apt-high">
+              <div class="ul-zblock__sub">고층부</div>
+              <div class="ul-zblock__range">15~32F</div>
+              <div class="ul-zblock__use">공동주택</div>
+            </div>
+            <div class="ul-zblock ul-zblock--hotel-high">
+              <div class="ul-zblock__sub">고층부</div>
+              <div class="ul-zblock__range">15~32F</div>
+              <div class="ul-zblock__use">숙박시설</div>
+            </div>
+            <!-- 14F 피난 -->
+            <div class="ul-zrefuge">14F 피난</div>
+            <div class="ul-zrefuge">14F 피난</div>
+            <div class="ul-zrefuge">14F 피난</div>
+            <!-- 중층부 -->
+            <div class="ul-zblock ul-zblock--apt-mid">
+              <div class="ul-zblock__sub">중층부</div>
+              <div class="ul-zblock__range">5~13F</div>
+              <div class="ul-zblock__use">공동주택</div>
+            </div>
+            <div class="ul-zblock ul-zblock--apt-mid">
+              <div class="ul-zblock__sub">중층부</div>
+              <div class="ul-zblock__range">5~13F</div>
+              <div class="ul-zblock__use">공동주택</div>
+            </div>
+            <div class="ul-zblock ul-zblock--hotel-mid">
+              <div class="ul-zblock__sub">중층부</div>
+              <div class="ul-zblock__range">5~13F</div>
+              <div class="ul-zblock__use">숙박시설</div>
+            </div>
+            <!-- 저층부 full-span -->
+            <div class="ul-zfull ul-zfull--podium">저층부 (2~4F) : 근린생활시설 / 숙박시설 (단일 동 연결)</div>
+            <!-- 필로티 full-span -->
+            <div class="ul-zfull ul-zfull--piloti">1F : 필로티</div>
+            <!-- 동 라벨 -->
+            <div class="ul-zlabel"><strong>101동</strong><span>공동주택</span></div>
+            <div class="ul-zlabel"><strong>102동</strong><span>공동주택</span></div>
+            <div class="ul-zlabel"><strong>103동</strong><span>숙박시설</span></div>
+          </div>
+          <!-- 범례 -->
+          <div class="ul-zlegend">
+            <span class="ul-zleg-item"><i class="ul-zleg-i ul-zleg-i--apt"></i>공동주택</span>
+            <span class="ul-zleg-item"><i class="ul-zleg-i ul-zleg-i--hotel"></i>숙박시설</span>
+            <span class="ul-zleg-item"><i class="ul-zleg-i ul-zleg-i--refuge"></i>피난안전구역</span>
+            <span class="ul-zleg-item"><i class="ul-zleg-i ul-zleg-i--podium"></i>저층부 (근생/숙박)</span>
+          </div>
+          <p class="ul-zdisclaimer">상기내용은 사업인허가 과정에서 변경될 수 있음</p>
+        </div>`;
+    }
+
+    function applyRangeFilter(range) {
+        if (window.innerWidth > 768) {
+            building.querySelectorAll('.ul-floor-row').forEach(r => r.style.display = '');
+            return;
+        }
+        building.querySelectorAll('.ul-floor-row').forEach(row => {
+            const zone = row.dataset.zone;
+            if (zone === 'refuge' || zone === 'base') {
+                row.style.display = '';
+            } else if (range === 'high') {
+                row.style.display = (zone === 'high') ? '' : 'none';
+            } else {
+                row.style.display = (zone === 'mid') ? '' : 'none';
+            }
+        });
+    }
+
+    function attachUnitListeners() {
+        building.querySelectorAll('.ul-unit--apt').forEach(cell => {
+            cell.addEventListener('click', () => handleUnitClick(cell));
+        });
+    }
+
+    function handleUnitClick(cell) {
+        if (selectedUnit === cell) {
+            selectedUnit.classList.remove('selected');
+            selectedUnit = null;
+            document.getElementById('ulInfo').hidden = true;
+            return;
+        }
+        if (selectedUnit) selectedUnit.classList.remove('selected');
+        selectedUnit = cell;
+        cell.classList.add('selected');
+        showInfoPanel(cell);
+    }
+
+    function showInfoPanel(cell) {
+        const unitNum  = cell.dataset.unit;
+        const floor    = cell.dataset.floor;
+        const ho       = cell.dataset.ho;
+        const dong     = cell.dataset.dong;
+        const typeName = cell.dataset.type;
+        const info     = TYPE_INFO[typeName] || {};
+
+        const panel = document.getElementById('ulInfo');
+        const body  = document.getElementById('ulInfoBody');
+
+        body.innerHTML = `
+            <div class="ul-info__unit-num">${dong}동 ${unitNum}호</div>
+            <div class="ul-info__meta">
+                <span class="ul-info__meta-item">층<strong>${floor}F</strong></span>
+                <span class="ul-info__meta-item">호수<strong>${ho}호</strong></span>
+                ${info.area  ? `<span class="ul-info__meta-item">전용면적<strong>${info.area}</strong></span>`  : ''}
+                ${info.rooms ? `<span class="ul-info__meta-item">구조<strong>${info.rooms}</strong></span>` : ''}
+            </div>
+            ${typeName ? `<div class="ul-info__type-badge ul-info__type-badge--${typeName}">${typeName} 타입</div>` : ''}
+            <br>
+            <a href="plans.html#units" class="ul-info__link">평면도 보기 →</a>
+        `;
+
+        panel.hidden = false;
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // 동 탭 전환
+    document.querySelectorAll('.ul-dong-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.ul-dong-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentDong = tab.dataset.dong;
+            if (selectedUnit) { selectedUnit.classList.remove('selected'); selectedUnit = null; }
+            document.getElementById('ulInfo').hidden = true;
+            buildGrid(currentDong);
+        });
+    });
+
+    // 층수 범위 필터
+    document.querySelectorAll('.ul-range-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.ul-range-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentRange = btn.dataset.range;
+            applyRangeFilter(currentRange);
+        });
+    });
+
+    // 정보 패널 닫기
+    const closeBtn = document.getElementById('ulInfoClose');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            if (selectedUnit) { selectedUnit.classList.remove('selected'); selectedUnit = null; }
+            document.getElementById('ulInfo').hidden = true;
+        });
+    }
+
+    // 리사이즈 시 필터 재적용
+    window.addEventListener('resize', () => applyRangeFilter(currentRange));
+
+    // 초기 렌더
+    buildGrid(currentDong);
+}
+
+initUnitLayout();
