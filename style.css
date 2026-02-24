@@ -742,6 +742,16 @@ button {
 }
 
 
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  z-index: 4;
+  pointer-events: none;
+  will-change: opacity;
+}
+
 .hero__content {
   position: relative;
   z-index: 3;

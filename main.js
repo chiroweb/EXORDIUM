@@ -244,6 +244,27 @@ if (curtain) {
 
 
 /* ══════════════════════════════════════════════════
+   HERO SCROLL DARKEN
+   ══════════════════════════════════════════════════ */
+
+{
+    const heroScrim = document.getElementById('heroScrim');
+    if (heroScrim) {
+        gsap.to(heroScrim, {
+            opacity: 0.65,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true,
+            }
+        });
+    }
+}
+
+
+/* ══════════════════════════════════════════════════
    SECTION 02: BUILDING REVEAL
    ══════════════════════════════════════════════════ */
 
