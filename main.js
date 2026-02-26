@@ -1,24 +1,42 @@
 /* ══════════════════════════════════════════════════
-   EXORDIUM SIGNATURE HAEUNDAE — Interactions v3
-   Landing Simplification + Subpage Null Guards
+   EXORDIUM SIGNATURE HAEUNDAE — Interactions
    ══════════════════════════════════════════════════ */
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Global Config ───
 gsap.defaults({
     ease: 'power3.out',
     duration: 0.8
 });
 
-// 새로고침 시 항상 히어로 섹션(최상단)으로 강제 이동
+// 새로고침 시 최상단 강제 이동
 if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
 }
 window.scrollTo(0, 0);
+
+
+/* ══════════════════════════════════════════════════
+   LENIS — Virtual Smooth Scroll (전역)
+   scrub: 1.8 의 관성감은 Lenis Lerp + GSAP scrub 조합으로 생성
+   ══════════════════════════════════════════════════ */
+
+const lenis = new Lenis({
+    duration: 1.4,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+});
+
+lenis.on('scroll', ScrollTrigger.update);
+
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+});
+
+gsap.ticker.lagSmoothing(0);
 
 
 /* ══════════════════════════════════════════════════
@@ -31,7 +49,6 @@ const menuOverlay = document.getElementById('menuOverlay');
 const menuItems = menuOverlay.querySelectorAll('.menu-overlay__item');
 const menuFooter = menuOverlay.querySelector('.menu-overlay__footer');
 
-// Nav — 아래로 스크롤: 배경 등장 / 위로 스크롤: 투명
 ScrollTrigger.create({
     start: 0,
     end: 'max',
@@ -46,7 +63,6 @@ ScrollTrigger.create({
     }
 });
 
-// Initial states
 gsap.set(menuItems, { opacity: 0, y: 28 });
 gsap.set(menuFooter, { opacity: 0 });
 menuItems.forEach(item => {
@@ -54,7 +70,6 @@ menuItems.forEach(item => {
     if (sub) gsap.set(sub, { height: 0 });
 });
 
-// Menu open / close
 let menuOpen = false;
 
 function openMenu() {
@@ -90,7 +105,6 @@ function closeMenu() {
             menuOverlay.classList.remove('open');
             document.body.style.overflow = '';
             gsap.set(menuItems, { y: 28 });
-            // 서브메뉴 초기화
             menuItems.forEach(item => {
                 const sub = item.querySelector('.menu-overlay__sub');
                 const lis = item.querySelectorAll('.menu-overlay__sub li');
@@ -106,7 +120,6 @@ menuBtn.addEventListener('click', () => {
     else openMenu();
 });
 
-// 호버: 소제목 슬라이드인
 menuItems.forEach(item => {
     const sub = item.querySelector('.menu-overlay__sub');
     if (!sub) return;
@@ -123,7 +136,6 @@ menuItems.forEach(item => {
     });
 });
 
-// 링크 클릭 시 메뉴 닫기
 menuOverlay.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', (e) => {
         if (link.getAttribute('href') === '#') {
@@ -136,500 +148,383 @@ menuOverlay.querySelectorAll('a').forEach(link => {
 
 
 /* ══════════════════════════════════════════════════
-   SECTION 01: HERO — Cinematic Interactions
-   (Landing page only — guarded by curtain existence)
+   HERO SEQUENCE
+   Phase 1: Masked Reverse Reveal + Container Mask Shrink
+   Phase 2: Staggered Masked Text Reveal (s2)
+   Phase 3: Container Mask Expansion
    ══════════════════════════════════════════════════ */
 
-const curtain = document.getElementById('curtain');
+function initHeroSequence() {
+    const seq = document.getElementById('heroSeq');
+    if (!seq) return;
 
-if (curtain) {
-    const curtainLeft = curtain.querySelector('.curtain__left');
-    const curtainRight = curtain.querySelector('.curtain__right');
-    const curtainBrand = curtain.querySelector('.curtain__brand');
-    const curtainVideoL = document.getElementById('curtainVideoL');
-    const curtainVideoR = document.getElementById('curtainVideoR');
+    const hvm      = document.getElementById('hvm');
+    const vidA     = document.getElementById('hvmVidA');
+    const vidB     = document.getElementById('hvmVidB');
+    const overlay  = hvm.querySelector('.hvm__overlay');
 
-    const heroLetters = document.querySelectorAll('.hero__letter');
-    const heroGoldLine = document.getElementById('heroGoldLine');
-    const heroTitleSub = document.getElementById('heroTitleSub');
-    const heroVideo = document.querySelector('.hero__video');
+    const htEye    = seq.querySelector('.ht__eye');
+    const htLines  = seq.querySelectorAll('.ht__line');
+    const htSub    = seq.querySelector('.ht__sub');
 
-    // ── 인트로 영상 재생 시간 (초) — 원하는 시간으로 조절 ──
-    const INTRO_DURATION = 5;
+    const hs2Lines = seq.querySelectorAll('.hs2__line');
+    const hs2Body  = seq.querySelector('.hs2__body');
+    const hs2Inner = seq.querySelector('.hs2__inner');
 
-    // 두 패널 영상 동시 재생 + 동기화
-    function playIntroVideos() {
-        if (curtainVideoL && curtainVideoR) {
-            curtainVideoL.currentTime = 0;
-            curtainVideoR.currentTime = 0;
-            curtainVideoL.play().catch(() => {});
-            curtainVideoR.play().catch(() => {});
-        }
-    }
+    // vidB: autoplay로 브라우저가 즉시 decode 시작, JS에서 즉시 숨김 (CSS opacity:0 제거)
+    gsap.set(vidB, { opacity: 0 });
 
-    // 영상 재생 준비 후 시작, 실패해도 커튼 정상 동작
-    window.addEventListener('load', () => {
-        playIntroVideos();
-        if (heroVideo) heroVideo.play().catch(() => {});
+    // ── 초기 상태: 히어로 텍스트 baseline 아래 대기 ──
+    gsap.set([htEye, ...htLines, htSub], { yPercent: 110 });
+    gsap.set(hs2Lines, { yPercent: 110 });
+    gsap.set(hs2Body, { opacity: 0, y: 12 });
+    gsap.set(hs2Inner, { opacity: 1 });
+
+    // ── 입장 애니메이션 (Masked Text Reveal — 위로 올라오며 등장) ──
+    const entrance = gsap.timeline({ delay: 0.25 });
+    entrance
+        .to(htEye,    { yPercent: 0, duration: 1.0, ease: 'power3.out' }, 0)
+        .to(htLines,  { yPercent: 0, duration: 1.2, ease: 'power3.out', stagger: 0.1 }, 0.12)
+        .to(htSub,    { yPercent: 0, duration: 0.9, ease: 'power3.out' }, 0.48);
+
+    // ── 입장 완료 후 스크롤 시퀀스 초기화 ──
+    // heroSeq pin spacer가 생성된 뒤 bldgSeq를 초기화해야 위치가 올바르게 계산됨
+    entrance.eventCallback('onComplete', () => {
+        initScrollTL();
+        // 다음 프레임에 spacer 반영 완료 후 bldgSeq 등록
+        requestAnimationFrame(() => {
+            initBldgSeq();
+            initBldgPopup();
+        });
     });
 
-    // Master entrance timeline — INTRO_DURATION 후 스플릿 시작
-    const entranceTL = gsap.timeline({ delay: INTRO_DURATION });
+    function initScrollTL() {
+        const SCROLL_SPACE = window.innerHeight * 2.2;
 
-    // Phase 1: Curtain brand text fade in (영상 끝 직전 오버레이)
-    entranceTL.to(curtainBrand, {
-        opacity: 1,
-        duration: 0.6,
-        ease: 'power2.inOut'
-    });
-
-    // Phase 2: Curtain brand text fade out
-    entranceTL.to(curtainBrand, {
-        opacity: 0,
-        duration: 0.4,
-        ease: 'power2.in'
-    }, '+=0.5');
-
-    // Phase 3: Curtains split open — 영상이 두 쪽으로 찢어지며 히어로 등장
-    entranceTL.to(curtainLeft, {
-        xPercent: -100,
-        duration: 1.2,
-        ease: 'power4.inOut'
-    }, '-=0.1');
-
-    entranceTL.to(curtainRight, {
-        xPercent: 100,
-        duration: 1.2,
-        ease: 'power4.inOut'
-    }, '<');
-
-    // Phase 4: Letter-by-letter stagger
-    entranceTL.to(heroLetters, {
-        opacity: 1,
-        y: '0%',
-        rotateX: 0,
-        duration: 0.9,
-        stagger: {
-            each: 0.06,
-            ease: 'power2.out'
-        },
-        ease: 'power3.out'
-    }, '-=0.5');
-
-    // Phase 5: Golden accent line draw
-    entranceTL.to(heroGoldLine, {
-        opacity: 1,
-        duration: 0.3,
-        ease: 'power2.out'
-    }, '-=0.3');
-
-    entranceTL.to('.hero__gold-line line', {
-        strokeDashoffset: 0,
-        duration: 0.8,
-        ease: 'power2.inOut'
-    }, '<');
-
-    // Phase 6: Subtitle reveal
-    entranceTL.to(heroTitleSub, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: 'power3.out'
-    }, '-=0.3');
-
-    // Phase 7: Hide curtain
-    entranceTL.set(curtain, { display: 'none' });
-}
-
-
-
-/* ══════════════════════════════════════════════════
-   HERO SCROLL DARKEN
-   ══════════════════════════════════════════════════ */
-
-{
-    const heroScrim = document.getElementById('heroScrim');
-    if (heroScrim) {
-        gsap.to(heroScrim, {
-            opacity: 0.65,
-            ease: 'none',
+        const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: '.hero',
+                trigger: seq,
                 start: 'top top',
-                end: 'bottom top',
-                scrub: true,
+                end: `+=${SCROLL_SPACE}`,
+                pin: true,
+                scrub: 1.8,
+                invalidateOnRefresh: true,
             }
         });
+
+        // ── Phase 1 (0→0.38): Masked Reverse Reveal — 히어로 텍스트 퇴장 ──
+        // 각 줄이 overflow:hidden 아래로 translateY(110%) 되돌아감
+        tl
+            .fromTo(htEye,      { yPercent: 0 }, { yPercent: 110, duration: 0.12, ease: 'power2.in' }, 0)
+            .fromTo(htLines[0], { yPercent: 0 }, { yPercent: 110, duration: 0.15, ease: 'power2.in' }, 0.03)
+            .fromTo(htLines[1], { yPercent: 0 }, { yPercent: 110, duration: 0.15, ease: 'power2.in' }, 0.06)
+            .fromTo(htLines[2], { yPercent: 0 }, { yPercent: 110, duration: 0.15, ease: 'power2.in' }, 0.09)
+            .fromTo(htSub,      { yPercent: 0 }, { yPercent: 110, duration: 0.12, ease: 'power2.in' }, 0.12);
+
+        // ── Phase 1 (0→0.40): Container Mask Shrink — vmask left: 0% → 62% ──
+        tl.fromTo(hvm,
+            { left: '0%' },
+            { left: '75%', duration: 0.40, ease: 'power2.inOut' },
+            0
+        );
+
+        // ── Phase 1.5 (0.30→0.38): overlay 감소 (패널 상태) ──
+        tl.fromTo(overlay,
+            { opacity: 1 },
+            { opacity: 0.08, duration: 0.08, ease: 'none' },
+            0.30
+        );
+
+        // ── Phase 1.5 (0.36): 영상 스왑 A → B ──
+        tl.to(vidA, { opacity: 0, duration: 0.05, ease: 'none' }, 0.35);
+        tl.to(vidB, { opacity: 1, duration: 0.05, ease: 'none' }, 0.35);
+
+        // ── Phase 2 (0.42→0.62): Staggered Masked Text Reveal — s2 텍스트 등장 ──
+        // 각 줄이 overflow:hidden 위로 translateY(0%)로 솟아오름
+        tl
+            .fromTo(hs2Lines[0], { yPercent: 110 }, { yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.42)
+            .fromTo(hs2Lines[1], { yPercent: 110 }, { yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.47)
+            .fromTo(hs2Lines[2], { yPercent: 110 }, { yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.52)
+            .fromTo(hs2Body,
+                { opacity: 0, y: 12 },
+                { opacity: 1, y: 0, duration: 0.12, ease: 'power2.out' },
+                0.58
+            );
+
+        // ── Phase 3 (0.68→1.0): Container Mask Expansion — vmask left: 62% → 0% ──
+        tl.to(hvm,
+            { left: '0%', duration: 0.32, ease: 'power2.inOut' },
+            0.68
+        );
+
+        // Phase 3: 영상이 텍스트 아래로 깔리면서 폰트색 dark → white (소통 효과)
+        tl.fromTo([...hs2Lines],
+            { color: '#1A1A1A' },
+            { color: '#ffffff', duration: 0.28, ease: 'power2.inOut' },
+            0.72
+        );
+        tl.fromTo(hs2Body,
+            { color: '#6B6B6B' },
+            { color: 'rgba(255,255,255,0.55)', duration: 0.28, ease: 'power2.inOut' },
+            0.72
+        );
+
+        // Phase 3: overlay 복귀 (풀스크린 영상이 되면서 어두워짐)
+        tl.to(overlay, { opacity: 0.32, duration: 0.20, ease: 'none' }, 0.74);
     }
 }
 
+initHeroSequence();
+
 
 /* ══════════════════════════════════════════════════
-   SECTION 02: BUILDING REVEAL
+   BUILDING SECTION
+   Scroll-driven: Black fade → Lines → Text → Building rise → Side info → Hotspots
    ══════════════════════════════════════════════════ */
 
-function initBuildingReveal() {
-    const section = document.querySelector('.br-section');
-    if (!section) return;
+function initBldgSeq() {
+    const seq = document.getElementById('bldgSeq');
+    if (!seq) return;
 
-    const buildingRise  = document.getElementById('brBuildingRise');
-    const hotspots      = document.querySelectorAll('.br__hs');
-    const hint          = document.getElementById('brHint');
-    const infoPanels    = document.querySelectorAll('.br__info-panel');
-    const titleLines    = section.querySelectorAll('.br__title-line');
-    const titleEyebrow  = section.querySelector('.br__title-eyebrow');
-    const titleSub      = section.querySelector('.br__title-sub');
-    const popup         = document.getElementById('brPopup');
-    const popupClose    = document.getElementById('brPopupClose');
-    const popupFloor    = document.getElementById('brPopupFloor');
-    const popupLabel    = document.getElementById('brPopupLabel');
-    const popupDesc     = document.getElementById('brPopupDesc');
-    const popupImgWrap  = document.getElementById('brPopupImgWrap');
-    const popupImg      = document.getElementById('brPopupImg');
+    const curtainT  = document.getElementById('bldgCurtainT');
+    const curtainB  = document.getElementById('bldgCurtainB');
+    const lines     = seq.querySelectorAll('.bldg-line');
+    const preEye    = seq.querySelector('.bpt__line--eye');
+    const preTitle  = seq.querySelector('.bpt__line--title');
+    const preSub    = seq.querySelector('.bpt__line--sub');
+    const imgWrap   = document.getElementById('bldgImgWrap');
+    const sideL     = seq.querySelectorAll('#bldgSideL .bs__label, #bldgSideL .bs__value');
+    const sideR     = seq.querySelectorAll('#bldgSideR .bs__label, #bldgSideR .bs__value');
+    const hotspots  = seq.querySelectorAll('.bhs');
+    const pretext   = document.getElementById('bldgPretext');
 
-    if (!buildingRise) return;
+    // ── 초기 상태 ──
+    gsap.set(curtainT, { y: '0%' });
+    gsap.set(curtainB, { y: '0%' });
+    gsap.set(lines,    { scaleY: 0 });
+    gsap.set([preEye, preTitle, preSub], { yPercent: 110 });
+    gsap.set(hotspots, { scale: 0 });
+    gsap.set([...sideL, ...sideR], { yPercent: 110 });
+    gsap.set(imgWrap,  { xPercent: -50, y: '60vh', opacity: 0 });
+    gsap.set(pretext,  { xPercent: -50, yPercent: -56 });
 
-    // ── 초기 상태 (CSS에서도 opacity:0이지만 GSAP 상태로도 명시) ──
-    gsap.set(buildingRise, { yPercent: 105 });
-    gsap.set(hotspots,     { opacity: 0, scale: 0 });
-    gsap.set(hint,         { opacity: 0 });
-    gsap.set(infoPanels,   { opacity: 0 });
-    gsap.set(titleLines,   { yPercent: 120, opacity: 0 });
-    if (titleEyebrow) gsap.set(titleEyebrow, { opacity: 0 });
-    if (titleSub)     gsap.set(titleSub,     { opacity: 0 });
+    const SCROLL_SPACE = window.innerHeight * 3.2;
 
-    ScrollTrigger.create({
-        trigger: section,
-        start: 'top 90%',
-        once: true,
-        onEnter: () => {
-            const tl = gsap.timeline();
-
-            // 아이브로우
-            if (titleEyebrow) tl.to(titleEyebrow, { opacity: 1, duration: 0.8 }, 0);
-
-            // 타이틀 라인 클립 리빌
-            titleLines.forEach((line, i) => {
-                tl.to(line, { yPercent: 0, opacity: 1, duration: 1.1, ease: 'power3.out' }, 0.2 + i * 0.2);
-            });
-
-            // 서브 타이틀
-            if (titleSub) tl.to(titleSub, { opacity: 1, duration: 0.8 }, 0.8);
-
-            // 건물 상승 (0.7s 후, 2.4s)
-            tl.to(buildingRise, { yPercent: 0, duration: 2.4, ease: 'power4.out' }, 0.7);
-
-            // 정보 패널 등장 (좌우 동시, 건물 올라온 직후)
-            tl.to(infoPanels, { opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.12 }, 2.6);
-
-            // 핫스팟 등장
-            tl.to(hotspots, { opacity: 1, scale: 1, duration: 0.6, stagger: 0.18, ease: 'back.out(1.7)' }, 4.0);
-
-            // 힌트 텍스트
-            if (hint) tl.to(hint, { opacity: 1, duration: 0.8 }, 4.4);
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: seq,
+            start: 'top top',   // 섹션이 뷰포트를 완전히 덮은 직후 고정
+            end: `+=${SCROLL_SPACE}`,
+            pin: true,
+            scrub: 1.8,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
         }
     });
 
-    // ── 핫스팟 클릭 → 팝업 ──
-    if (!popup) return;
-    let activeHs = null;
+    // Phase 1 (0→0.28): 커튼 위아래로 열림
+    tl.to(curtainT, { y: '-100%', duration: 0.28, ease: 'power2.inOut' }, 0);
+    tl.to(curtainB, { y: '100%',  duration: 0.28, ease: 'power2.inOut' }, 0);
 
-    hotspots.forEach(hs => {
-        hs.addEventListener('click', e => {
-            e.stopPropagation();
-            if (activeHs === hs && popup.classList.contains('br__popup--open')) {
-                closePopup();
-                return;
-            }
-            activeHs = hs;
-            openPopup(hs);
-        });
+    // Phase 2 (0.22→0.50): 라인 드로잉
+    tl
+        .to(lines[0], { scaleY: 1, duration: 0.22, ease: 'power2.inOut' }, 0.22)
+        .to(lines[1], { scaleY: 1, duration: 0.22, ease: 'power2.inOut' }, 0.27)
+        .to(lines[2], { scaleY: 1, duration: 0.22, ease: 'power2.inOut' }, 0.32);
+
+    // Phase 3 (0.36→0.56): 텍스트 스태거드 리빌
+    tl
+        .fromTo(preEye,   { yPercent: 110 }, { yPercent: 0, duration: 0.13, ease: 'power3.out' }, 0.36)
+        .fromTo(preTitle, { yPercent: 110 }, { yPercent: 0, duration: 0.16, ease: 'power3.out' }, 0.41)
+        .fromTo(preSub,   { yPercent: 110 }, { yPercent: 0, duration: 0.12, ease: 'power3.out' }, 0.49);
+
+    // Phase 4 (0.52→0.78): 건물 이미지 상승 + 페이드인
+    tl.fromTo(imgWrap,
+        { y: '60vh', opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.30, ease: 'power2.out' },
+        0.52
+    );
+
+    // Phase 5 (0.68→0.82): 사이드 인포 리빌
+    const sideAll = [...sideL, ...sideR];
+    sideAll.forEach((el, i) => {
+        tl.fromTo(el,
+            { yPercent: 110 },
+            { yPercent: 0, duration: 0.13, ease: 'power3.out' },
+            0.68 + i * 0.03
+        );
     });
 
-    if (popupClose) popupClose.addEventListener('click', e => {
-        e.stopPropagation();
-        closePopup();
+    // Phase 6 (0.80→0.98): 핫스팟 팝인
+    hotspots.forEach((hs, i) => {
+        tl.to(hs,
+            { scale: 1, duration: 0.11, ease: 'back.out(2.8)' },
+            0.80 + i * 0.05
+        );
     });
+}
 
-    document.addEventListener('click', e => {
-        if (popup.classList.contains('br__popup--open') && !popup.contains(e.target)) {
-            closePopup();
-        }
-    });
+/* ══════════════════════════════════════════════════
+   BUILDING POPUP — 홀로그램 팝업 (클릭 드리븐)
+   3단계: 커넥터 라인 → 박스 확장 → 콘텐츠 페이드인
+   ══════════════════════════════════════════════════ */
 
-    function openPopup(hs) {
+function initBldgPopup() {
+    const seq = document.getElementById('bldgSeq');
+    if (!seq) return;
+
+    const S3 = 'https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/';
+    const POPUP_DATA = [
+        {
+            floor: '28 – 32F',
+            name: '루프탑 인피니티풀',
+            nameEn: 'SKY AMENITY',
+            desc: '스카이 라운지 · 루프탑 인피니티풀\n인피니티 뷰 테라스',
+            img: S3 + '%E1%84%8B%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%86%BC%20%E1%84%89%E1%85%AE%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%B7%2001%20%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1.png',
+        },
+        {
+            floor: '3 – 24F',
+            name: '호텔 라운지',
+            nameEn: 'SUMMIT LOUNGE',
+            desc: '프라이빗 라운지\n비즈니스 미팅룸',
+            img: S3 + '%E1%84%8B%E1%85%A1%E1%84%91%E1%85%A1%E1%84%90%E1%85%B3_%E1%84%92%E1%85%A9%E1%84%90%E1%85%A6%E1%86%AF%203%E1%84%8E%E1%85%B3%E1%86%BC%20%E1%84%85%E1%85%A6%E1%86%AB%E1%84%83%E1%85%A5%E1%84%85%E1%85%B5%E1%86%BC.png',
+        },
+        {
+            floor: 'B1 – 4F',
+            name: '피트니스 & 커뮤니티',
+            nameEn: 'FITNESS · COMMUNITY',
+            desc: '피트니스 · 스크린골프 · 사우나\n키즈클럽 · 플레이그라운드',
+            img: S3 + '%E1%84%8F%E1%85%A5%E1%84%86%E1%85%B2%E1%84%82%E1%85%B5%E1%84%90%E1%85%B5-3f-render.png',
+        },
+        {
+            floor: '5 – 32F',
+            name: '아파트 84㎡',
+            nameEn: 'UNIT PLAN · 84A TYPE',
+            desc: '방 3 · 욕실 2\n베란다 확장형 평면도',
+            img: S3 + '84A_%EB%B2%A0%EB%9E%80%EB%8B%A4%ED%99%95%EC%9E%A5_%ED%8F%89%EB%A9%B4%EB%8F%84.webp',
+        },
+    ];
+
+    const popup      = document.getElementById('bpop');
+    const popupBox   = document.getElementById('bpopBox');
+    const content    = document.getElementById('bpopContent');
+    const connLine   = document.getElementById('bpopLine');
+    const scanline   = popup.querySelector('.bpop__scanline');
+
+    let activeIdx  = -1;
+    let scanTL     = null;
+
+    function openPopup(hs, idx) {
+        if (activeIdx === idx) { closePopup(); return; }
+        if (activeIdx !== -1) closePopup(true);
+
+        activeIdx = idx;
+        const data = POPUP_DATA[idx];
+
+        // 위치 계산
         const hsRect  = hs.getBoundingClientRect();
-        const secRect = section.getBoundingClientRect();
-        const cx = hsRect.left - secRect.left + hsRect.width  / 2;
-        const cy = hsRect.top  - secRect.top  + hsRect.height / 2;
-        const goRight = cx < section.offsetWidth * 0.55;
+        const seqRect = seq.getBoundingClientRect();
+        const hsX = hsRect.left - seqRect.left + hsRect.width  / 2;
+        const hsY = hsRect.top  - seqRect.top  + hsRect.height / 2;
 
-        popupFloor.textContent = hs.dataset.floor;
-        popupLabel.textContent = hs.dataset.label;
-        popupDesc.textContent  = hs.dataset.desc;
+        const popW = 600;
+        const popH = 530;
+        const onLeft = hsX > seq.offsetWidth * 0.5;
+        let pX = onLeft ? hsX - popW - 36 : hsX + 36;
+        let pY = hsY - 40;
+        pX = Math.max(12, Math.min(pX, seq.offsetWidth  - popW - 12));
+        pY = Math.max(12, Math.min(pY, seq.offsetHeight - popH - 12));
 
-        // 이미지 처리
-        if (hs.dataset.img) {
-            popupImg.src = hs.dataset.img;
-            popupImgWrap.style.display = '';
-            popupImgWrap.classList.remove('br__popup-img-wrap--empty');
-        } else {
-            popupImg.src = '';
-            popupImgWrap.style.display = '';
-            popupImgWrap.classList.add('br__popup-img-wrap--empty');
+        popup.style.left = pX + 'px';
+        popup.style.top  = pY + 'px';
+        popup.classList.add('is-open');
+
+        // 이미지 교체
+        const popImg = document.getElementById('bpopImg');
+        if (popImg) { popImg.src = data.img; popImg.alt = data.name; }
+
+        // 커넥터 라인 좌표
+        const lineEndX = onLeft ? pX + popW : pX;
+        const lineEndY = pY + 18;
+        const len = Math.hypot(lineEndX - hsX, lineEndY - hsY);
+        connLine.setAttribute('x1', hsX);
+        connLine.setAttribute('y1', hsY);
+        connLine.setAttribute('x2', lineEndX);
+        connLine.setAttribute('y2', lineEndY);
+        connLine.setAttribute('stroke-dasharray', len);
+        connLine.setAttribute('stroke-dashoffset', len);
+
+        // 팝업 콘텐츠
+        content.innerHTML = `
+            <div class="bpop__floor">${data.floor}</div>
+            <div class="bpop__name">${data.name}</div>
+            <span class="bpop__name-en">${data.nameEn}</span>
+            <div class="bpop__desc">${data.desc.replace('\n', '<br>')}</div>
+        `;
+
+        // 3단계 애니메이션
+        const tl = gsap.timeline();
+
+        // Step 1: 커넥터 라인 드로잉
+        gsap.set(connLine, { strokeDashoffset: len });
+        tl.to(popup, { opacity: 1, duration: 0.01 }, 0);
+        tl.to(connLine, { strokeDashoffset: 0, duration: 0.32, ease: 'power2.out' }, 0);
+
+        // Step 2: 박스 확장
+        gsap.set(popupBox, { scaleY: 0, transformOrigin: 'top left' });
+        tl.to(popupBox, { scaleY: 1, duration: 0.28, ease: 'power3.out' }, 0.24);
+
+        // Step 3: 콘텐츠 페이드인
+        gsap.set(content, { opacity: 0 });
+        tl.to(content, { opacity: 1, duration: 0.22, ease: 'power2.out' }, 0.44);
+
+        // 스캔라인 애니메이션
+        if (scanTL) scanTL.kill();
+        gsap.set(scanline, { top: 0, opacity: 1 });
+        scanTL = gsap.to(scanline, {
+            top: '100%', opacity: 0, duration: 2.2, ease: 'none',
+            repeat: -1, repeatDelay: 0.5
+        });
+    }
+
+    function closePopup(instant = false) {
+        if (activeIdx === -1) return;
+        activeIdx = -1;
+        popup.classList.remove('is-open');
+        if (scanTL) { scanTL.kill(); scanTL = null; }
+
+        if (instant) {
+            gsap.set(popup, { opacity: 0 });
+            gsap.set(popupBox, { scaleY: 0 });
+            gsap.set(content, { opacity: 0 });
+            gsap.set(connLine, { strokeDashoffset: parseFloat(connLine.getAttribute('stroke-dasharray') || 0) });
+            return;
         }
 
-        popup.style.top       = cy + 'px';
-        popup.style.left      = goRight ? (cx + 20) + 'px' : 'auto';
-        popup.style.right     = goRight ? 'auto' : (section.offsetWidth - cx + 20) + 'px';
-        popup.style.transform = 'translateY(-50%)';
-
-        popup.classList.remove('br__popup--open');
-        void popup.offsetWidth;
-        popup.classList.add('br__popup--open');
+        gsap.to(popup, {
+            opacity: 0, duration: 0.18, ease: 'power2.in',
+            onComplete: () => {
+                gsap.set(popupBox, { scaleY: 0 });
+                gsap.set(content, { opacity: 0 });
+            }
+        });
+        gsap.to(connLine, {
+            strokeDashoffset: parseFloat(connLine.getAttribute('stroke-dasharray') || 300),
+            duration: 0.18, ease: 'power2.in'
+        });
     }
-
-    function closePopup() {
-        popup.classList.remove('br__popup--open');
-        activeHs = null;
-    }
-}
-
-initBuildingReveal();
-
-
-/* ══════════════════════════════════════════════════
-   SECTION 03: MEDIA FACADE — Text-as-Window + Scroll Reveal
-   ══════════════════════════════════════════════════ */
-
-const facadeSection = document.querySelector('.facade');
-
-if (facadeSection) {
-    const facadeVisual = document.getElementById('facadeVisual');
-    const facadeVideo = document.querySelector('.facade__visual-video');
-    const facadeLines = document.querySelectorAll('.facade__line');
-    const facadeEyebrow = document.querySelector('.facade__eyebrow');
-    const facadeDesc = document.querySelector('.facade__desc');
-    const facadeOverline = document.querySelector('.facade__overline');
 
     // 초기 상태
-    gsap.set(facadeEyebrow, { opacity: 0, y: 15 });
-    gsap.set(facadeLines, { y: '120%' });
-    gsap.set(facadeDesc, { opacity: 0, y: 20 });
+    gsap.set(popup,   { opacity: 0 });
+    gsap.set(popupBox, { scaleY: 0 });
+    gsap.set(content, { opacity: 0 });
 
-    // ── STEP 1: 비디오 재생 (IntersectionObserver — pin 구조에서 안정적)
-    if (facadeVideo) {
-        const facadeVideoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    facadeVideo.play().catch(() => {});
-                } else {
-                    facadeVideo.pause();
-                }
-            });
-        }, { threshold: 0.1 });
-        facadeVideoObserver.observe(facadeSection);
-    }
-
-    // ── STEP 2: Pin
-    ScrollTrigger.create({
-        trigger: '.facade',
-        start: 'top top',
-        end: () => `+=${window.innerWidth * 1.7}`,
-        pin: '.facade__pin-wrap',
-        pinSpacing: true,
-        invalidateOnRefresh: true
+    // 이벤트
+    seq.querySelectorAll('.bhs').forEach((hs, i) => {
+        hs.addEventListener('click', (e) => { e.stopPropagation(); openPopup(hs, i); });
     });
-
-    // ── STEP 3: Scrub 타임라인
-    const facadeTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: '.facade',
-            start: 'top top',
-            end: () => `+=${window.innerWidth * 1.7}`,
-            scrub: 0.8,
-            invalidateOnRefresh: true
-        }
-    });
-
-    // 0–50%: 박스 확장 — 오버라인은 비디오 뒤(z-index:0)라 자연히 가려짐
-    facadeTl
-        .to(facadeVisual, {
-            top: '0%', left: '0%', right: '0%', bottom: '0%',
-            borderRadius: '0px',
-            duration: 0.50,
-            ease: 'power2.inOut'
-        }, 0);
-
-    // 52–67%: 텍스트 등장
-    facadeTl
-        .to(facadeEyebrow, { opacity: 1, y: 0, duration: 0.08, ease: 'power3.out' }, 0.52)
-        .to(facadeLines[0], { y: '0%', duration: 0.10, ease: 'power3.out' }, 0.55)
-        .to(facadeLines[1], { y: '0%', duration: 0.10, ease: 'power3.out' }, 0.59)
-        .to(facadeLines[2], { y: '0%', duration: 0.10, ease: 'power3.out' }, 0.63);
-
-    // 67–87%: 윈도우 효과 (텍스트 fill → transparent)
-    facadeTl
-        .to(facadeLines[0], { webkitTextFillColor: 'rgba(255,255,255,0)', duration: 0.20, ease: 'none' }, 0.67)
-        .to(facadeLines[1], { webkitTextFillColor: 'rgba(255,255,255,0)', duration: 0.20, ease: 'none' }, 0.70)
-        .to(facadeLines[2], { webkitTextFillColor: 'rgba(255,255,255,0)', duration: 0.20, ease: 'none' }, 0.73);
-
-    // 82–98%: 설명 텍스트
-    facadeTl
-        .to(facadeDesc, { opacity: 1, y: 0, duration: 0.16, ease: 'power2.out' }, 0.82);
+    seq.addEventListener('click', () => closePopup());
 }
-
-
-/* ══════════════════════════════════════════════════
-   SECTION 04: COMMUNITY — Bento Grid Reveal
-   ══════════════════════════════════════════════════ */
-
-const communityCells = document.querySelectorAll('.community__cell');
-
-if (communityCells.length > 0) {
-    gsap.set(communityCells, { clipPath: 'inset(100% 0% 0% 0%)' });
-    gsap.set('.community__cell img', { scale: 1.06 });
-
-    ScrollTrigger.create({
-        trigger: '.community',
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-            gsap.to(communityCells, {
-                clipPath: 'inset(0% 0% 0% 0%)',
-                duration: 1.0,
-                ease: 'power4.out',
-                stagger: { amount: 0.55, from: 'start' }
-            });
-
-            gsap.to('.community__cell img', {
-                scale: 1.0,
-                duration: 1.4,
-                ease: 'power3.out',
-                stagger: { amount: 0.55, from: 'start' }
-            });
-        }
-    });
-
-    gsap.set('.community__overlay-eyebrow', { opacity: 0, y: 10 });
-    gsap.set('.community__overlay-line', { opacity: 0, y: 24 });
-
-    ScrollTrigger.create({
-        trigger: '.community',
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-            gsap.to('.community__overlay-eyebrow', {
-                opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.5
-            });
-            gsap.to('.community__overlay-line', {
-                opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12, delay: 0.65
-            });
-        }
-    });
-
-    // ── Hover interactions — 은은한 이미지 zoom + 패럴랙스 + spotlight dim
-    communityCells.forEach(cell => {
-        const img = cell.querySelector('img');
-        const label = cell.querySelector('.community__label');
-
-        // Mouse parallax — quickTo for snappy feel
-        const moveX = gsap.quickTo(img, 'x', { duration: 0.6, ease: 'power2.out' });
-        const moveY = gsap.quickTo(img, 'y', { duration: 0.6, ease: 'power2.out' });
-
-        cell.addEventListener('mouseenter', () => {
-            // 이미지만 살짝 zoom — 셀은 고정 (overflow:hidden으로 클립)
-            gsap.to(img, { scale: 1.07, duration: 0.6, ease: 'power2.out' });
-
-            // 라벨 gold 하이라이트
-            gsap.to(label, { color: '#C8A97E', duration: 0.35, ease: 'power2.out' });
-
-            // Spotlight: 나머지 셀 은은하게 dim
-            communityCells.forEach(s => {
-                if (s !== cell) gsap.to(s, { opacity: 0.72, duration: 0.45, ease: 'power2.out' });
-            });
-        });
-
-        cell.addEventListener('mousemove', (e) => {
-            const rect = cell.getBoundingClientRect();
-            const dx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-            const dy = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-            moveX(dx * -6);
-            moveY(dy * -6);
-        });
-
-        cell.addEventListener('mouseleave', () => {
-            gsap.to(img, { scale: 1, x: 0, y: 0, duration: 0.7, ease: 'power2.out' });
-            gsap.to(label, { color: 'rgba(245,240,235,0.55)', duration: 0.35, ease: 'power2.out' });
-            communityCells.forEach(s => gsap.to(s, { opacity: 1, duration: 0.5, ease: 'power2.out' }));
-        });
-    });
-}
-
-
-/* ══════════════════════════════════════════════════
-   SECTION 05: LOCATION & LIFE — Marquee + Card Slider
-   ══════════════════════════════════════════════════ */
-
-// Card Slider
-const locationTrack = document.getElementById('locationSliderTrack');
-const locationPrev = document.getElementById('locationPrev');
-const locationNext = document.getElementById('locationNext');
-const locationCurrentEl = document.getElementById('locationCurrent');
-
-if (locationTrack && locationPrev && locationNext) {
-    const TOTAL_PAGES = 2; // 4 cards, 2 visible at a time
-    let currentPage = 0;
-
-    function updateSlider() {
-        const gap = parseFloat(getComputedStyle(locationTrack).gap) || 16;
-        const cardWidth = locationTrack.parentElement.offsetWidth;
-        const offset = currentPage * (cardWidth + gap);
-        locationTrack.style.transform = `translateX(-${offset}px)`;
-
-        if (locationCurrentEl) locationCurrentEl.textContent = currentPage + 1;
-        locationPrev.disabled = currentPage === 0;
-        locationNext.disabled = currentPage === TOTAL_PAGES - 1;
-    }
-
-    locationPrev.addEventListener('click', () => {
-        if (currentPage > 0) { currentPage--; updateSlider(); }
-    });
-
-    locationNext.addEventListener('click', () => {
-        if (currentPage < TOTAL_PAGES - 1) { currentPage++; updateSlider(); }
-    });
-
-    updateSlider();
-}
-
-// Marquee entrance
-gsap.from('.location-life__marquee', {
-    opacity: 0,
-    duration: 1.2,
-    ease: 'power2.out',
-    scrollTrigger: {
-        trigger: '.location-life',
-        start: 'top 70%',
-        once: true
-    }
-});
-
-// Background video — play only when section is visible
-const bgVideo = document.querySelector('.location-life__bg-video');
-if (bgVideo) {
-    const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                bgVideo.play().catch(() => { });
-            } else {
-                bgVideo.pause();
-            }
-        });
-    }, { threshold: 0.2 });
-    videoObserver.observe(document.querySelector('.location-life'));
-}
-
 
 /* ══════════════════════════════════════════════════
    SMOOTH SCROLL TO ANCHORS
@@ -674,24 +569,6 @@ initSubpageTabs();
 
 
 /* ══════════════════════════════════════════════════
-   INITIAL LOAD
-   ══════════════════════════════════════════════════ */
-
-window.addEventListener('load', () => {
-    ScrollTrigger.refresh();
-});
-
-// Handle resize
-let resizeTimeout;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        ScrollTrigger.refresh();
-    }, 250);
-});
-
-
-/* ══════════════════════════════════════════════════
    동호수 배치도 — Interactive Unit Layout Grid
    ══════════════════════════════════════════════════ */
 
@@ -699,7 +576,6 @@ function initUnitLayout() {
     const building = document.getElementById('ulBuilding');
     if (!building) return;
 
-    // 호수별 타입: 1호~2호=84A, 3호=59, 4~6호=84B
     const UNIT_TYPES = ['84A', '84A', '59', '84B', '84B', '84B'];
 
     const TYPE_INFO = {
@@ -724,22 +600,18 @@ function initUnitLayout() {
             return;
         }
 
-        // 공동주택 — 아이보리 라이트 테마
         if (outer) outer.classList.add('ul-building-light');
         if (rf) rf.style.display = '';
         buildDualGrid();
     }
 
-    /* ── 101·102동 나란히 렌더 ── */
     function buildDualGrid() {
         function floorRowsHTML(dong) {
             let h = '';
-            // 호수 헤더
             h += '<div class="ul-header-row">';
             h += '<div class="ul-floor-label"></div>';
             for (let u = 1; u <= 6; u++) h += `<div class="ul-header-ho">${u}호</div>`;
             h += '</div>';
-            // 층
             for (let f = 32; f >= 1; f--) {
                 if (f === 3 || f === 2) continue;
                 if (f === 14) {
@@ -797,7 +669,6 @@ function initUnitLayout() {
         building.innerHTML = `
         <div class="ul-zone-diagram">
           <div class="ul-zone-grid">
-            <!-- 고층부 -->
             <div class="ul-zblock ul-zblock--apt-high">
               <div class="ul-zblock__sub">고층부</div>
               <div class="ul-zblock__range">15~32F</div>
@@ -813,11 +684,9 @@ function initUnitLayout() {
               <div class="ul-zblock__range">15~32F</div>
               <div class="ul-zblock__use">숙박시설</div>
             </div>
-            <!-- 14F 피난 -->
             <div class="ul-zrefuge">14F 피난</div>
             <div class="ul-zrefuge">14F 피난</div>
             <div class="ul-zrefuge">14F 피난</div>
-            <!-- 중층부 -->
             <div class="ul-zblock ul-zblock--apt-mid">
               <div class="ul-zblock__sub">중층부</div>
               <div class="ul-zblock__range">5~13F</div>
@@ -833,16 +702,12 @@ function initUnitLayout() {
               <div class="ul-zblock__range">5~13F</div>
               <div class="ul-zblock__use">숙박시설</div>
             </div>
-            <!-- 저층부 full-span -->
             <div class="ul-zfull ul-zfull--podium">저층부 (2~4F) : 근린생활시설 / 숙박시설 (단일 동 연결)</div>
-            <!-- 필로티 full-span -->
             <div class="ul-zfull ul-zfull--piloti">1F : 필로티</div>
-            <!-- 동 라벨 -->
             <div class="ul-zlabel"><strong>101동</strong><span>공동주택</span></div>
             <div class="ul-zlabel"><strong>102동</strong><span>공동주택</span></div>
             <div class="ul-zlabel"><strong>103동</strong><span>숙박시설</span></div>
           </div>
-          <!-- 범례 -->
           <div class="ul-zlegend">
             <span class="ul-zleg-item"><i class="ul-zleg-i ul-zleg-i--apt"></i>공동주택</span>
             <span class="ul-zleg-item"><i class="ul-zleg-i ul-zleg-i--hotel"></i>숙박시설</span>
@@ -917,7 +782,6 @@ function initUnitLayout() {
         panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    // 동 탭 전환
     document.querySelectorAll('.ul-dong-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.ul-dong-tab').forEach(t => t.classList.remove('active'));
@@ -929,7 +793,6 @@ function initUnitLayout() {
         });
     });
 
-    // 층수 범위 필터
     document.querySelectorAll('.ul-range-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.ul-range-btn').forEach(b => b.classList.remove('active'));
@@ -939,7 +802,6 @@ function initUnitLayout() {
         });
     });
 
-    // 정보 패널 닫기
     const closeBtn = document.getElementById('ulInfoClose');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
@@ -948,11 +810,26 @@ function initUnitLayout() {
         });
     }
 
-    // 리사이즈 시 필터 재적용
     window.addEventListener('resize', () => applyRangeFilter(currentRange));
 
-    // 초기 렌더
     buildGrid(currentDong);
 }
 
 initUnitLayout();
+
+
+/* ══════════════════════════════════════════════════
+   INITIAL LOAD
+   ══════════════════════════════════════════════════ */
+
+window.addEventListener('load', () => {
+    ScrollTrigger.refresh();
+});
+
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 250);
+});

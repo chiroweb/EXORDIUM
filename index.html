@@ -13,7 +13,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
   <link
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     rel="stylesheet" />
@@ -194,372 +194,131 @@
     </div>
   </div>
 
-  <!-- ═══════════ CINEMATIC CURTAIN ═══════════ -->
-  <div class="curtain" id="curtain">
-    <div class="curtain__left">
-      <!-- 인트로 영상 URL을 아래 src에 넣어주세요 -->
-      <video class="curtain__video" id="curtainVideoL" muted playsinline preload="auto">
-        <source src="/intro-video.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="curtain__right">
-      <video class="curtain__video" id="curtainVideoR" muted playsinline preload="auto">
-        <source src="/intro-video.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div class="curtain__brand">EXORDIUM</div>
-  </div>
+  <!-- ═══════════ HERO SEQUENCE ═══════════ -->
+  <section class="hero-seq" id="heroSeq">
 
-  <!-- ═══════════ SECTION 01: HERO ═══════════ -->
-  <section class="hero" id="hero">
-    <div class="hero__sticky">
-      <div class="hero__video-wrap" id="heroVideoWrap">
-        <video class="hero__video" autoplay muted loop playsinline preload="metadata" src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/%EC%97%91%EC%86%8C%EB%94%94%EC%9B%80_%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98_%ED%95%B4%EC%9A%B4%EB%8C%80_%EC%98%81%EC%83%811.mp4">
-        </video>
-        <div class="hero__overlay"></div>
-        <div class="hero__vignette" id="heroVignette"></div>
+    <!-- Video Mask — full-screen → right panel → full-screen -->
+    <div class="hvm" id="hvm">
+      <!-- Video A: 해수욕장1 (Hero) -->
+      <video class="hvm__vid hvm__vid--a" id="hvmVidA" autoplay muted loop playsinline preload="auto">
+        <source src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%E1%84%92%E1%85%A2%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%83%E1%85%A2%E1%84%92%E1%85%A2%E1%84%89%E1%85%AE%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%8C%E1%85%A1%E1%86%BC1.mp4" type="video/mp4">
+      </video>
+      <!-- Video B: 엑소디움 영상2 (Panel + Expansion) -->
+      <video class="hvm__vid hvm__vid--b" id="hvmVidB" autoplay muted loop playsinline preload="auto">
+        <source src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%EC%97%91%EC%86%8C%EB%94%94%EC%9B%80_%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98_%ED%95%B4%EC%9A%B4%EB%8C%80_%EC%98%81%EC%83%812.mp4" type="video/mp4">
+      </video>
+      <div class="hvm__overlay"></div>
+    </div>
+
+    <!-- Hero Text — center overlay, exits on scroll (Masked Reverse Reveal) -->
+    <div class="ht" id="ht">
+      <div class="ht__eyemask">
+        <p class="ht__eye">송정의 해수욕장을 품은 안식처.</p>
       </div>
-      <div class="hero__content" id="heroContent">
-        <div class="hero__title-wrap">
-          <h1 class="hero__title">
-            <span class="hero__title-line" id="heroTitleLine">
-              <span class="hero__letter" data-letter>E</span><span class="hero__letter" data-letter>X</span><span
-                class="hero__letter" data-letter>O</span><span class="hero__letter" data-letter>R</span><span
-                class="hero__letter" data-letter>D</span><span class="hero__letter" data-letter>I</span><span
-                class="hero__letter" data-letter>U</span><span class="hero__letter" data-letter>M</span>
-            </span>
-            <!-- Golden Accent Line -->
-            <svg class="hero__gold-line" id="heroGoldLine" viewBox="0 0 200 2" preserveAspectRatio="none">
-              <line x1="0" y1="1" x2="200" y2="1" stroke="url(#goldGradient)" stroke-width="1.5" stroke-linecap="round" />
-              <defs>
-                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="transparent" />
-                  <stop offset="20%" stop-color="#C8A97E" />
-                  <stop offset="80%" stop-color="#C8A97E" />
-                  <stop offset="100%" stop-color="transparent" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <span class="hero__title-sub" id="heroTitleSub">SIGNATURE HAEUNDAE</span>
-          </h1>
+      <h1 class="ht__title">
+        <div class="ht__lmask"><span class="ht__line">EXORDIUM</span></div>
+        <div class="ht__lmask"><span class="ht__line">SIGNATURE</span></div>
+        <div class="ht__lmask"><span class="ht__line">HAEUNDAE</span></div>
+      </h1>
+      <div class="ht__submask">
+        <p class="ht__sub">× WYNDHAM HOTEL</p>
+      </div>
+    </div>
+
+    <!-- Second Section — left column, enters on scroll (Staggered Masked Text Reveal) -->
+    <div class="hs2" id="hs2">
+      <div class="hs2__inner">
+        <h2 class="hs2__title">
+          <div class="hs2__lmask"><span class="hs2__line">부산의 바다를</span></div>
+          <div class="hs2__lmask"><span class="hs2__line">소유하는</span></div>
+          <div class="hs2__lmask"><span class="hs2__line">새로운 방법</span></div>
+        </h2>
+        <div class="hs2__bodymask">
+          <p class="hs2__body">324세대 아파트와 윈덤 호텔 400호실.<br>부산 해운대, 전혀 다른 일상이 시작된다.</p>
         </div>
       </div>
     </div>
-    <div class="hero__scrim" id="heroScrim"></div>
+
   </section>
 
-  <!-- ═══════════ SECTION 02: BUILDING REVEAL ═══════════ -->
-  <section class="section br-section" id="building-reveal">
-    <!-- 배경 영상 (z:0) -->
-    <video class="br__bg-video" autoplay muted loop playsinline preload="metadata">
-      <source src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/haeundae-ocean.mp4" type="video/mp4" />
+  <!-- ═══════════ BUILDING SECTION ═══════════ -->
+  <section class="bldg-seq" id="bldgSeq">
+
+    <!-- 배경 영상 (URL만 교체하면 바로 작동) -->
+    <video class="bldg-bg-vid" id="bldgBgVid" autoplay muted loop playsinline preload="auto">
+      <!-- <source src="S3_영상_URL_여기에" type="video/mp4"> -->
     </video>
 
-    <!-- 필름 그레인 -->
-    <div class="br__grain"></div>
+    <!-- 커튼: 위아래로 열리며 섹션 공개 -->
+    <div class="bldg-curtain bldg-curtain--top" id="bldgCurtainT"></div>
+    <div class="bldg-curtain bldg-curtain--bot" id="bldgCurtainB"></div>
 
-    <!-- 앰비언트 오브 -->
-    <div class="br__orb br__orb--gold"></div>
-    <div class="br__orb br__orb--blue"></div>
+    <!-- SVG overlay for connector line -->
+    <svg class="bldg-svg-ov" id="bldgSvgOv" xmlns="http://www.w3.org/2000/svg">
+      <line class="bpop-line" id="bpopLine" x1="0" y1="0" x2="0" y2="0"/>
+    </svg>
 
-    <!-- Layer 1: 타이포그래피 (z:5, 건물 뒤) -->
-    <div class="br__title-layer">
-      <div class="br__title-eyebrow">( HAEUNDAE LANDMARK )</div>
-      <div class="br__title-wrap">
-        <div class="br__title-line-wrap"><div class="br__title-line" id="brTitle1">EXORDIUM</div></div>
-        <div class="br__title-line-wrap"><div class="br__title-line br__title-line--x" id="brTitle2">× WYNDHAM</div></div>
-        <div class="br__title-line-wrap"><div class="br__title-line br__title-line--ko" id="brTitle3">IN 해운대</div></div>
-      </div>
-      <div class="br__title-sub">TOWER · BUSAN 2030</div>
+    <!-- 3 vertical decorative lines -->
+    <div class="bldg-lines" id="bldgLines">
+      <div class="bldg-line"></div>
+      <div class="bldg-line"></div>
+      <div class="bldg-line"></div>
     </div>
 
-    <!-- Layer 2: 건물 (z:10) -->
-    <div class="br__building-wrap">
-      <div class="br__building-rise" id="brBuildingRise">
-        <img
-          src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/building-exordium.svg"
-          alt="엑소디움 시그니처 해운대"
-          class="br__building-img"
-        />
-        <div class="br__hotspots" id="brHotspots">
-          <button class="br__hs" data-id="1" style="left:38%;top:22%"
-            data-label="스카이 라운지" data-floor="32F"
-            data-desc="해운대 오션뷰를 한눈에 담는 프리미엄 루프탑 라운지. 윈덤호텔 고객 전용."
-            data-img="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/%E1%84%8B%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%86%BC+%E1%84%89%E1%85%AE%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%BC+01+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1.webp">
-            <span class="br__hs-star">✦</span>
-          </button>
-          <button class="br__hs" data-id="2" style="left:58%;top:42%"
-            data-label="Summit Lounge" data-floor="15 · 16F"
-            data-desc="호텔고객과 공용으로 운영되는 프리미엄 라운지. 해운대 전망 파노라마."
-            data-img="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/%E1%84%92%E1%85%A9%E1%84%90%E1%85%A6%E1%86%AF%E1%84%85%E1%85%A1%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%8C%E1%85%B5.webp">
-            <span class="br__hs-star">✦</span>
-          </button>
-          <button class="br__hs" data-id="3" style="left:38%;top:77%"
-            data-label="Family Amenity" data-floor="3 · 4F"
-            data-desc="입주민 전용 커뮤니티 시설. 피트니스, 사우나, 골프연습장."
-            data-img="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/u7772917729_a_refined_and_elegant_gym_in_a_resort_with_big_wind_3d029497-a76d-4de7-9720-0ebe31fcf58e.webp">
-            <span class="br__hs-star">✦</span>
-          </button>
-          <button class="br__hs" data-id="4" style="left:52%;top:64%"
-            data-label="미디어 파사드" data-floor="전층"
-            data-desc="국내 최초 초대형 스마트 글라스 미디어 파사드. 야간 랜드마크."
-            data-img="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/DJI_20260111140410_0378_D.webp">
-            <span class="br__hs-star">✦</span>
-          </button>
-        </div>
+    <!-- Pre-text (behind building, then covered) -->
+    <div class="bldg-pretext" id="bldgPretext">
+      <div class="bpt__mask"><span class="bpt__line bpt__line--eye">REDEFINING URBAN LIVING</span></div>
+      <div class="bpt__mask"><span class="bpt__line bpt__line--title">THE PINNACLE</span></div>
+      <div class="bpt__mask"><span class="bpt__line bpt__line--sub">TOWER · HAEUNDAE</span></div>
+    </div>
+
+    <!-- Building image + hotspots -->
+    <div class="bldg-img-wrap" id="bldgImgWrap">
+      <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%E1%84%8C%E1%85%A6%E1%84%86%E1%85%A9%E1%86%A8+%E1%84%8B%E1%85%A5%E1%86%B9%E1%84%82%E1%85%B3%E1%86%AB+%E1%84%83%E1%85%B5%E1%84%8C%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB+(1).svg" class="bldg-img" alt="EXORDIUM 조감도" />
+      <div class="bldg-hotspots">
+        <!-- 루프탑 인피니티풀: 오른쪽(호텔) 건물 꼭대기 -->
+        <button class="bhs" data-idx="0" style="top:18%;left:68%"><span class="bhs__pulse"></span><span class="bhs__dot"></span></button>
+        <!-- 호텔 라운지: 두 건물 사이, 중간 높이 -->
+        <button class="bhs" data-idx="1" style="top:48%;left:54%"><span class="bhs__pulse"></span><span class="bhs__dot"></span></button>
+        <!-- 피트니스 & 커뮤니티: 오른쪽 건물 하단 -->
+        <button class="bhs" data-idx="2" style="top:75%;left:62%"><span class="bhs__pulse"></span><span class="bhs__dot"></span></button>
+        <!-- 아파트 평형도: 왼쪽(아파트) 건물 중간 -->
+        <button class="bhs" data-idx="3" style="top:50%;left:18%"><span class="bhs__pulse"></span><span class="bhs__dot"></span></button>
       </div>
     </div>
 
-    <!-- Layer 3: 정보 패널 (좌측 4줄 좌정렬 / 우측 4줄 우정렬) -->
-
-    <!-- 좌측 패널 -->
-    <div class="br__info-panel br__info-panel--left" id="brInfoLeft">
-      <div class="br__info-item">
-        <div class="br__info-label">시공예정사</div>
-        <div class="br__info-value">대우산업개발</div>
-      </div>
-      <div class="br__info-item">
-        <div class="br__info-label">아파트</div>
-        <div class="br__info-value">324세대</div>
-      </div>
-      <div class="br__info-item">
-        <div class="br__info-label">규모</div>
-        <div class="br__info-value">지상 32층 / 지하 5층</div>
-      </div>
-      <div class="br__info-item">
-        <div class="br__info-label">타입</div>
-        <div class="br__info-value br__info-value--ko">59 · 84㎡</div>
-      </div>
+    <!-- Side info left -->
+    <div class="bldg-side bldg-side--left" id="bldgSideL">
+      <div class="bs__mask"><span class="bs__label">Architect</span></div>
+      <div class="bs__mask"><span class="bs__value">대우산업개발</span></div>
+      <div class="bs__mask bs__gap"><span class="bs__label">Height</span></div>
+      <div class="bs__mask"><span class="bs__value">지상 32층</span></div>
     </div>
 
-    <!-- 우측 패널 -->
-    <div class="br__info-panel br__info-panel--right" id="brInfoRight">
-      <div class="br__info-item">
-        <div class="br__info-label">HOTEL</div>
-        <div class="br__info-value">WYNDHAM 400호실</div>
-      </div>
-      <div class="br__info-item">
-        <div class="br__info-label">위치</div>
-        <div class="br__info-value br__info-value--ko">부산 해운대구 우동</div>
-      </div>
-      <div class="br__info-item">
-        <div class="br__info-label">입주예정</div>
-        <div class="br__info-value">2030. 05</div>
-      </div>
-      <div class="br__info-item">
-        <div class="br__info-label">주차</div>
-        <div class="br__info-value br__info-value--ko">지하 5층 자주식</div>
-      </div>
+    <!-- Side info right -->
+    <div class="bldg-side bldg-side--right" id="bldgSideR">
+      <div class="bs__mask"><span class="bs__label">Completion</span></div>
+      <div class="bs__mask"><span class="bs__value">2028</span></div>
+      <div class="bs__mask bs__gap"><span class="bs__label">Units</span></div>
+      <div class="bs__mask"><span class="bs__value">324세대</span></div>
     </div>
 
-    <!-- 탐색 힌트 -->
-    <div class="br__hint" id="brHint">✦ 건물의 빛나는 포인트를 탐색하세요</div>
-
-    <!-- 팝업 -->
-    <div class="br__popup" id="brPopup">
-      <div class="br__popup-box">
-        <button class="br__popup-close" id="brPopupClose" aria-label="닫기"></button>
-        <div class="br__popup-scan"></div>
-        <div class="br__popup-corners">
-          <span class="br__corner br__corner--tl"></span>
-          <span class="br__corner br__corner--tr"></span>
-          <span class="br__corner br__corner--bl"></span>
-          <span class="br__corner br__corner--br"></span>
+    <!-- Hologram popup -->
+    <div class="bpop" id="bpop">
+      <div class="bpop__box" id="bpopBox">
+        <div class="bpop__img-wrap">
+          <img class="bpop__img" id="bpopImg" src="" alt="">
         </div>
-        <div class="br__popup-img-wrap" id="brPopupImgWrap">
-          <img class="br__popup-img" id="brPopupImg" src="" alt="">
-        </div>
-        <div class="br__popup-content">
-          <div class="br__popup-header">
-            <span class="br__popup-floor" id="brPopupFloor"></span>
-            <span class="br__popup-label" id="brPopupLabel"></span>
-          </div>
-          <p class="br__popup-desc" id="brPopupDesc"></p>
-          <div class="br__popup-status">
-            <span class="br__popup-dot"></span>
-            <span>분양 진행중</span>
-          </div>
-        </div>
+        <div class="bpop__scanline"></div>
+        <div class="bpop__corner bpop__corner--tl"></div>
+        <div class="bpop__corner bpop__corner--tr"></div>
+        <div class="bpop__corner bpop__corner--bl"></div>
+        <div class="bpop__corner bpop__corner--br"></div>
+        <div class="bpop__content" id="bpopContent"></div>
       </div>
     </div>
 
   </section>
-
-  <!-- ═══════════ SECTION 03: MEDIA FACADE — Clip-path 리빌 ═══════════ -->
-  <section class="section section--dark facade" id="facade">
-    <div class="facade__pin-wrap">
-
-      <!-- 영상 박스 위를 덮는 대형 타이포 -->
-      <div class="facade__overline">
-        <p class="facade__overline-text">WYNDHAM HOTEL WITH</p>
-      </div>
-
-      <!-- Visual layer (clip-path masked) -->
-      <div class="facade__visual" id="facadeVisual">
-        <video class="facade__visual-video" muted loop playsinline preload="metadata"
-          src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/%EC%97%91%EC%86%8C%EB%94%94%EC%9B%80_%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98_%ED%95%B4%EC%9A%B4%EB%8C%80_%EC%98%81%EC%83%812.mp4"></video>
-        <div class="facade__visual-overlay"></div>
-      </div>
-      <div class="facade__content">
-        <span class="facade__eyebrow">MEDIA FACADE</span>
-        <div class="facade__text-stack">
-          <div class="facade__line-wrap">
-            <p class="facade__line facade__line--sub">국내 최초</p>
-          </div>
-          <div class="facade__line-wrap">
-            <p class="facade__line">초대형 스마트 글라스</p>
-          </div>
-          <div class="facade__line-wrap">
-            <p class="facade__line">미디어 파사드</p>
-          </div>
-        </div>
-        <p class="facade__desc">
-          야간, 건물이 도시의 아이콘이 되는 비주얼 임팩트.<br />
-          스마트 글라스 외벽이 만들어내는 압도적 스케일.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ SECTION 04: COMMUNITY — Hotel Life Bento Grid ═══════════ -->
-  <section class="section community" id="community">
-    <div class="community__bento">
-
-      <div class="community__cell community__cell--a">
-        <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/%E1%84%8B%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%86%BC+%E1%84%89%E1%85%AE%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%BC+01+%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1.webp" alt="Rooftop Infinity Pool" />
-        <span class="community__label">Rooftop Infinity Pool</span>
-      </div>
-
-      <div class="community__cell community__cell--b">
-        <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/u7772917729_a_refined_and_elegant_gym_in_a_resort_with_big_wind_3d029497-a76d-4de7-9720-0ebe31fcf58e.webp" alt="3F Fitness & Pool" />
-        <span class="community__label">3F · Fitness & Pool</span>
-      </div>
-
-      <div class="community__cell community__cell--c">
-        <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/%E1%84%92%E1%85%A9%E1%84%90%E1%85%A6%E1%86%AF%E1%84%85%E1%85%A1%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%8C%E1%85%B5.webp" alt="Hotel Lounge" />
-        <span class="community__label">Hotel Lounge</span>
-      </div>
-
-      <div class="community__cell community__cell--d">
-        <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/%E1%84%89%E1%85%A1%E1%84%8B%E1%85%AE%E1%84%82%E1%85%A1.webp" alt="Sauna & Spa" />
-        <span class="community__label">Sauna & Spa</span>
-      </div>
-
-      <div class="community__cell community__cell--e">
-        <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/u7772917729_a_refined_and_elegant_gym_in_a_resort_with_big_wind_3d029497-a76d-4de7-9720-0ebe31fcf58e.webp" alt="4F 헬스장" />
-        <span class="community__label">Fitness Center</span>
-      </div>
-
-      <!-- Typography overlay -->
-      <div class="community__overlay" aria-hidden="true">
-        <p class="community__overlay-eyebrow">Residents Only</p>
-        <h2 class="community__overlay-title">
-          <span class="community__overlay-line">Hotel</span>
-          <span class="community__overlay-line">Life</span>
-        </h2>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ═══════════ SECTION 06: LOCATION & LIFE — 마키 + 카드 패널 ═══════════ -->
-  <section class="section location-life" id="location-life">
-
-    <!-- Background Video -->
-    <div class="location-life__bg-video-wrap">
-      <video class="location-life__bg-video" muted loop playsinline preload="none"
-        src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/%E1%84%92%E1%85%A2%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%83%E1%85%A2%E1%84%92%E1%85%A2%E1%84%89%E1%85%AE%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%8C%E1%85%A1%E1%86%BC1.mp4"></video>
-      <div class="location-life__bg-overlay"></div>
-    </div>
-
-
-
-    <!-- Marquee Ticker -->
-    <div class="location-life__marquee">
-      <div class="location-life__marquee-track">
-        <span class="location-life__marquee-text">WHERE THE OCEAN MEETS YOUR LIFE</span>
-        <span class="location-life__marquee-separator">✦</span>
-        <span class="location-life__marquee-text">WHERE THE OCEAN MEETS YOUR LIFE</span>
-        <span class="location-life__marquee-separator">✦</span>
-        <span class="location-life__marquee-text">WHERE THE OCEAN MEETS YOUR LIFE</span>
-        <span class="location-life__marquee-separator">✦</span>
-        <span class="location-life__marquee-text">WHERE THE OCEAN MEETS YOUR LIFE</span>
-        <span class="location-life__marquee-separator">✦</span>
-      </div>
-    </div>
-
-    <!-- Location Card Slider -->
-    <div class="location-life__slider">
-      <div class="location-life__slider-wrap">
-        <div class="location-life__slider-track" id="locationSliderTrack">
-
-          <div class="location-life__card">
-            <div class="location-life__card-img">
-              <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/DJI_20260111140410_0378_D.webp" alt="송정해수욕장" loading="lazy" />
-              <div class="location-life__card-overlay"></div>
-            </div>
-            <div class="location-life__card-body">
-              <span class="location-life__card-tag">OCEANFRONT</span>
-              <h3 class="location-life__card-title">송정해수욕장<br />바로 앞</h3>
-              <p class="location-life__card-desc">부산 최고의 바다를 매일 누리는 라이프스타일. 도보 5분.</p>
-              <a href="location.html" class="location-life__card-btn">자세히 →</a>
-            </div>
-          </div>
-
-          <div class="location-life__card">
-            <div class="location-life__card-img">
-              <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/0112%281%29.webp" alt="오시리아 관광단지" loading="lazy" />
-              <div class="location-life__card-overlay"></div>
-            </div>
-            <div class="location-life__card-body">
-              <span class="location-life__card-tag">TOURISM</span>
-              <h3 class="location-life__card-title">오시리아 관광단지<br />5분</h3>
-              <p class="location-life__card-desc">롯데월드·스타필드·IKEA가 집중된 동부산 복합 문화권.</p>
-              <a href="location.html" class="location-life__card-btn">자세히 →</a>
-            </div>
-          </div>
-
-          <div class="location-life__card">
-            <div class="location-life__card-img">
-              <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/SD01.webp" alt="동해선 송정역" loading="lazy" />
-              <div class="location-life__card-overlay"></div>
-            </div>
-            <div class="location-life__card-body">
-              <span class="location-life__card-tag">TRANSPORT</span>
-              <h3 class="location-life__card-title">동해선 송정역<br />10분</h3>
-              <p class="location-life__card-desc">해운대역 15분, 부산역 25분. 광역 교통망이 완성된 입지.</p>
-              <a href="location.html" class="location-life__card-btn">자세히 →</a>
-            </div>
-          </div>
-
-          <div class="location-life__card">
-            <div class="location-life__card-img">
-              <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%80%E1%85%B3%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%B8%E1%84%90%E1%85%AE%E1%84%89%E1%85%B5%20%E1%84%8B%E1%85%A3%E1%84%80%E1%85%A7%E1%86%BC-01.webp" alt="센텀시티·해운대" loading="lazy" />
-              <div class="location-life__card-overlay"></div>
-            </div>
-            <div class="location-life__card-body">
-              <span class="location-life__card-tag">LIFESTYLE</span>
-              <h3 class="location-life__card-title">센텀시티·해운대<br />15분</h3>
-              <p class="location-life__card-desc">신세계·NC백화점·해운대백병원. 생활 인프라가 모두 가까이.</p>
-              <a href="location.html" class="location-life__card-btn">자세히 →</a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="location-life__slider-nav">
-        <button class="location-life__slider-btn" id="locationPrev" aria-label="이전">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <span class="location-life__slider-count"><span id="locationCurrent">1</span> / 2</span>
-        <button class="location-life__slider-btn" id="locationNext" aria-label="다음">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-
 
   <!-- ═══════════ FOOTER ═══════════ -->
   <footer class="footer">
