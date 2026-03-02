@@ -871,7 +871,7 @@ function initLocBrief() {
     if (!section) return;
 
     const mapWrap = section.querySelector('.loc-map-wrap');
-    const mapImg  = section.querySelector('.loc-brief__map-img');
+    // mapImg 제거 — iframe으로 교체되어 scale 애니메이션 불필요
     const eyebrow = section.querySelector('.loc-brief__eyebrow');
     const title   = section.querySelector('.loc-brief__title');
     const addr    = section.querySelector('.loc-brief__addr');
@@ -882,7 +882,6 @@ function initLocBrief() {
 
     // ── 초기 상태 ──
     gsap.set(mapWrap, { clipPath: 'inset(0 0 100% 0)', y: 24 });
-    gsap.set(mapImg,  { scale: 1.08 });
     gsap.set([eyebrow, title, addr, cta], { y: 36, opacity: 0 });
     gsap.set(rules,   { scaleX: 0, transformOrigin: 'left center' });
     gsap.set(groups,  { y: 22, opacity: 0 });
@@ -897,7 +896,6 @@ function initLocBrief() {
 
         // 지도 카드: 커튼 올리기 + y 정착
         tl.to(mapWrap, { clipPath: 'inset(0 0 0% 0)', y: 0, duration: 1.1 }, 0);
-        tl.to(mapImg,  { scale: 1, duration: 1.4, ease: 'power2.out' }, 0);
 
         // 텍스트: y + opacity 페이드업
         tl.to(eyebrow, { y: 0, opacity: 1, duration: 0.6 }, 0.28);

@@ -5155,10 +5155,10 @@ button {
 .loc-brief__map-img {
   display: block;
   width: 100%;
-  height: auto;
-  object-fit: contain;
-  transform-origin: center;
+  height: clamp(260px, 30vw, 420px);
+  border: none;
   border-radius: 1px;
+  transform-origin: center;
 }
 
 
@@ -5322,7 +5322,7 @@ button {
 
   .loc-brief__map-img {
     width: 100%;
-    max-height: unset;
+    height: clamp(200px, 28vw, 360px);
   }
 
 }
