@@ -220,7 +220,7 @@
         <source src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%E1%84%92%E1%85%A2%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%83%E1%85%A2%E1%84%92%E1%85%A2%E1%84%89%E1%85%AE%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%8C%E1%85%A1%E1%86%BC1.mp4" type="video/mp4">
       </video>
       <!-- Video B: 엑소디움 영상2 (Panel + Expansion) -->
-      <video class="hvm__vid hvm__vid--b" id="hvmVidB" autoplay muted loop playsinline preload="auto">
+      <video class="hvm__vid hvm__vid--b" id="hvmVidB" autoplay muted loop playsinline preload="metadata">
         <source src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%EC%97%91%EC%86%8C%EB%94%94%EC%9B%80_%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98_%ED%95%B4%EC%9A%B4%EB%8C%80_%EC%98%81%EC%83%812.mp4" type="video/mp4">
       </video>
       <div class="hvm__overlay"></div>
@@ -260,7 +260,7 @@
   <section class="bldg-seq" id="bldgSeq">
 
     <!-- 배경 영상 (URL만 교체하면 바로 작동) -->
-    <video class="bldg-bg-vid" id="bldgBgVid" autoplay muted loop playsinline preload="auto">
+    <video class="bldg-bg-vid" id="bldgBgVid" autoplay muted loop playsinline preload="none">
       <!-- <source src="S3_영상_URL_여기에" type="video/mp4"> -->
     </video>
 
@@ -289,7 +289,7 @@
 
     <!-- Building image + hotspots -->
     <div class="bldg-img-wrap" id="bldgImgWrap">
-      <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%E1%84%8C%E1%85%A6%E1%84%86%E1%85%A9%E1%86%A8+%E1%84%8B%E1%85%A5%E1%86%B9%E1%84%82%E1%85%B3%E1%86%AB+%E1%84%83%E1%85%B5%E1%84%8C%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB+(1).svg" class="bldg-img" alt="EXORDIUM 조감도" />
+      <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%E1%84%8C%E1%85%A6%E1%84%86%E1%85%A9%E1%86%A8+%E1%84%8B%E1%85%A5%E1%86%B9%E1%84%82%E1%85%B3%E1%86%AB+%E1%84%83%E1%85%B5%E1%84%8C%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB+(1).svg" class="bldg-img" alt="EXORDIUM 조감도" loading="lazy" />
       <div class="bldg-hotspots">
         <!-- 1. BIPV 스마트 커튼월: 윈덤호텔 중앙부 -->
         <button class="bhs" data-idx="0" style="top:40%;left:65%"><span class="bhs__pulse"></span><span class="bhs__dot"></span></button>
@@ -351,14 +351,14 @@
   <section class="loc-brief" id="locBrief">
 
     <!-- 배경: 파도 영상 (10% opacity) -->
-    <video class="loc-brief__video" autoplay muted loop playsinline>
+    <video class="loc-brief__video" id="locBriefVid" muted loop playsinline preload="none">
       <source src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%E1%84%92%E1%85%A2%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%83%E1%85%A2%E1%84%92%E1%85%A2%E1%84%89%E1%85%AE%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%8C%E1%85%A1%E1%86%BC1.mp4" type="video/mp4" />
     </video>
 
     <!-- 왼쪽: 지도 -->
     <div class="loc-brief__map" id="locBriefMap">
       <div class="loc-map-wrap" id="locMapWrap">
-        <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%EC%86%A1%EC%A0%95%EC%A7%80%EB%8F%84.jpg" class="loc-brief__map-img" alt="송정 위치 지도" />
+        <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/%EC%86%A1%EC%A0%95%EC%A7%80%EB%8F%84.jpg" class="loc-brief__map-img" alt="송정 위치 지도" loading="lazy" />
 
       </div>
     </div>

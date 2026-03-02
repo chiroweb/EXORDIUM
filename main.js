@@ -878,6 +878,7 @@ function initLocBrief() {
     const rules   = section.querySelectorAll('.loc-brief__rule');
     const groups  = section.querySelectorAll('.loc-brief__group');
     const cta     = section.querySelector('.loc-brief__cta');
+    const locVid  = document.getElementById('locBriefVid');
 
     // ── 초기 상태 ──
     gsap.set(mapWrap, { clipPath: 'inset(0 0 100% 0)', y: 24 });
@@ -913,6 +914,8 @@ function initLocBrief() {
         start: 'top 62%',
         once: true,
         onEnter: () => {
+            // 배경 영상 lazy load + 재생
+            if (locVid) { locVid.load(); locVid.play(); }
             // 마그네틱 스냅
             lenis.scrollTo(section, {
                 duration: 0.82,
