@@ -3,40 +3,40 @@
    Landing Simplification + Subpage System
    ══════════════════════════════════════════════════ */
 
-/* ─── Freesentation (한글 본문 폰트) — 실사용 weight만 선언 ─── */
+/* ─── Pretendard (한글/영문 통합 폰트) — 로컬 호스팅 ─── */
 @font-face {
-  font-family: 'Presentation';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-2ExtraLight.woff2') format('woff2');
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-ExtraLight.woff2') format('woff2');
   font-weight: 200;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Presentation';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-3Light.woff2') format('woff2');
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Light.woff2') format('woff2');
   font-weight: 300;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Presentation';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-4Regular.woff2') format('woff2');
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Regular.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Presentation';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-5Medium.woff2') format('woff2');
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Medium.woff2') format('woff2');
   font-weight: 500;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Presentation';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-6SemiBold.woff2') format('woff2');
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Presentation';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-7Bold.woff2') format('woff2');
+  font-family: 'Pretendard';
+  src: url('/fonts/Pretendard-Bold.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
 }
@@ -69,8 +69,8 @@
   --border-light: #D4CEC6;
 
   /* Typography */
-  --font-display: 'Bebas Neue', 'Presentation', sans-serif;
-  --font-body: 'Presentation', 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+  --font-display: 'Pretendard', -apple-system, sans-serif;
+  --font-body: 'Pretendard', -apple-system, sans-serif;
 
   /* Layout */
   --gutter: clamp(16px, 2vw, 32px);
@@ -226,15 +226,15 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 0 var(--margin);
-  height: 78px;
+  height: 60px;
+  background: transparent;
   transition: background 0.4s ease, backdrop-filter 0.4s ease;
 }
 
-
 .nav.scrolled {
-  background: rgba(237, 244, 250, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .nav__logo {
@@ -252,11 +252,11 @@ button {
 }
 
 .nav__logo-img {
-  height: 58px;
+  height: 46px;
   width: auto;
   display: block;
   filter: brightness(0) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.08));
-  transition: filter 0.3s ease;
+  transition: filter 0.35s ease;
 }
 
 .nav__logo:hover .nav__logo-img {
@@ -283,17 +283,18 @@ button {
 
 .nav__cta {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 10px 28px;
-  border: 1px solid var(--accent-gold);
-  color: var(--accent-gold);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 8px 22px;
+  border: 1px solid rgba(26, 26, 26, 0.45);
+  color: rgba(26, 26, 26, 0.75);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .nav__cta:hover {
+  border-color: var(--accent-gold);
   background: var(--accent-gold);
   color: #fff;
 }
@@ -333,6 +334,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: stretch;
+  align-self: stretch;  /* nav bar 전체 높이 채움 → top:100% 가 nav 하단에 정확히 닿음 */
   list-style: none;
   margin: 0;
   padding: 0;
@@ -355,10 +357,10 @@ button {
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(26, 26, 26, 0.45);
+  color: rgba(26, 26, 26, 0.7);
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.2s ease;
+  transition: color 0.35s ease;
   position: relative;
 }
 
@@ -392,11 +394,11 @@ button {
   min-width: 168px;
   list-style: none;
   margin: 0;
-  padding: 14px 0 12px;
-  background: rgba(237, 244, 250, 0.96);
+  padding: 10px 0 8px;
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(196, 212, 228, 0.5);
+  border: 1px solid rgba(200, 200, 200, 0.4);
   border-top: 2px solid var(--accent-gold);
   z-index: 200;
   opacity: 0;
@@ -436,7 +438,7 @@ button {
 
 .nav__dropdown li a {
   display: block;
-  padding: 7px 22px;
+  padding: 5px 22px;
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 400;
@@ -450,6 +452,29 @@ button {
 .nav__dropdown li a:hover {
   color: var(--accent-gold);
   padding-left: 28px;
+}
+
+/* ── Dark-background nav state (hero / building sections) ── */
+.nav--dark .nav__link {
+  color: rgba(255, 255, 255, 0.65);
+}
+.nav--dark .nav__item:hover .nav__link {
+  color: #fff;
+}
+.nav--dark .nav__logo-img {
+  filter: brightness(0) invert(1) drop-shadow(0 1px 6px rgba(0, 0, 0, 0.2));
+}
+.nav--dark .nav__cta {
+  border-color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.85);
+}
+.nav--dark .nav__cta:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+.nav--dark .nav__menu-line {
+  background: rgba(255, 255, 255, 0.85);
 }
 
 /* ── Responsive breakpoint ── */
@@ -2663,7 +2688,7 @@ button {
 @media (max-width: 768px) {
   .nav__cta {
     font-size: 11px;
-    padding: 8px 16px;
+    padding: 6px 14px;
   }
 
   .project__panel--story .project__panel-inner,
@@ -4248,7 +4273,7 @@ button {
 }
 
 .coming-soon__title {
-  font-family: 'Cormorant Garamond', 'Georgia', serif;
+  font-family: var(--font-body);
   font-size: clamp(56px, 10vw, 120px);
   font-weight: 500;
   line-height: 1.0;
@@ -4377,11 +4402,12 @@ button {
 .ht__line {
   display: block;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(64px, 8.5vw, 116px);
+  font-size: clamp(20px, 5.8vw, 112px);
   font-weight: 500;
   letter-spacing: -0.02em;
   color: #fff;
   line-height: 1.0;
+  white-space: nowrap;
 }
 
 .ht__sub {
@@ -4421,11 +4447,27 @@ button {
 .hs2__line {
   display: block;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(44px, 5.6vw, 80px);
+  font-size: clamp(20px, 5.8vw, 112px);
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: var(--text-dark);
-  line-height: 1.05;
+  color: #fff;
+  line-height: 1.0;
+  white-space: nowrap;
+}
+
+.hs2__sublmask {
+  overflow: hidden;
+  margin-top: 18px;
+  padding-bottom: 0.06em;
+}
+
+.hs2__sub {
+  display: block;
+  font-family: var(--font-body);
+  font-size: clamp(11px, 1.1vw, 14px);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .hs2__bodymask {
@@ -4438,7 +4480,7 @@ button {
   font-size: clamp(12px, 1.05vw, 14px);
   font-weight: 300;
   line-height: 2.0;
-  color: var(--neutral-mid);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 
@@ -4537,7 +4579,7 @@ button {
 
 .bpt__line {
   display: block;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-body);
   color: #1A1A1A;
 }
 
@@ -4551,7 +4593,8 @@ button {
 }
 
 .bpt__line--title {
-  font-size: clamp(58px, 8vw, 112px);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(72px, 11vw, 152px);
   font-weight: 500;
   letter-spacing: -0.025em;
   line-height: 0.92;
@@ -4651,15 +4694,15 @@ button {
 
 .bs__mask {
   overflow: hidden;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
-.bs__gap { margin-top: 22px; }
+.bs__gap { margin-top: 28px; }
 
 .bs__label {
   display: block;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 300;
   letter-spacing: 0.2em;
   color: rgba(200,169,126,0.55);
@@ -4668,11 +4711,25 @@ button {
 
 .bs__value {
   display: block;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(15px, 1.4vw, 19px);
+  font-family: var(--font-body);
+  font-size: clamp(17px, 1.7vw, 22px);
   font-weight: 400;
   color: rgba(26,26,26,0.75);
   letter-spacing: 0.02em;
+}
+
+.bs__desc {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(26, 26, 26, 0.4);
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+
+.bldg-side--right .bs__desc {
+  color: rgba(26, 26, 26, 0.4);
 }
 
 /* Hologram popup */
@@ -4758,7 +4815,7 @@ button {
 }
 
 .bpop__name {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-body);
   font-size: 30px;
   font-weight: 500;
   color: #fff;
@@ -4786,3 +4843,499 @@ button {
   line-height: 1.9;
   letter-spacing: 0.04em;
 }
+
+
+/* ══════════════════════════════════════════════════
+   FLOATING CTAs — 관심고객 등록 + 분양홍보관 위치
+   배경 없음 · 선(stroke)으로만 존재감 표현
+   ══════════════════════════════════════════════════ */
+
+/* ─── 공통: fixed 고정 + 초기 숨김 ─── */
+.fcta,
+.floc {
+  position: fixed;
+  bottom: 40px;
+  z-index: 900;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fcta.is-visible,
+.floc.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ─── 오른쪽: SIGNATURE HAEUNDAE 회전 원형 ─── */
+.fcta {
+  right: 40px;
+  width: 108px;
+  height: 108px;
+}
+
+/* 회전하는 SVG 텍스트 링 */
+.fcta__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: fcta-spin 14s linear infinite;
+  transform-origin: 50% 50%;
+  overflow: visible;
+}
+
+/* 링 텍스트 스타일 */
+.fcta__arc-text {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 8.5px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  fill: rgba(255, 255, 255, 0.82);
+  text-transform: uppercase;
+}
+
+@keyframes fcta-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* 중앙 원 — 배경 없음, 선 없음 */
+.fcta__inner {
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 한글 텍스트 */
+.fcta__ko {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  text-align: center;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* 화살표 */
+.fcta__arr {
+  position: absolute;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 20px;
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  letter-spacing: 0;
+}
+
+/* hover */
+.fcta:hover .fcta__ko {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.fcta:hover .fcta__arr {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fcta:hover .fcta__ring {
+  animation-play-state: paused;
+}
+
+
+/* ─── 왼쪽: 분양홍보관 위치 — 선 필 ─── */
+.floc {
+  left: 40px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 22px 12px 17px;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease,
+              color 0.25s ease;
+}
+
+.floc__pin {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  fill: currentColor;
+  opacity: 0.75;
+}
+
+.floc:hover {
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 0.75);
+}
+
+.floc:hover .floc__pin {
+  opacity: 1;
+}
+
+/* ─── 모바일 ─── */
+@media (max-width: 768px) {
+  .fcta {
+    right: 20px;
+    bottom: 28px;
+    width: 90px;
+    height: 90px;
+  }
+
+  .fcta__arc-text {
+    font-size: 7px;
+  }
+
+  .fcta__ko {
+    font-size: 9.5px;
+  }
+
+  .floc {
+    left: 16px;
+    bottom: 28px;
+    font-size: 11px;
+    padding: 10px 17px 10px 13px;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════
+   약도 모달
+   ══════════════════════════════════════════════════ */
+
+.yakdo-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.yakdo-modal.is-open {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.yakdo-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.yakdo-modal.is-open .yakdo-modal__backdrop {
+  opacity: 1;
+}
+
+.yakdo-modal__card {
+  position: relative;
+  max-width: min(680px, 90vw);
+  width: 100%;
+  background: #fff;
+  border-radius: 2px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(18px) scale(0.97);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 0.05s;
+}
+
+.yakdo-modal.is-open .yakdo-modal__card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.yakdo-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.55);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  transition: background 0.2s ease;
+}
+
+.yakdo-modal__close:hover {
+  background: rgba(10, 10, 10, 0.85);
+}
+
+.yakdo-modal__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+
+/* ══════════════════════════════════════════════════
+   LOCATION BRIEF — 분양홍보관 위치 섹션
+   ══════════════════════════════════════════════════ */
+
+.loc-brief {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  background: #0D0D0D;
+  overflow: hidden;
+}
+
+/* ─── 배경 비디오 ─── */
+.loc-brief__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.38;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ─── 왼쪽: 지도 ─── */
+.loc-brief__map {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(32px, 5vw, 60px);
+}
+
+.loc-map-wrap {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 3px;
+  padding: 24px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.loc-brief__map-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transform-origin: center;
+  border-radius: 1px;
+}
+
+
+/* ─── 오른쪽: 정보 패널 ─── */
+.loc-brief__info {
+  position: relative;
+  z-index: 1;
+  padding: clamp(56px, 8vh, 96px) clamp(40px, 5vw, 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 헤더 */
+.loc-brief__eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 20px;
+}
+
+.loc-brief__title {
+  font-family: var(--font-body);
+  font-size: clamp(34px, 4vw, 58px);
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: #F5F0EB;
+  margin-bottom: 10px;
+}
+
+.loc-brief__addr {
+  font-family: var(--font-body);
+  font-size: clamp(34px, 4vw, 58px);
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: #F5F0EB;
+  margin-bottom: 32px;
+}
+
+/* 구분선 */
+.loc-brief__rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.10);
+  margin: 16px 0;
+  transform-origin: left center;
+}
+
+/* 카테고리 그룹 */
+.loc-brief__group {
+  padding: 4px 0;
+}
+
+.loc-brief__group-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 8.5px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
+
+/* 리스트 */
+.loc-brief__list {
+  list-style: none;
+}
+
+.loc-brief__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.loc-brief__item:last-child {
+  border-bottom: none;
+}
+
+.loc-brief__name {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: rgba(245, 240, 235, 0.62);
+}
+
+.loc-brief__num {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  color: rgba(245, 240, 235, 0.88);
+  line-height: 1;
+}
+
+.loc-brief__num em {
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: rgba(245, 240, 235, 0.32);
+  margin-left: 2px;
+}
+
+/* 하단 CTA */
+.loc-brief__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 20px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(200, 169, 126, 0.75);
+  text-decoration: none;
+  transition: color 0.22s ease, gap 0.22s ease;
+}
+
+.loc-brief__cta svg {
+  transition: transform 0.22s ease;
+}
+
+.loc-brief__cta:hover {
+  color: var(--accent-gold);
+  gap: 14px;
+}
+
+.loc-brief__cta:hover svg {
+  transform: translateX(4px);
+}
+
+/* ─── 모바일 ─── */
+@media (max-width: 768px) {
+  .loc-brief {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .loc-brief__map {
+    min-height: 44vw;
+  }
+
+  .loc-map-wrap {
+    width: 78%;
+    max-height: 36vw;
+  }
+
+  .loc-brief__map-img {
+    width: 100%;
+    max-height: unset;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .loc-brief__info {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 48px 28px;
+  }
+
+  .loc-brief__num {
+    font-size: 17px;
+  }
+}
+

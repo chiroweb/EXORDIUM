@@ -49,13 +49,28 @@ const menuOverlay = document.getElementById('menuOverlay');
 const menuItems = menuOverlay.querySelectorAll('.menu-overlay__item');
 const menuFooter = menuOverlay.querySelector('.menu-overlay__footer');
 
+// 초기 상태: 페이지 로드 시 히어로(다크 섹션)에 있으므로 dark
+nav.classList.add('nav--dark');
+
+const darkSectionIds = ['heroSeq'];
+
 ScrollTrigger.create({
     start: 0,
     end: 'max',
-    onUpdate: (self) => {
-        if (self.scroll() <= 80) {
-            nav.classList.remove('scrolled');
-        } else if (self.direction === 1) {
+    onUpdate: () => {
+        const navH = 60;
+        let isDark = false;
+        darkSectionIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= navH && rect.bottom > navH) isDark = true;
+        });
+        nav.classList.toggle('nav--dark', isDark);
+
+        // 스크롤 시 frosted glass 적용 (다크 섹션 제외)
+        const scrollY = window.scrollY || window.pageYOffset;
+        if (!isDark && scrollY > 40) {
             nav.classList.add('scrolled');
         } else {
             nav.classList.remove('scrolled');
@@ -163,29 +178,40 @@ function initHeroSequence() {
     const vidB     = document.getElementById('hvmVidB');
     const overlay  = hvm.querySelector('.hvm__overlay');
 
+    const htContainer = seq.querySelector('.ht');
     const htEye    = seq.querySelector('.ht__eye');
     const htLines  = seq.querySelectorAll('.ht__line');
     const htSub    = seq.querySelector('.ht__sub');
 
     const hs2Lines = seq.querySelectorAll('.hs2__line');
+    const hs2Sub   = seq.querySelector('.hs2__sub');
     const hs2Body  = seq.querySelector('.hs2__body');
     const hs2Inner = seq.querySelector('.hs2__inner');
+
+    // ── "Your Signature, Your Ocean" 한 글자씩 왼쪽에서 등장 ──
+    const subText = htSub.textContent;
+    htSub.innerHTML = [...subText].map(c =>
+        `<span class="ht__char" style="display:inline-block">${c === ' ' ? '\u00A0' : c}</span>`
+    ).join('');
+    const htChars = htSub.querySelectorAll('.ht__char');
 
     // vidB: autoplay로 브라우저가 즉시 decode 시작, JS에서 즉시 숨김 (CSS opacity:0 제거)
     gsap.set(vidB, { opacity: 0 });
 
     // ── 초기 상태: 히어로 텍스트 baseline 아래 대기 ──
-    gsap.set([htEye, ...htLines, htSub], { yPercent: 110 });
+    gsap.set([htEye, ...htLines], { yPercent: 110 });
+    gsap.set(htChars, { opacity: 0 });
     gsap.set(hs2Lines, { yPercent: 110 });
+    gsap.set(hs2Sub,  { yPercent: 110 });
     gsap.set(hs2Body, { opacity: 0, y: 12 });
     gsap.set(hs2Inner, { opacity: 1 });
 
-    // ── 입장 애니메이션 (Masked Text Reveal — 위로 올라오며 등장) ──
+    // ── 입장 애니메이션: 타이틀은 아래에서, 서브는 왼쪽에서 한 글자씩 ──
     const entrance = gsap.timeline({ delay: 0.25 });
     entrance
         .to(htEye,    { yPercent: 0, duration: 1.0, ease: 'power3.out' }, 0)
-        .to(htLines,  { yPercent: 0, duration: 1.2, ease: 'power3.out', stagger: 0.1 }, 0.12)
-        .to(htSub,    { yPercent: 0, duration: 0.9, ease: 'power3.out' }, 0.48);
+        .to(htLines,  { yPercent: 0, duration: 1.2, ease: 'power3.out' }, 0.12)
+        .to(htChars,  { opacity: 1, duration: 0.05, stagger: 0.04, ease: 'none' }, 0.55);
 
     // ── 입장 완료 후 스크롤 시퀀스 초기화 ──
     // heroSeq pin spacer가 생성된 뒤 bldgSeq를 초기화해야 위치가 올바르게 계산됨
@@ -208,18 +234,30 @@ function initHeroSequence() {
                 end: `+=${SCROLL_SPACE}`,
                 pin: true,
                 scrub: 1.8,
+                snap: {
+                    snapTo: [0, 1],
+                    duration: { min: 0.4, max: 1.5 },
+                    delay: 0.05,
+                    ease: 'power2.inOut'
+                },
                 invalidateOnRefresh: true,
             }
         });
 
-        // ── Phase 1 (0→0.38): Masked Reverse Reveal — 히어로 텍스트 퇴장 ──
-        // 각 줄이 overflow:hidden 아래로 translateY(110%) 되돌아감
+        // ── 영상 스왑(0.35) 직전: 히어로 텍스트 mask reveal 퇴장 ──
+        // 영상이 바뀌는 순간 텍스트가 함께 사라짐 (역방향 스크롤 시 영상 스왑과 동시에 등장)
         tl
-            .fromTo(htEye,      { yPercent: 0 }, { yPercent: 110, duration: 0.12, ease: 'power2.in' }, 0)
-            .fromTo(htLines[0], { yPercent: 0 }, { yPercent: 110, duration: 0.15, ease: 'power2.in' }, 0.03)
-            .fromTo(htLines[1], { yPercent: 0 }, { yPercent: 110, duration: 0.15, ease: 'power2.in' }, 0.06)
-            .fromTo(htLines[2], { yPercent: 0 }, { yPercent: 110, duration: 0.15, ease: 'power2.in' }, 0.09)
-            .fromTo(htSub,      { yPercent: 0 }, { yPercent: 110, duration: 0.12, ease: 'power2.in' }, 0.12);
+            .fromTo(htEye,      { yPercent: 0 }, { yPercent: 110, duration: 0.04, ease: 'power2.in' }, 0.31)
+            .fromTo(htLines[0], { yPercent: 0 }, { yPercent: 110, duration: 0.04, ease: 'power2.in' }, 0.32)
+            .fromTo(htSub,      { yPercent: 0 }, { yPercent: 110, duration: 0.04, ease: 'power2.in' }, 0.31);
+
+        // ── ht 컨테이너 완전 소멸 — 잔여물 방지 안전망 ──
+        // mask overflow:hidden 이 렌더링 타이밍상 누출될 수 있어, 컨테이너 자체를 끔
+        tl.fromTo(htContainer,
+            { autoAlpha: 1 },
+            { autoAlpha: 0, duration: 0.01, ease: 'none' },
+            0.36
+        );
 
         // ── Phase 1 (0→0.40): Container Mask Shrink — vmask left: 0% → 62% ──
         tl.fromTo(hvm,
@@ -240,11 +278,9 @@ function initHeroSequence() {
         tl.to(vidB, { opacity: 1, duration: 0.05, ease: 'none' }, 0.35);
 
         // ── Phase 2 (0.42→0.62): Staggered Masked Text Reveal — s2 텍스트 등장 ──
-        // 각 줄이 overflow:hidden 위로 translateY(0%)로 솟아오름
         tl
-            .fromTo(hs2Lines[0], { yPercent: 110 }, { yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.42)
-            .fromTo(hs2Lines[1], { yPercent: 110 }, { yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.47)
-            .fromTo(hs2Lines[2], { yPercent: 110 }, { yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.52)
+            .fromTo(hs2Lines[0], { yPercent: 110 }, { yPercent: 0, duration: 0.18, ease: 'power3.out' }, 0.42)
+            .fromTo(hs2Sub,      { yPercent: 110 }, { yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.50)
             .fromTo(hs2Body,
                 { opacity: 0, y: 12 },
                 { opacity: 1, y: 0, duration: 0.12, ease: 'power2.out' },
@@ -255,18 +291,6 @@ function initHeroSequence() {
         tl.to(hvm,
             { left: '0%', duration: 0.32, ease: 'power2.inOut' },
             0.68
-        );
-
-        // Phase 3: 영상이 텍스트 아래로 깔리면서 폰트색 dark → white (소통 효과)
-        tl.fromTo([...hs2Lines],
-            { color: '#1A1A1A' },
-            { color: '#ffffff', duration: 0.28, ease: 'power2.inOut' },
-            0.72
-        );
-        tl.fromTo(hs2Body,
-            { color: '#6B6B6B' },
-            { color: 'rgba(255,255,255,0.55)', duration: 0.28, ease: 'power2.inOut' },
-            0.72
         );
 
         // Phase 3: overlay 복귀 (풀스크린 영상이 되면서 어두워짐)
@@ -293,8 +317,8 @@ function initBldgSeq() {
     const preTitle  = seq.querySelector('.bpt__line--title');
     const preSub    = seq.querySelector('.bpt__line--sub');
     const imgWrap   = document.getElementById('bldgImgWrap');
-    const sideL     = seq.querySelectorAll('#bldgSideL .bs__label, #bldgSideL .bs__value');
-    const sideR     = seq.querySelectorAll('#bldgSideR .bs__label, #bldgSideR .bs__value');
+    const sideL     = seq.querySelectorAll('#bldgSideL .bs__label, #bldgSideL .bs__value, #bldgSideL .bs__desc');
+    const sideR     = seq.querySelectorAll('#bldgSideR .bs__label, #bldgSideR .bs__value, #bldgSideR .bs__desc');
     const hotspots  = seq.querySelectorAll('.bhs');
     const pretext   = document.getElementById('bldgPretext');
 
@@ -317,6 +341,12 @@ function initBldgSeq() {
             end: `+=${SCROLL_SPACE}`,
             pin: true,
             scrub: 1.8,
+            snap: {
+                snapTo: [0, 1],
+                duration: { min: 0.4, max: 1.5 },
+                delay: 0.05,
+                ease: 'power2.inOut'
+            },
             anticipatePin: 1,
             invalidateOnRefresh: true,
         }
@@ -355,11 +385,11 @@ function initBldgSeq() {
         );
     });
 
-    // Phase 6 (0.80→0.98): 핫스팟 팝인
+    // Phase 6 (0.82→0.97): 핫스팟 팝인
     hotspots.forEach((hs, i) => {
         tl.to(hs,
             { scale: 1, duration: 0.11, ease: 'back.out(2.8)' },
-            0.80 + i * 0.05
+            0.82 + i * 0.03
         );
     });
 }
@@ -376,32 +406,46 @@ function initBldgPopup() {
     const S3 = 'https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/';
     const POPUP_DATA = [
         {
-            floor: '28 – 32F',
+            floor: 'FACADE SYSTEM',
+            name: 'BIPV 스마트 커튼월',
+            nameEn: 'SMART CURTAIN WALL',
+            desc: '국내 최초의 BIPV(RE100 태양광발전, 미디어파사드 송출) 스마트 커튼월 시스템으로 엑소디움 시그니처 해운대를 포함 전체 랜드마크의 웅장함을 주변 5KM이내에서도 느끼실 수 있습니다.',
+            img: S3 + '%E1%84%80%E1%85%A5%E1%86%AB%E1%84%86%E1%85%AE%E1%86%AF_%E1%84%90%E1%85%AE%E1%84%89%E1%85%B5%E1%84%8B%E1%85%A3%E1%84%80%E1%85%A7%E1%86%BC.webp',
+        },
+        {
+            floor: 'ROOFTOP',
             name: '루프탑 인피니티풀',
-            nameEn: 'SKY AMENITY',
-            desc: '스카이 라운지 · 루프탑 인피니티풀\n인피니티 뷰 테라스',
-            img: S3 + '%E1%84%8B%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1%E1%86%BC%20%E1%84%89%E1%85%AE%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%B7%2001%20%E1%84%87%E1%85%A9%E1%86%A8%E1%84%89%E1%85%A1.png',
+            nameEn: 'ROOFTOP INFINITY POOL',
+            desc: '국내 최고층 루프탑 인피니티풀로 송정의 수평선과 맞닿은 핫 플레이스로서 입주민 특별할인 혜택으로 이용을 하실 수 있습니다.',
+            img: S3 + '%E1%84%89%E1%85%AE%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%BC1%20%E1%84%89%E1%85%A1%E1%84%85%E1%85%A1%E1%86%B7%20%E1%84%8C%E1%85%AE%E1%84%80%E1%85%A7%E1%86%BC.webp',
         },
         {
-            floor: '3 – 24F',
-            name: '호텔 라운지',
-            nameEn: 'SUMMIT LOUNGE',
-            desc: '프라이빗 라운지\n비즈니스 미팅룸',
-            img: S3 + '%E1%84%8B%E1%85%A1%E1%84%91%E1%85%A1%E1%84%90%E1%85%B3_%E1%84%92%E1%85%A9%E1%84%90%E1%85%A6%E1%86%AF%203%E1%84%8E%E1%85%B3%E1%86%BC%20%E1%84%85%E1%85%A6%E1%86%AB%E1%84%83%E1%85%A5%E1%84%85%E1%85%B5%E1%86%BC.png',
+            floor: '2 – 4F',
+            name: '윈덤호텔 직영 시설',
+            nameEn: 'WYNDHAM HOTEL AMENITY',
+            desc: '윈덤호텔 직영 대형 부페식당, 사우나, 연회장을 입주민 특별 할인혜택으로 이용하실 수 있습니다.',
+            img: S3 + '%E1%84%92%E1%85%A9%E1%84%90%E1%85%A6%E1%86%AF%E1%84%85%E1%85%A1%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%8C%E1%85%B5.webp',
         },
         {
-            floor: 'B1 – 4F',
-            name: '피트니스 & 커뮤니티',
-            nameEn: 'FITNESS · COMMUNITY',
-            desc: '피트니스 · 스크린골프 · 사우나\n키즈클럽 · 플레이그라운드',
-            img: S3 + '%E1%84%8F%E1%85%A5%E1%84%86%E1%85%B2%E1%84%82%E1%85%B5%E1%84%90%E1%85%B5-3f-render.png',
+            floor: 'FULL TOWER',
+            name: '프리미엄 창호 & AI 스마트',
+            nameEn: 'PREMIUM WINDOW · AI SYSTEM',
+            desc: '엑소디움 브랜드에 걸맞는 최고급 창호 및 오션과 시티뷰를 극대화 하기위한 슬림 프레임을 적용할 예정이고, AI 스마트 시스템으로 간편하게 세대의 환기, 냉,난방을 컨트롤 할 수 있는 최첨단 제품이 시공될 예정입니다.',
+            img: S3 + '%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%80%E1%85%B3%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%B8%E1%84%90%E1%85%AE%E1%84%89%E1%85%B5%20%E1%84%8B%E1%85%A3%E1%84%80%E1%85%A7%E1%86%BC%20%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC.webp',
         },
         {
-            floor: '5 – 32F',
-            name: '아파트 84㎡',
-            nameEn: 'UNIT PLAN · 84A TYPE',
-            desc: '방 3 · 욕실 2\n베란다 확장형 평면도',
-            img: S3 + '84A_%EB%B2%A0%EB%9E%80%EB%8B%A4%ED%99%95%EC%9E%A5_%ED%8F%89%EB%A9%B4%EB%8F%84.webp',
+            floor: '1 – 32F',
+            name: '고속 엘리베이터',
+            nameEn: 'HIGH-SPEED ELEVATOR',
+            desc: '4대의 고속 엘리베이터를 적용하여 고층부, 저층부를 존으로 나누어 입주민들의 이용에 편리함을 더하고, 이사전용 엘리베이터 1대를 별도로 운영하여 전입 전출세대 이사일에 불편함 자체를 없앴습니다.',
+            img: S3 + '%E1%84%80%E1%85%A5%E1%86%AB%E1%84%86%E1%85%AE%E1%86%AF_%E1%84%90%E1%85%AE%E1%84%89%E1%85%B5%E1%84%8C%E1%85%AE%E1%84%80%E1%85%A7%E1%86%BC.webp',
+        },
+        {
+            floor: 'B1 – B2',
+            name: '입주민 커뮤니티',
+            nameEn: 'RESIDENT COMMUNITY',
+            desc: '아파트 입주민 전용 커뮤니티시설을 아파트 각 동의 지하에 배치하여 피트니스 시설과 접객공간 및 카페시설을 운영할 예정으로 엑소디움 시그니처 해운대만의 고급스러움을 더할 예정입니다.',
+            img: S3 + '%E1%84%8F%E1%85%A5%E1%84%86%E1%85%B2%E1%84%82%E1%85%B5%E1%84%90%E1%85%B5-3f-render.webp',
         },
     ];
 
@@ -459,7 +503,7 @@ function initBldgPopup() {
             <div class="bpop__floor">${data.floor}</div>
             <div class="bpop__name">${data.name}</div>
             <span class="bpop__name-en">${data.nameEn}</span>
-            <div class="bpop__desc">${data.desc.replace('\n', '<br>')}</div>
+            <div class="bpop__desc">${data.desc.replaceAll('\n', '<br>')}</div>
         `;
 
         // 3단계 애니메이션
@@ -816,6 +860,124 @@ function initUnitLayout() {
 }
 
 initUnitLayout();
+
+
+/* ══════════════════════════════════════════════════
+   LOCATION BRIEF — 지도 + 위치정보 섹션 애니메이션
+   ══════════════════════════════════════════════════ */
+
+function initLocBrief() {
+    const section = document.getElementById('locBrief');
+    if (!section) return;
+
+    const mapWrap = section.querySelector('.loc-map-wrap');
+    const mapImg  = section.querySelector('.loc-brief__map-img');
+    const eyebrow = section.querySelector('.loc-brief__eyebrow');
+    const title   = section.querySelector('.loc-brief__title');
+    const addr    = section.querySelector('.loc-brief__addr');
+    const rules   = section.querySelectorAll('.loc-brief__rule');
+    const groups  = section.querySelectorAll('.loc-brief__group');
+    const cta     = section.querySelector('.loc-brief__cta');
+
+    // ── 초기 상태 ──
+    gsap.set(mapWrap, { clipPath: 'inset(0 0 100% 0)', y: 24 });
+    gsap.set(mapImg,  { scale: 1.08 });
+    gsap.set([eyebrow, title, addr, cta], { y: 36, opacity: 0 });
+    gsap.set(rules,   { scaleX: 0, transformOrigin: 'left center' });
+    gsap.set(groups,  { y: 22, opacity: 0 });
+
+    let revealed = false;
+
+    function playReveal() {
+        if (revealed) return;
+        revealed = true;
+
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        // 지도 카드: 커튼 올리기 + y 정착
+        tl.to(mapWrap, { clipPath: 'inset(0 0 0% 0)', y: 0, duration: 1.1 }, 0);
+        tl.to(mapImg,  { scale: 1, duration: 1.4, ease: 'power2.out' }, 0);
+
+        // 텍스트: y + opacity 페이드업
+        tl.to(eyebrow, { y: 0, opacity: 1, duration: 0.6 }, 0.28);
+        tl.to(title,   { y: 0, opacity: 1, duration: 0.75 }, 0.4);
+        tl.to(addr,    { y: 0, opacity: 1, duration: 0.55 }, 0.52);
+        tl.to(rules,   { scaleX: 1, duration: 0.5, stagger: 0.1 }, 0.5);
+        tl.to(groups,  { y: 0, opacity: 1, duration: 0.6, stagger: 0.1 }, 0.58);
+        tl.to(cta,     { y: 0, opacity: 1, duration: 0.5 }, 0.88);
+    }
+
+    // ── 단일 트리거: 스냅 + 리빌 동시 처리 ──
+    ScrollTrigger.create({
+        trigger: section,
+        start: 'top 62%',
+        once: true,
+        onEnter: () => {
+            // 마그네틱 스냅
+            lenis.scrollTo(section, {
+                duration: 0.82,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            });
+            // 리빌은 스냅 시작 직후 함께 실행
+            gsap.delayedCall(0.2, playReveal);
+        },
+    });
+}
+
+initLocBrief();
+
+
+/* ══════════════════════════════════════════════════
+   FLOATING CTAs — 관심고객 등록 + 분양홍보관 위치
+   히어로 섹션 진입 후 페이드인, 이후 화면 고정 추적
+   ══════════════════════════════════════════════════ */
+
+function initFloatCTAs() {
+    const reg = document.getElementById('fctaRegister');
+    const loc = document.getElementById('flocBtn');
+    if (!reg && !loc) return;
+
+    const elems = [reg, loc].filter(Boolean);
+
+    // 히어로 섹션 진입 시 표시 (heroSeq 상단이 뷰포트 안으로 들어오면)
+    const heroSeq = document.getElementById('heroSeq');
+    const trigger = heroSeq || document.body;
+
+    ScrollTrigger.create({
+        trigger,
+        start: 'top 60%',
+        onEnter: () => {
+            elems.forEach((el, i) => {
+                gsap.delayedCall(i * 0.12, () => el.classList.add('is-visible'));
+            });
+        },
+    });
+
+    // 약도 모달
+    const modal    = document.getElementById('yakdoModal');
+    const backdrop = document.getElementById('yakdoBackdrop');
+    const closeBtn = document.getElementById('yakdoClose');
+    if (!modal || !loc) return;
+
+    function openYakdo() {
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeYakdo() {
+        modal.classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+
+    loc.addEventListener('click', openYakdo);
+    backdrop.addEventListener('click', closeYakdo);
+    closeBtn.addEventListener('click', closeYakdo);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('is-open')) closeYakdo();
+    });
+}
+
+initFloatCTAs();
 
 
 /* ══════════════════════════════════════════════════
