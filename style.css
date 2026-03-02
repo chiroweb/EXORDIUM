@@ -1431,7 +1431,7 @@ button {
   .br__info-value--big  { font-size: clamp(24px, 6vw, 40px); }
 }
 
-   SECTION 02 (OLD): PROJECT — Horizontal Scroll (2 Panels)
+/* SECTION 02 (OLD): PROJECT — Horizontal Scroll (2 Panels)
    ══════════════════════════════════════════════════ */
 
 .project {
