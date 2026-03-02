@@ -43,9 +43,10 @@ gsap.ticker.lagSmoothing(0);
    NAVIGATION
    ══════════════════════════════════════════════════ */
 
-// 로고 클릭 → 최상단으로 스크롤
+// 로고 클릭 — 랜딩 페이지: 최상단 스크롤 / 세부 페이지: index.html 이동
 const navLogo = document.querySelector('.nav__logo');
-if (navLogo) {
+const isLanding = !!document.getElementById('heroSeq');
+if (navLogo && isLanding) {
     navLogo.addEventListener('click', (e) => {
         e.preventDefault();
         lenis.scrollTo(0, { duration: 1.2 });
