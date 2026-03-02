@@ -43,6 +43,15 @@ gsap.ticker.lagSmoothing(0);
    NAVIGATION
    ══════════════════════════════════════════════════ */
 
+// 로고 클릭 → 최상단으로 스크롤
+const navLogo = document.querySelector('.nav__logo');
+if (navLogo) {
+    navLogo.addEventListener('click', (e) => {
+        e.preventDefault();
+        lenis.scrollTo(0, { duration: 1.2 });
+    });
+}
+
 const nav = document.getElementById('nav');
 const menuBtn = document.getElementById('menuBtn');
 const menuOverlay = document.getElementById('menuOverlay');
