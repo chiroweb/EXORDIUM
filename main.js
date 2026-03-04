@@ -27,6 +27,7 @@ window.scrollTo(0, 0);
 
 const lenis = new Lenis({
     duration: 1.4,
+    wheelMultiplier: document.getElementById('heroSeq') ? 0.4 : 1,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
 });
 
@@ -237,22 +238,39 @@ function initHeroSequence() {
     function initScrollTL() {
         const SCROLL_SPACE = window.innerHeight * 3.2;
 
+        let heroLastSnap = 0;
+        const HERO_SNAPS = [0, 0.42, 0.84, 1];
+
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: seq,
                 start: 'top top',
                 end: `+=${SCROLL_SPACE}`,
                 pin: true,
-                scrub: 1.0,
+                scrub: 1.5,
                 snap: {
                     snapTo: (progress) => {
-                        if (progress < 0.45) return 0;
-                        if (progress > 0.92) return 1;
-                        return 0.84;
+                        const idx = HERO_SNAPS.indexOf(heroLastSnap);
+                        if (idx === -1) return HERO_SNAPS[0];
+                        if (progress > heroLastSnap + 0.03) {
+                            return HERO_SNAPS[Math.min(idx + 1, HERO_SNAPS.length - 1)];
+                        }
+                        if (progress < heroLastSnap - 0.03) {
+                            return HERO_SNAPS[Math.max(idx - 1, 0)];
+                        }
+                        return heroLastSnap;
                     },
-                    duration: { min: 0.4, max: 1.5 },
-                    delay: 0.15,
-                    ease: 'power2.inOut'
+                    duration: { min: 0.4, max: 1.2 },
+                    delay: 0.08,
+                    ease: 'power2.inOut',
+                },
+                onUpdate: (self) => {
+                    for (const p of HERO_SNAPS) {
+                        if (Math.abs(self.progress - p) < 0.015) {
+                            heroLastSnap = p;
+                            break;
+                        }
+                    }
                 },
                 invalidateOnRefresh: true,
             }
@@ -351,22 +369,39 @@ function initBldgSeq() {
 
     const SCROLL_SPACE = window.innerHeight * 5.0;
 
+    let bldgLastSnap = 0;
+    const BLDG_SNAPS = [0, 0.36, 0.55, 0.82, 1];
+
     const tl = gsap.timeline({
         scrollTrigger: {
             trigger: seq,
             start: 'top top',   // 섹션이 뷰포트를 완전히 덮은 직후 고정
             end: `+=${SCROLL_SPACE}`,
             pin: true,
-            scrub: 1.0,
+            scrub: 1.5,
             snap: {
                 snapTo: (progress) => {
-                    if (progress < 0.45) return 0;
-                    if (progress > 0.92) return 1;
-                    return 0.82;
+                    const idx = BLDG_SNAPS.indexOf(bldgLastSnap);
+                    if (idx === -1) return BLDG_SNAPS[0];
+                    if (progress > bldgLastSnap + 0.03) {
+                        return BLDG_SNAPS[Math.min(idx + 1, BLDG_SNAPS.length - 1)];
+                    }
+                    if (progress < bldgLastSnap - 0.03) {
+                        return BLDG_SNAPS[Math.max(idx - 1, 0)];
+                    }
+                    return bldgLastSnap;
                 },
-                duration: { min: 0.4, max: 1.5 },
-                delay: 0.15,
-                ease: 'power2.inOut'
+                duration: { min: 0.4, max: 1.2 },
+                delay: 0.08,
+                ease: 'power2.inOut',
+            },
+            onUpdate: (self) => {
+                for (const p of BLDG_SNAPS) {
+                    if (Math.abs(self.progress - p) < 0.015) {
+                        bldgLastSnap = p;
+                        break;
+                    }
+                }
             },
             anticipatePin: 1,
             invalidateOnRefresh: true,
