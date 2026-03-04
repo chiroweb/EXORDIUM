@@ -235,7 +235,7 @@ function initHeroSequence() {
     });
 
     function initScrollTL() {
-        const SCROLL_SPACE = window.innerHeight * 2.2;
+        const SCROLL_SPACE = window.innerHeight * 3.2;
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -243,11 +243,15 @@ function initHeroSequence() {
                 start: 'top top',
                 end: `+=${SCROLL_SPACE}`,
                 pin: true,
-                scrub: 1.8,
+                scrub: 1.0,
                 snap: {
-                    snapTo: [0, 1],
+                    snapTo: (progress) => {
+                        if (progress < 0.45) return 0;
+                        if (progress > 0.92) return 1;
+                        return 0.84;
+                    },
                     duration: { min: 0.4, max: 1.5 },
-                    delay: 0.05,
+                    delay: 0.15,
                     ease: 'power2.inOut'
                 },
                 invalidateOnRefresh: true,
@@ -269,10 +273,10 @@ function initHeroSequence() {
             0.36
         );
 
-        // ── Phase 1 (0→0.40): Container Mask Shrink — vmask left: 0% → 62% ──
+        // ── Phase 1 (0→0.60): Container Mask Shrink — vmask left: 0% → 75% ──
         tl.fromTo(hvm,
             { left: '0%' },
-            { left: '75%', duration: 0.40, ease: 'power2.inOut' },
+            { left: '75%', duration: 0.72, ease: 'power2.inOut' },
             0
         );
 
@@ -297,14 +301,17 @@ function initHeroSequence() {
                 0.58
             );
 
-        // ── Phase 3 (0.68→1.0): Container Mask Expansion — vmask left: 62% → 0% ──
+        // ── Phase 3 (0.68→1.18): Container Mask Expansion — vmask left: 75% → 0% ──
         tl.to(hvm,
-            { left: '0%', duration: 0.32, ease: 'power2.inOut' },
+            { left: '0%', duration: 0.60, ease: 'power2.inOut' },
             0.68
         );
 
         // Phase 3: overlay 복귀 (풀스크린 영상이 되면서 어두워짐)
         tl.to(overlay, { opacity: 0.32, duration: 0.20, ease: 'none' }, 0.74);
+
+        // Hold zone: 애니메이션 완료 후 추가 스크롤 여유 공간
+        tl.to({}, { duration: 0.25 });
     }
 }
 
@@ -342,7 +349,7 @@ function initBldgSeq() {
     gsap.set(imgWrap,  { xPercent: -50, y: '60vh', opacity: 0 });
     gsap.set(pretext,  { xPercent: -50, yPercent: -56 });
 
-    const SCROLL_SPACE = window.innerHeight * 3.2;
+    const SCROLL_SPACE = window.innerHeight * 5.0;
 
     const tl = gsap.timeline({
         scrollTrigger: {
@@ -350,11 +357,15 @@ function initBldgSeq() {
             start: 'top top',   // 섹션이 뷰포트를 완전히 덮은 직후 고정
             end: `+=${SCROLL_SPACE}`,
             pin: true,
-            scrub: 1.8,
+            scrub: 1.0,
             snap: {
-                snapTo: [0, 1],
+                snapTo: (progress) => {
+                    if (progress < 0.45) return 0;
+                    if (progress > 0.92) return 1;
+                    return 0.82;
+                },
                 duration: { min: 0.4, max: 1.5 },
-                delay: 0.05,
+                delay: 0.15,
                 ease: 'power2.inOut'
             },
             anticipatePin: 1,
@@ -402,6 +413,9 @@ function initBldgSeq() {
             0.82 + i * 0.03
         );
     });
+
+    // Hold zone: 애니메이션 완료 후 추가 스크롤 여유 공간
+    tl.to({}, { duration: 0.27 });
 }
 
 /* ══════════════════════════════════════════════════
@@ -989,6 +1003,78 @@ function initFloatCTAs() {
 }
 
 initFloatCTAs();
+
+
+/* ══════════════════════════════════════════════════
+   BACKGROUND MUSIC — 자동재생 + ON/OFF 토글
+   ══════════════════════════════════════════════════ */
+
+function initMusicPlayer() {
+    const audio    = document.getElementById('bgMusic');
+    const btn      = document.getElementById('musicBtn');
+    const stateEl  = document.getElementById('musicState');
+    if (!audio || !btn || !stateEl) return;
+
+    audio.volume = 0.45;
+
+    let isPlaying = false;
+    let interactionPending = false; // 자동재생 차단 → 첫 클릭 대기
+
+    function setPlaying(playing) {
+        isPlaying = playing;
+        stateEl.textContent = playing ? 'ON' : 'OFF';
+        btn.classList.toggle('is-playing', playing);
+        btn.classList.toggle('is-muted', !playing);
+    }
+
+    // 자동재생 시도
+    const autoplayPromise = audio.play();
+    if (autoplayPromise !== undefined) {
+        autoplayPromise
+            .then(() => {
+                setPlaying(true);
+            })
+            .catch(() => {
+                // 브라우저 자동재생 정책으로 차단 → 첫 번째 사용자 인터랙션에서 재생
+                setPlaying(false);
+                interactionPending = true;
+
+                function tryAutoplay() {
+                    if (!interactionPending) return;
+                    audio.play()
+                        .then(() => {
+                            interactionPending = false;
+                            setPlaying(true);
+                            document.removeEventListener('click', tryAutoplay, true);
+                            document.removeEventListener('touchstart', tryAutoplay, true);
+                        })
+                        .catch(() => {});
+                }
+
+                document.addEventListener('click', tryAutoplay, true);
+                document.addEventListener('touchstart', tryAutoplay, true);
+            });
+    }
+
+    // 버튼 토글
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // document click 이벤트 전파 차단
+
+        // 자동재생 대기 중이었다면 취소 (첫 클릭은 토글로 사용)
+        if (interactionPending) {
+            interactionPending = false;
+        }
+
+        if (isPlaying) {
+            audio.pause();
+            setPlaying(false);
+        } else {
+            audio.play().then(() => setPlaying(true)).catch(() => {});
+        }
+    });
+}
+
+initMusicPlayer();
 
 
 /* ══════════════════════════════════════════════════

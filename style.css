@@ -478,6 +478,62 @@ button {
   background: rgba(255, 255, 255, 0.85);
 }
 
+/* ── Music Button ── */
+.nav__music {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(26, 26, 26, 0.55);
+  cursor: pointer;
+  transition: color 0.3s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nav__music:hover {
+  color: var(--accent-gold);
+}
+.nav__music-icon {
+  display: flex;
+  align-items: center;
+  color: var(--accent-gold);
+  transition: color 0.3s;
+}
+.nav__music-label {
+  line-height: 1;
+}
+.nav__music-label #musicState {
+  color: var(--accent-gold);
+  font-style: italic;
+}
+/* wave animation when playing */
+.nav__music.is-playing .music-wave {
+  animation: music-pulse 1.4s ease-in-out infinite;
+}
+.nav__music.is-playing .music-wave-2 {
+  animation-delay: 0.2s;
+}
+@keyframes music-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+/* muted state — waves hidden */
+.nav__music.is-muted .music-wave {
+  opacity: 0;
+}
+.nav--dark .nav__music {
+  color: rgba(245, 240, 235, 0.5);
+}
+.nav--dark .nav__music:hover {
+  color: var(--accent-gold);
+}
+.nav--dark .nav__music-icon {
+  color: var(--accent-gold);
+}
+
 /* ── Responsive breakpoint ── */
 @media (max-width: 1099px) {
   .nav__list { display: none; }
@@ -4468,7 +4524,7 @@ button {
   font-size: clamp(11px, 1.1vw, 14px);
   font-weight: 300;
   letter-spacing: 0.22em;
-  color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
 }
 
 .hs2__bodymask {
@@ -4481,7 +4537,7 @@ button {
   font-size: clamp(12px, 1.05vw, 14px);
   font-weight: 300;
   line-height: 2.0;
-  color: rgba(255, 255, 255, 0.55);
+  color: #ffffff;
 }
 
 
