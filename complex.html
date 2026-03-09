@@ -52,8 +52,7 @@
         <a href="complex.html" class="nav__link">단지안내</a>
         <ul class="nav__dropdown">
           <li><a href="complex.html#design">단지설계</a></li>
-          <li><a href="complex.html#site-plan">단지 배치도</a></li>
-          <li><a href="complex.html#unit-layout">동호수 배치도</a></li>
+          <li><a href="complex.html#unit-layout">단지/동호수 배치도</a></li>
           <li><a href="complex.html#system">시스템</a></li>
         </ul>
       </li>
@@ -132,8 +131,7 @@
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="complex.html#design">단지설계</a></li>
-            <li><a href="complex.html#site-plan">단지 배치도</a></li>
-            <li><a href="complex.html#unit-layout">동호수 배치도</a></li>
+            <li><a href="complex.html#unit-layout">단지/동호수 배치도</a></li>
             <li><a href="complex.html#system">시스템</a></li>
           </ul>
         </div>
@@ -216,8 +214,7 @@
   <nav class="subpage-tabs" id="subpageTabs">
     <div class="subpage-tabs__inner">
       <a href="#design" class="subpage-tab" data-tab="design">단지설계</a>
-      <a href="#site-plan" class="subpage-tab" data-tab="site-plan">단지 배치도</a>
-      <a href="#unit-layout" class="subpage-tab" data-tab="unit-layout">동호수 배치도</a>
+      <a href="#unit-layout" class="subpage-tab" data-tab="unit-layout">단지/동호수 배치도</a>
       <a href="#system" class="subpage-tab" data-tab="system">시스템</a>
     </div>
   </nav>
@@ -269,25 +266,27 @@
         </section>
       </div>
 
-      <!-- Tab: 단지 배치도 -->
-      <div class="tab-section" id="tab-site-plan">
-        <section class="info-section">
-          <span class="info-section__label">Site Plan</span>
-          <h2 class="info-section__title">단지 배치도</h2>
-          <div class="complex-image-full">
-            <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/%E1%84%83%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%B5%E1%84%87%E1%85%A2%E1%84%8E%E1%85%B5%E1%84%83%E1%85%A9.jpg" alt="엑소디움 시그니처 해운대 단지 배치도" loading="lazy" />
-          </div>
-          <p style="font-size:13px;color:var(--neutral-mid);line-height:1.8;margin-top:20px;">
-            ※ 본 배치도는 이해를 돕기 위한 것으로 실제와 차이가 있을 수 있으며, 인허가 과정에서 변경될 수 있습니다.
-          </p>
-        </section>
-      </div>
-
-      <!-- Tab: 동호수 배치도 -->
+      <!-- Tab: 단지/동호수 배치도 -->
       <div class="tab-section" id="tab-unit-layout">
         <section class="info-section">
-          <span class="info-section__label">Unit Layout</span>
-          <h2 class="info-section__title">동호수 배치도</h2>
+          <!-- 타이틀 행: 왼쪽 제목 / 오른쪽 단지배치도 -->
+          <div class="ul-title-row">
+            <div class="ul-title-row__head">
+              <span class="info-section__label">Site Plan · Unit Layout</span>
+              <h2 class="info-section__title">동호수 배치도</h2>
+            </div>
+            <div class="ul-title-row__right">
+              <p class="ul-split-right__label">단지 배치도</p>
+              <div class="ul-split-right__img-wrap" id="sitePlanThumb">
+                <img
+                  src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/%E1%84%83%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%B5%E1%84%87%E1%85%A2%E1%84%8E%E1%85%B5%E1%84%83%E1%85%A9.jpg"
+                  alt="엑소디움 시그니처 해운대 단지 배치도"
+                  class="ul-split-right__img"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
 
           <!-- 동 선택 탭 -->
           <div class="ul-dong-tabs" role="tablist" aria-label="동 선택">
@@ -339,7 +338,7 @@
                 월패드 기반 IoT 통합 제어. 조명·냉난방·환기·보안을 스마트폰 하나로 원격 제어합니다.
               </p>
               <div class="complex-feature__img">
-                <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/lot.png" alt="스마트홈 시스템" loading="lazy" />
+                <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/lot.22.png" alt="스마트홈 시스템" loading="lazy" />
               </div>
             </div>
             <div class="complex-feature">
@@ -359,7 +358,7 @@
                 24시간 안면인식 출입 관리, 층간소음 모니터링, AI 무인 택배 시스템이 적용됩니다.
               </p>
               <div class="complex-feature__img">
-                <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/cctv.png" alt="무인택배 & 스마트 보안" loading="lazy" />
+                <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/cct.png" alt="무인택배 & 스마트 보안" loading="lazy" />
               </div>
             </div>
             <div class="complex-feature">
@@ -369,17 +368,7 @@
                 전 세대 전열 교환형 환기장치 설치. 외부 공기를 정화해 신선한 실내 공기를 유지합니다.
               </p>
               <div class="complex-feature__img">
-                <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/airsystem.png" alt="독립 환기 시스템" loading="lazy" />
-              </div>
-            </div>
-            <div class="complex-feature">
-              <span class="complex-feature__num">05</span>
-              <p class="complex-feature__title">세대별 지하 전용 보관창고</p>
-              <p class="complex-feature__desc">
-                세대당 하나씩의 지하 세대물품 보관창고를 제공할 예정입니다.
-              </p>
-              <div class="complex-feature__img">
-                <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/HOLD.png" alt="세대별 지하 전용 보관창고" loading="lazy" />
+                <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/air.22.png" alt="독립 환기 시스템" loading="lazy" />
               </div>
             </div>
           </div>
@@ -396,11 +385,41 @@
       <span>시공예정사: 대우산업개발 주식회사</span>
       <span>대표전화: 1661-0299</span>
     </div>
+    <div class="footer__info">
+      <span>온라인대행: 디지털우주대작전주식회사</span>
+      <span>242-86-02886</span>
+      <span>서울시 강남구 봉은사로 57길 5, 201호(삼성동)</span>
+    </div>
     <p class="footer__legal">
       본 홈페이지의 이미지 및 콘텐츠는 소비자의 이해를 돕기 위한 것으로 실제와 차이가 있을 수 있습니다.<br />
       © 2026 EXORDIUM SIGNATURE HAEUNDAE. All Rights Reserved.
     </p>
   </footer>
+
+  <!-- 단지 배치도 라이트박스 -->
+  <div id="sitePlanLightbox" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.88);cursor:zoom-out;align-items:center;justify-content:center;">
+    <button id="sitePlanLightboxClose" style="position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;line-height:1;">×</button>
+    <img
+      src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/%E1%84%83%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%B5%E1%84%87%E1%85%A2%E1%84%8E%E1%85%B5%E1%84%83%E1%85%A9.jpg"
+      alt="엑소디움 시그니처 해운대 단지 배치도"
+      style="max-width:92vw;max-height:88vh;object-fit:contain;border-radius:6px;"
+    />
+  </div>
+
+  <script>
+    (function() {
+      var thumb = document.getElementById('sitePlanThumb');
+      var lb = document.getElementById('sitePlanLightbox');
+      var closeBtn = document.getElementById('sitePlanLightboxClose');
+      if (!thumb || !lb) return;
+      thumb.style.cursor = 'zoom-in';
+      function openLb() { lb.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+      function closeLb() { lb.style.display = 'none'; document.body.style.overflow = ''; }
+      thumb.addEventListener('click', openLb);
+      closeBtn.addEventListener('click', function(e) { e.stopPropagation(); closeLb(); });
+      lb.addEventListener('click', closeLb);
+    })();
+  </script>
 
   <script type="module" src="/main.js"></script>
 </body>

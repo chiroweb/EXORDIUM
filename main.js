@@ -388,7 +388,6 @@ function initBldgSeq() {
     const curtainT  = document.getElementById('bldgCurtainT');
     const curtainB  = document.getElementById('bldgCurtainB');
     const lines     = seq.querySelectorAll('.bldg-line');
-    const preEye    = seq.querySelector('.bpt__line--eye');
     const preTitle  = seq.querySelector('.bpt__line--title');
     const preSub    = seq.querySelector('.bpt__line--sub');
     const imgWrap   = document.getElementById('bldgImgWrap');
@@ -401,11 +400,12 @@ function initBldgSeq() {
     gsap.set(curtainT, { y: '0%' });
     gsap.set(curtainB, { y: '0%' });
     gsap.set(lines,    { scaleY: 0 });
-    gsap.set([preEye, preTitle, preSub], { yPercent: 110 });
+    gsap.set([preTitle, preSub], { yPercent: 110 });
     gsap.set(hotspots, { scale: 0 });
     gsap.set([...sideL, ...sideR], { yPercent: 110 });
     gsap.set(imgWrap,  { xPercent: -50, y: '60vh', opacity: 0 });
-    gsap.set(pretext,  { xPercent: -50, yPercent: -56 });
+    const isMobilePretext = window.matchMedia('(max-width: 768px)').matches;
+    gsap.set(pretext,  { xPercent: -50, yPercent: isMobilePretext ? -56 : 0 });
 
     const SCROLL_SPACE = window.innerHeight * 5.0;
 
@@ -444,8 +444,7 @@ function initBldgSeq() {
 
     // Phase 3 (0.36→0.56): 텍스트 스태거드 리빌
     tl
-        .fromTo(preEye,   { yPercent: 110 }, { yPercent: 0, duration: 0.13, ease: 'power3.out' }, 0.36)
-        .fromTo(preTitle, { yPercent: 110 }, { yPercent: 0, duration: 0.16, ease: 'power3.out' }, 0.41)
+        .fromTo(preTitle, { yPercent: 110 }, { yPercent: 0, duration: 0.16, ease: 'power3.out' }, 0.36)
         .fromTo(preSub,   { yPercent: 110 }, { yPercent: 0, duration: 0.12, ease: 'power3.out' }, 0.49);
 
     // Phase 4 (0.52→0.78): 건물 이미지 상승 + 페이드인
@@ -494,6 +493,7 @@ function initBldgPopup() {
             nameEn: 'SMART CURTAIN WALL',
             desc: '국내 최초의 BIPV(RE100 태양광발전, 미디어파사드 송출) 스마트 커튼월 시스템으로 엑소디움 시그니처 해운대를 포함 전체 랜드마크의 웅장함을 주변 5KM이내에서도 느끼실 수 있습니다.',
             img: S3 + '%E1%84%80%E1%85%A5%E1%86%AB%E1%84%86%E1%85%AE%E1%86%AF_%E1%84%90%E1%85%AE%E1%84%89%E1%85%B5%E1%84%8B%E1%85%A3%E1%84%80%E1%85%A7%E1%86%BC.webp',
+            side: 'left',
         },
         {
             floor: 'ROOFTOP',
@@ -501,6 +501,7 @@ function initBldgPopup() {
             nameEn: 'ROOFTOP INFINITY POOL',
             desc: '국내 최고층 루프탑 인피니티풀로 송정의 수평선과 맞닿은 핫 플레이스로서 입주민 특별할인 혜택으로 이용을 하실 수 있습니다.',
             img: S3 + '%E1%84%89%E1%85%AE%E1%84%8B%E1%85%A7%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%BC1%20%E1%84%89%E1%85%A1%E1%84%85%E1%85%A1%E1%86%B7%20%E1%84%8C%E1%85%AE%E1%84%80%E1%85%A7%E1%86%BC.webp',
+            side: 'left',
         },
         {
             floor: '2 – 4F',
@@ -508,6 +509,7 @@ function initBldgPopup() {
             nameEn: 'WYNDHAM HOTEL AMENITY',
             desc: '윈덤호텔 직영 대형 부페식당, 사우나, 연회장을 입주민 특별 할인혜택으로 이용하실 수 있습니다.',
             img: S3 + '%E1%84%92%E1%85%A9%E1%84%90%E1%85%A6%E1%86%AF%E1%84%85%E1%85%A1%E1%84%8B%E1%85%AE%E1%86%AB%E1%84%8C%E1%85%B5.webp',
+            side: 'left',
         },
         {
             floor: 'FULL TOWER',
@@ -515,6 +517,7 @@ function initBldgPopup() {
             nameEn: 'PREMIUM WINDOW · AI SYSTEM',
             desc: '엑소디움 브랜드에 걸맞는 최고급 창호 및 오션과 시티뷰를 극대화 하기위한 슬림 프레임을 적용할 예정이고, AI 스마트 시스템으로 간편하게 세대의 환기, 냉,난방을 컨트롤 할 수 있는 최첨단 제품이 시공될 예정입니다.',
             img: S3 + '%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%80%E1%85%B3%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%B8%E1%84%90%E1%85%AE%E1%84%89%E1%85%B5%20%E1%84%8B%E1%85%A3%E1%84%80%E1%85%A7%E1%86%BC%20%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC.webp',
+            side: 'right',
         },
         {
             floor: '1 – 32F',
@@ -522,6 +525,7 @@ function initBldgPopup() {
             nameEn: 'HIGH-SPEED ELEVATOR',
             desc: '4대의 고속 엘리베이터를 적용하여 고층부, 저층부를 존으로 나누어 입주민들의 이용에 편리함을 더하고, 이사전용 엘리베이터 1대를 별도로 운영하여 전입 전출세대 이사일에 불편함 자체를 없앴습니다.',
             img: S3 + '%E1%84%80%E1%85%A5%E1%86%AB%E1%84%86%E1%85%AE%E1%86%AF_%E1%84%90%E1%85%AE%E1%84%89%E1%85%B5%E1%84%8C%E1%85%AE%E1%84%80%E1%85%A7%E1%86%BC.webp',
+            side: 'right',
         },
         {
             floor: 'B1 – B2',
@@ -529,6 +533,7 @@ function initBldgPopup() {
             nameEn: 'RESIDENT COMMUNITY',
             desc: '아파트 입주민 전용 커뮤니티시설을 아파트 각 동의 지하에 배치하여 피트니스 시설과 접객공간 및 카페시설을 운영할 예정으로 엑소디움 시그니처 해운대만의 고급스러움을 더할 예정입니다.',
             img: S3 + '%E1%84%8F%E1%85%A5%E1%84%86%E1%85%B2%E1%84%82%E1%85%B5%E1%84%90%E1%85%B5-3f-render.webp',
+            side: 'right',
         },
     ];
 
@@ -561,20 +566,23 @@ function initBldgPopup() {
         const hsY = hsRect.top  - seqRect.top  + hsRect.height / 2;
 
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
-        const popW = isMobile ? Math.min(seq.offsetWidth - 20, 520) : 600;
+        const popW = isMobile ? Math.min(seq.offsetWidth - 20, 520) : 480;
         const popH = isMobile ? 460 : 530;
-        const onLeft = hsX > seq.offsetWidth * 0.5;
-        let pX = onLeft ? hsX - popW - 36 : hsX + 36;
-        let pY = hsY - 40;
-        pX = Math.max(12, Math.min(pX, seq.offsetWidth  - popW - 12));
-        pY = Math.max(12, Math.min(pY, seq.offsetHeight - popH - 12));
 
+        let pX, pY;
         if (isMobile) {
             // 모바일에서는 CSS 하단 고정 레이아웃 사용
             popup.style.left = '';
             popup.style.top = '';
             popup.style.width = '';
         } else {
+            const EDGE_MARGIN = 48;
+            if (data.side === 'left') {
+                pX = EDGE_MARGIN;
+            } else {
+                pX = seq.offsetWidth - popW - EDGE_MARGIN;
+            }
+            pY = Math.max(12, Math.min(hsY - popH / 2, seq.offsetHeight - popH - 12));
             popup.style.left = pX + 'px';
             popup.style.top = pY + 'px';
             popup.style.width = popW + 'px';
@@ -588,8 +596,8 @@ function initBldgPopup() {
         // 커넥터 라인 좌표
         let len = 0;
         if (!isMobile) {
-            const lineEndX = onLeft ? pX + popW : pX;
-            const lineEndY = pY + 18;
+            const lineEndX = data.side === 'left' ? pX + popW : pX;
+            const lineEndY = pY + popH / 2;
             len = Math.hypot(lineEndX - hsX, lineEndY - hsY);
             connLine.setAttribute('x1', hsX);
             connLine.setAttribute('y1', hsY);
@@ -726,7 +734,7 @@ function initUnitLayout() {
     const building = document.getElementById('ulBuilding');
     if (!building) return;
 
-    const UNIT_TYPES = ['84A', '84A', '59', '84B', '84B', '84B'];
+    const UNIT_TYPES = ['84A', '59', '59', '84A', '84B', '84B'];
 
     const TYPE_INFO = {
         '84A': { area: '84.99㎡', rooms: '방 3 · 욕실 2', plan: 'plans.html#units' },
@@ -924,9 +932,10 @@ function initUnitLayout() {
                 ${info.area  ? `<span class="ul-info__meta-item">전용면적<strong>${info.area}</strong></span>`  : ''}
                 ${info.rooms ? `<span class="ul-info__meta-item">구조<strong>${info.rooms}</strong></span>` : ''}
             </div>
-            ${typeName ? `<div class="ul-info__type-badge ul-info__type-badge--${typeName}">${typeName} 타입</div>` : ''}
-            <br>
-            <a href="plans.html#units" class="ul-info__link">평면도 보기 →</a>
+            <div class="ul-info__bottom">
+                ${typeName ? `<div class="ul-info__type-badge ul-info__type-badge--${typeName}">${typeName} 타입</div>` : ''}
+                <a href="plans.html#units" class="ul-info__link">평면도 보기 →</a>
+            </div>
         `;
 
         panel.hidden = false;

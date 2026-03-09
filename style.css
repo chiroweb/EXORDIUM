@@ -173,7 +173,7 @@ button {
 .caption {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--neutral-mid);
@@ -389,7 +389,7 @@ button {
   padding: 0 15px;
   height: 100%;
   font-family: var(--font-body);
-  font-size: 12.5px;
+  font-size: 19px;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -465,7 +465,7 @@ button {
   display: block;
   padding: 7px 26px;
   font-family: var(--font-body);
-  font-size: 14.5px;
+  font-size: 22px;
   font-weight: 400;
   letter-spacing: 0.03em;
   color: rgba(255, 255, 255, 0.55);
@@ -2418,6 +2418,14 @@ button {
   padding: 120px var(--margin) clamp(56px, 8vh, 96px);
 }
 
+@media (min-width: 769px) {
+  .subpage-hero {
+    height: 34vh;
+    min-height: 260px;
+    padding: 80px var(--margin) clamp(32px, 4vh, 56px);
+  }
+}
+
 /* Background image layer */
 .subpage-hero__bg {
   position: absolute;
@@ -2459,7 +2467,8 @@ button {
 
 .subpage-hero__eyebrow {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 18px;
+  font-weight: 700;
   letter-spacing: 0.30em;
   text-transform: uppercase;
   color: var(--accent-gold);
@@ -2528,7 +2537,7 @@ button {
 
 .plan-type__spec {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0.20em;
   text-transform: uppercase;
   color: var(--neutral-mid);
@@ -2612,7 +2621,7 @@ button {
 
 .info-table th {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent-gold);
@@ -2624,7 +2633,7 @@ button {
 }
 
 .info-table td {
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text-dark);
   padding: 20px 0;
   line-height: 1.7;
@@ -2668,7 +2677,7 @@ button {
 }
 
 .info-timeline__note {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--neutral-mid);
   line-height: 1.6;
 }
@@ -2698,7 +2707,7 @@ button {
 
 .info-contract__label {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--neutral-mid);
@@ -2707,7 +2716,7 @@ button {
 }
 
 .info-contract__note {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--accent-gold);
   margin-top: 8px;
   display: block;
@@ -2737,7 +2746,7 @@ button {
 }
 
 .info-modelhouse__hours {
-  font-size: 15px;
+  font-size: 16px;
   color: var(--neutral-mid);
 }
 
@@ -2771,7 +2780,7 @@ button {
 
 .location-category__label {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 16px;
   letter-spacing: 0.30em;
   text-transform: uppercase;
   color: var(--accent-gold);
@@ -3010,7 +3019,7 @@ button {
 }
 
 .location-visit-card__address-sub {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 400;
   color: #1A1A1A;
   opacity: 0.55;
@@ -3170,7 +3179,7 @@ button {
 
 .pr-section__desc {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.7;
   color: var(--neutral-mid);
   flex: 1;
@@ -3228,7 +3237,7 @@ button {
 
 .pr-card__sub {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 16px;
   color: var(--neutral-mid);
   line-height: 1.5;
 }
@@ -3456,7 +3465,7 @@ button {
 }
 
 .partner-card__desc {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--neutral-mid);
   line-height: 1.8;
 }
@@ -3502,7 +3511,7 @@ button {
 }
 
 .complex-feature__desc {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--neutral-mid);
   line-height: 1.8;
 }
@@ -3793,7 +3802,7 @@ button {
 }
 
 .notice-placeholder__sub {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--neutral-mid);
   line-height: 1.8;
 }
@@ -3972,6 +3981,57 @@ button {
 }
 
 /* ── 건물 컨테이너 ── */
+/* ─ 동호수 타이틀 행 + 단지배치도 ─ */
+.ul-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5%;
+  margin-bottom: 32px;
+}
+
+.ul-title-row__head {
+  width: 30%;
+  flex-shrink: 0;
+}
+
+.ul-title-row__right {
+  width: 55%;
+  flex-shrink: 0;
+}
+
+.ul-split-right__label {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #1A1A1A;
+  margin-bottom: 10px;
+}
+
+.ul-split-right__img-wrap {
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  overflow: hidden;
+  height: 90%;
+}
+
+.ul-split-right__img {
+  width: 100%;
+  display: block;
+  margin-top: -10%;
+  margin-bottom: -10%;
+}
+
+@media (max-width: 1024px) {
+  .ul-title-row {
+    flex-direction: column;
+  }
+  .ul-title-row__right {
+    width: 100%;
+  }
+}
+
 .ul-building-outer {
   background: #f8f5f0;
   border: 1px solid rgba(0,0,0,0.07);
@@ -4059,7 +4119,7 @@ button {
 
 /* 공동주택 */
 .ul-unit--apt {
-  background: #ffffff;
+  background: transparent;
   border: 1px solid rgba(59,100,220,0.4);
   color: #1A1A1A;
 }
@@ -4073,7 +4133,7 @@ button {
 
 /* 숙박시설 */
 .ul-unit--hotel {
-  background: #ffffff;
+  background: transparent;
   border: 1px solid rgba(140,60,210,0.4);
   color: #1A1A1A;
   cursor: default;
@@ -4238,7 +4298,7 @@ button {
 
 .ul-info__meta-item {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--neutral-mid);
 }
 
@@ -4248,29 +4308,35 @@ button {
   margin-left: 4px;
 }
 
-.ul-info__type-badge {
-  display: inline-block;
-  padding: 3px 12px;
-  border-radius: 20px;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  margin-bottom: 12px;
+.ul-info__bottom {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
 }
 
-.ul-info__type-badge--84A { background: rgba(59,100,220,0.1); color: #1a3fa0; border: 1px solid rgba(59,100,220,0.3); }
-.ul-info__type-badge--59  { background: rgba(30,160,80,0.1);  color: #1a6b38; border: 1px solid rgba(30,160,80,0.3);  }
-.ul-info__type-badge--84B { background: rgba(140,60,210,0.1); color: #6b2fa0; border: 1px solid rgba(140,60,210,0.28); }
+.ul-info__type-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.ul-info__type-badge--84A { background: transparent; color: #1a3fa0; border: 1.5px solid rgba(59,100,220,0.6); }
+.ul-info__type-badge--59  { background: transparent; color: #a01a1a; border: 1.5px solid rgba(220,45,45,0.6);  }
+.ul-info__type-badge--84B { background: transparent; color: #1a6b38; border: 1.5px solid rgba(30,160,80,0.6);  }
 
 .ul-info__link {
   display: inline-block;
   font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--accent-gold);
+  font-size: 16px;
+  color: #1A1A1A;
   text-decoration: none;
   letter-spacing: 0.06em;
-  border-bottom: 1px solid rgba(200,169,110,0.5);
+  border-bottom: 1px solid rgba(26,26,26,0.4);
   padding-bottom: 1px;
   transition: opacity 0.2s;
 }
@@ -4516,8 +4582,8 @@ button {
 }
 
 .ul-tbadge--84A { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(59,100,220,0.6); }
-.ul-tbadge--59  { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(30,160,80,0.6);  }
-.ul-tbadge--84B { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(220,45,45,0.6);  }
+.ul-tbadge--59  { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(220,45,45,0.6);  }
+.ul-tbadge--84B { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(30,160,80,0.6);   }
 
 /* 두 그리드를 나란히 */
 .ul-dual-grids {
@@ -4629,35 +4695,35 @@ button {
 
 /* ─ 유닛 셀 기본 리셋 (라이트 모드) ─ */
 .ul-building-light .ul-unit--apt {
-  background: #ffffff;
+  background: transparent;
   border-color: rgba(0, 0, 0, 0.18);
   color: #1A1A1A;
   box-shadow: none;
 }
 
-/* ─ 호수별 스트로크 색상 (배경은 흰색 유지) ─ */
+/* ─ 호수별 스트로크 색상 ─ */
 
-/* 1,2호 — 84A (파란색) */
+/* 1,4호 — 84A (파란색) */
 .ul-building-light .ul-unit[data-ho="1"],
-.ul-building-light .ul-unit[data-ho="2"] {
-  background: #ffffff;
+.ul-building-light .ul-unit[data-ho="4"] {
+  background: transparent;
   border-color: rgba(59, 100, 220, 0.6);
   color: #1A1A1A;
 }
 
-/* 3호 — 59 (초록색) */
+/* 2,3호 — 59 (빨간색) */
+.ul-building-light .ul-unit[data-ho="2"],
 .ul-building-light .ul-unit[data-ho="3"] {
-  background: #ffffff;
-  border-color: rgba(30, 160, 80, 0.6);
+  background: transparent;
+  border-color: rgba(220, 45, 45, 0.6);
   color: #1A1A1A;
 }
 
-/* 4,5,6호 — 84B (빨간색) */
-.ul-building-light .ul-unit[data-ho="4"],
+/* 5,6호 — 84B (초록색) */
 .ul-building-light .ul-unit[data-ho="5"],
 .ul-building-light .ul-unit[data-ho="6"] {
-  background: #ffffff;
-  border-color: rgba(220, 45, 45, 0.6);
+  background: transparent;
+  border-color: rgba(30, 160, 80, 0.6);
   color: #1A1A1A;
 }
 
@@ -4809,7 +4875,7 @@ button {
   position: relative;
   height: 100vh;
   overflow: hidden;
-  background: var(--bg-dark);
+  background: #0D0D0D;
 }
 
 /* ─ Video Mask ─ */
@@ -4837,7 +4903,7 @@ button {
 .hvm__overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.30);
+  background: rgba(30, 30, 30, 0.55);
   pointer-events: none;
   z-index: 2;
 }
@@ -4862,10 +4928,10 @@ button {
 
 .ht__eye {
   font-family: var(--font-body);
-  font-size: clamp(11px, 1.1vw, 14px);
+  font-size: clamp(22px, 2.2vw, 28px);
   font-weight: 300;
   letter-spacing: 0.22em;
-  color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
   margin-bottom: 20px;
 }
 
@@ -4893,10 +4959,10 @@ button {
 
 .ht__sub {
   font-family: var(--font-body);
-  font-size: clamp(10px, 1.0vw, 12px);
+  font-size: clamp(20px, 2.0vw, 24px);
   font-weight: 300;
   letter-spacing: 0.28em;
-  color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
   text-transform: uppercase;
   margin-top: 18px;
 }
@@ -4945,7 +5011,7 @@ button {
 .hs2__sub {
   display: block;
   font-family: var(--font-body);
-  font-size: clamp(11px, 1.1vw, 14px);
+  font-size: clamp(22px, 2.2vw, 28px);
   font-weight: 300;
   letter-spacing: 0.22em;
   color: #ffffff;
@@ -4958,7 +5024,7 @@ button {
 
 .hs2__body {
   font-family: var(--font-body);
-  font-size: clamp(12px, 1.05vw, 14px);
+  font-size: clamp(24px, 2.1vw, 28px);
   font-weight: 300;
   line-height: 2.0;
   color: #ffffff;
@@ -5051,6 +5117,12 @@ button {
   z-index: 6;
   pointer-events: none;
   white-space: nowrap;
+}
+
+@media (min-width: 769px) {
+  .bldg-pretext {
+    top: 6%;
+  }
 }
 
 .bpt__mask {
