@@ -680,7 +680,24 @@ button {
   display: inline-block;
 }
 
-/* Sub-items — hidden, revealed on hover via GSAP */
+/* Accordion chevron */
+.menu-overlay__item--has-sub .menu-overlay__title::after {
+  content: '+';
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 200;
+  color: rgba(245, 240, 235, 0.35);
+  line-height: 1;
+  transition: transform 0.3s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.menu-overlay__item--has-sub.is-open .menu-overlay__title::after {
+  content: '−';
+  color: var(--accent-gold);
+}
+
+/* Sub-items — hidden, revealed on click via GSAP */
 .menu-overlay__sub {
   list-style: none;
   display: flex;
@@ -818,8 +835,8 @@ button {
 
   .menu-overlay__title {
     font-size: clamp(24px, 7vw, 36px);
-    justify-content: flex-end;
-    text-align: right;
+    justify-content: space-between;
+    text-align: left;
     padding: 12px 0;
   }
 
@@ -828,7 +845,8 @@ button {
   }
 
   .menu-overlay__sub {
-    display: none !important;
+    flex-direction: column;
+    gap: 0;
   }
 
   .menu-overlay__footer {
@@ -3855,10 +3873,10 @@ button {
 .ul-dong-tab {
   flex: 1;
   padding: 12px 8px 10px;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.12);
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.15);
   border-radius: 6px;
-  color: var(--text-dark);
+  color: #1A1A1A;
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
@@ -3880,16 +3898,15 @@ button {
 }
 
 .ul-dong-tab:hover {
-  background: rgba(200,169,110,0.1);
-  border-color: rgba(200,169,110,0.4);
-  color: var(--text-light);
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.25);
+  color: #1A1A1A;
 }
 
 .ul-dong-tab.active {
-  background: rgba(200,169,110,0.16);
-  border-color: var(--accent-gold);
+  background: rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.3);
   color: #1A1A1A;
-  color: var(--accent-gold);
 }
 
 .ul-range-filter {
@@ -3905,10 +3922,10 @@ button {
 .ul-range-btn {
   flex: 1;
   padding: 8px 12px;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.12);
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.15);
   border-radius: 4px;
-  color: var(--text-dark);
+  color: #1A1A1A;
   font-family: var(--font-body);
   font-size: 13px;
   cursor: pointer;
@@ -3916,9 +3933,9 @@ button {
 }
 
 .ul-range-btn.active {
-  background: rgba(59,100,220,0.1);
-  border-color: rgba(59,100,220,0.35);
-  color: #1a3fa0;
+  background: rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.3);
+  color: #1A1A1A;
 }
 
 /* ── 건물 컨테이너 ── */
@@ -3984,7 +4001,7 @@ button {
   white-space: nowrap;
 }
 
-/* ── 유닛 셀 — 3D 버튼 기본 ── */
+/* ── 유닛 셀 기본 ── */
 .ul-unit {
   flex: 1;
   min-width: 0;
@@ -4000,11 +4017,7 @@ button {
   letter-spacing: 0;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease, border-color 0.14s ease;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    inset 0 -1px 0 rgba(0,0,0,0.07),
-    0 1px 3px rgba(0,0,0,0.08);
+  transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
 }
 
 @media (max-width: 768px) {
@@ -4013,26 +4026,22 @@ button {
 
 /* 공동주택 */
 .ul-unit--apt {
-  background: rgba(59,100,220,0.1);
-  border: 1px solid rgba(59,100,220,0.25);
+  background: #ffffff;
+  border: 1px solid rgba(59,100,220,0.4);
   color: #1A1A1A;
 }
 
 .ul-unit--apt:hover {
-  transform: translateY(-2px);
-  background: rgba(59,100,220,0.2);
-  border-color: rgba(59,100,220,0.45);
+  transform: translateY(-1px);
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(59,100,220,0.6);
   color: #1A1A1A;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 4px 10px rgba(59,100,220,0.15),
-    0 1px 3px rgba(0,0,0,0.07);
 }
 
 /* 숙박시설 */
 .ul-unit--hotel {
-  background: rgba(140,60,210,0.09);
-  border: 1px solid rgba(140,60,210,0.22);
+  background: #ffffff;
+  border: 1px solid rgba(140,60,210,0.4);
   color: #1A1A1A;
   cursor: default;
 }
@@ -4042,9 +4051,9 @@ button {
 }
 
 .ul-unit--hotel.clickable:hover {
-  transform: translateY(-2px);
-  background: rgba(140,60,210,0.18);
-  border-color: rgba(140,60,210,0.4);
+  transform: translateY(-1px);
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(140,60,210,0.6);
   color: #1A1A1A;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.9),
@@ -4055,18 +4064,12 @@ button {
 /* pressed 상태 */
 .ul-unit--apt:active {
   transform: translateY(1px) scale(0.97);
-  box-shadow:
-    inset 0 2px 4px rgba(0,0,0,0.15),
-    0 1px 2px rgba(0,0,0,0.06);
 }
 
 /* 선택됨 */
 .ul-unit.selected {
-  border-color: var(--accent-gold) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.1),
-    0 0 0 1px rgba(200,169,110,0.45),
-    0 4px 16px rgba(200,169,110,0.18) !important;
+  background: rgba(0,0,0,0.08) !important;
+  color: #1A1A1A !important;
 }
 
 /* ── 피난안전구역 ── */
@@ -4107,6 +4110,12 @@ button {
   background: rgba(140,90,220,0.08);
   border: 1px solid rgba(140,90,220,0.2);
   color: #1A1A1A;
+}
+
+.ul-merged-cell--empty {
+  height: 26px;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .ul-merged-cell--piloti {
@@ -4265,20 +4274,20 @@ button {
 }
 
 .ul-zblock--apt-high {
-  background: rgba(59, 130, 246, 0.22);
-  border: 1px solid rgba(59, 130, 246, 0.4);
+  background: #ffffff;
+  border: 2px solid rgba(59, 130, 246, 0.55);
 }
 .ul-zblock--apt-mid {
-  background: rgba(99, 155, 246, 0.17);
-  border: 1px solid rgba(99, 155, 246, 0.32);
+  background: #ffffff;
+  border: 2px solid rgba(59, 130, 246, 0.38);
 }
 .ul-zblock--hotel-high {
-  background: rgba(75, 85, 130, 0.25);
-  border: 1px solid rgba(100, 115, 165, 0.38);
+  background: #ffffff;
+  border: 2px solid rgba(75, 85, 130, 0.55);
 }
 .ul-zblock--hotel-mid {
-  background: rgba(75, 85, 130, 0.18);
-  border: 1px solid rgba(100, 115, 165, 0.28);
+  background: #ffffff;
+  border: 2px solid rgba(75, 85, 130, 0.38);
 }
 
 .ul-zblock__sub {
@@ -4316,8 +4325,8 @@ button {
   align-items: center;
   justify-content: center;
   padding: 8px 4px;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(200, 130, 0, 0.3);
+  background: #ffffff;
+  border: 2px solid rgba(200, 130, 0, 0.55);
   border-radius: 4px;
   font-family: var(--font-body);
   font-size: 12px;
@@ -4343,15 +4352,15 @@ button {
 
 .ul-zfull--podium {
   height: 48px;
-  background: rgba(140, 90, 220, 0.09);
-  border: 1px solid rgba(140, 90, 220, 0.2);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.18);
   color: #1A1A1A;
 }
 
 .ul-zfull--piloti {
   height: 32px;
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.18);
   color: #1A1A1A;
 }
 
@@ -4525,6 +4534,7 @@ button {
 }
 
 .ul-sub-grid .ul-merged-cell--podium { height: 40px; }
+.ul-sub-grid .ul-merged-cell--empty  { height: 22px; }
 .ul-sub-grid .ul-merged-cell--piloti { height: 22px; }
 
 /* 탭도 2개짜리로 너비 조정 */
@@ -4586,104 +4596,84 @@ button {
 
 /* ─ 유닛 셀 기본 리셋 (라이트 모드) ─ */
 .ul-building-light .ul-unit--apt {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.09);
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.18);
   color: #1A1A1A;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.07),
-    0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
 }
 
-/* ─ 호수별 배경 색상 ─ */
+/* ─ 호수별 스트로크 색상 (배경은 흰색 유지) ─ */
 
-/* 1호 — 파란색 */
-.ul-building-light .ul-unit[data-ho="1"] {
-  background: rgba(59, 100, 220, 0.13);
-  border-color: rgba(59, 100, 220, 0.28);
+/* 1,2호 — 84A (파란색) */
+.ul-building-light .ul-unit[data-ho="1"],
+.ul-building-light .ul-unit[data-ho="2"] {
+  background: #ffffff;
+  border-color: rgba(59, 100, 220, 0.6);
   color: #1A1A1A;
 }
 
-/* 2,3호 — 빨간색 */
-.ul-building-light .ul-unit[data-ho="2"],
+/* 3호 — 59 (초록색) */
 .ul-building-light .ul-unit[data-ho="3"] {
-  background: rgba(220, 45, 45, 0.11);
-  border-color: rgba(220, 45, 45, 0.24);
+  background: #ffffff;
+  border-color: rgba(30, 160, 80, 0.6);
   color: #1A1A1A;
 }
 
-/* 4호 — 파란색 */
-.ul-building-light .ul-unit[data-ho="4"] {
-  background: rgba(59, 100, 220, 0.13);
-  border-color: rgba(59, 100, 220, 0.28);
-  color: #1A1A1A;
-}
-
-/* 5,6호 — 초록색 */
+/* 4,5,6호 — 84B (빨간색) */
+.ul-building-light .ul-unit[data-ho="4"],
 .ul-building-light .ul-unit[data-ho="5"],
 .ul-building-light .ul-unit[data-ho="6"] {
-  background: rgba(30, 160, 80, 0.11);
-  border-color: rgba(30, 160, 80, 0.24);
+  background: #ffffff;
+  border-color: rgba(220, 45, 45, 0.6);
   color: #1A1A1A;
 }
 
-/* ─ hover (라이트 모드) ─ */
+/* ─ hover (라이트 모드) — 회색 배경, 검정 텍스트 ─ */
 .ul-building-light .ul-unit[data-ho="1"]:hover,
-.ul-building-light .ul-unit[data-ho="4"]:hover {
-  transform: translateY(-2px);
-  background: rgba(59, 100, 220, 0.23);
-  color: #1A1A1A;
-  box-shadow: 0 4px 10px rgba(59, 100, 220, 0.18), 0 1px 3px rgba(0,0,0,0.06);
-}
-
 .ul-building-light .ul-unit[data-ho="2"]:hover,
-.ul-building-light .ul-unit[data-ho="3"]:hover {
-  transform: translateY(-2px);
-  background: rgba(220, 45, 45, 0.2);
-  color: #1A1A1A;
-  box-shadow: 0 4px 10px rgba(220, 45, 45, 0.16), 0 1px 3px rgba(0,0,0,0.06);
-}
-
+.ul-building-light .ul-unit[data-ho="3"]:hover,
+.ul-building-light .ul-unit[data-ho="4"]:hover,
 .ul-building-light .ul-unit[data-ho="5"]:hover,
 .ul-building-light .ul-unit[data-ho="6"]:hover {
-  transform: translateY(-2px);
-  background: rgba(30, 160, 80, 0.2);
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.05);
   color: #1A1A1A;
-  box-shadow: 0 4px 10px rgba(30, 160, 80, 0.16), 0 1px 3px rgba(0,0,0,0.06);
+  box-shadow: none;
 }
 
 /* ─ pressed ─ */
 .ul-building-light .ul-unit--apt:active {
   transform: translateY(1px) scale(0.97);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.06);
+  box-shadow: none;
 }
 
-/* ─ 선택됨 ─ */
+/* ─ 선택됨 — 회색 배경 ─ */
 .ul-building-light .ul-unit.selected {
-  outline: 2px solid #c8a97e;
-  outline-offset: 1px;
-  box-shadow: 0 4px 14px rgba(200, 169, 110, 0.28) !important;
+  background: rgba(0, 0, 0, 0.09) !important;
+  color: #1A1A1A !important;
+  box-shadow: none !important;
+  outline: none;
 }
 
 /* ─ 피난안전구역 (라이트 모드) ─ */
 .ul-building-light .ul-refuge-cell {
-  background: rgba(245, 158, 11, 0.14);
-  border-color: rgba(200, 130, 0, 0.3);
+  background: #ffffff;
+  border-color: rgba(200, 130, 0, 0.55);
   color: #1A1A1A;
   box-shadow: none;
 }
 
 /* ─ 저층부 (라이트 모드) ─ */
 .ul-building-light .ul-merged-cell--podium {
-  background: rgba(140, 90, 220, 0.09);
-  border-color: rgba(140, 90, 220, 0.2);
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.18);
   color: #1A1A1A;
 }
 
 /* ─ 필로티 (라이트 모드) ─ */
 .ul-building-light .ul-merged-cell--piloti {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.09);
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.18);
   color: #1A1A1A;
 }
 

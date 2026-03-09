@@ -133,6 +133,7 @@ function closeMenu() {
             document.body.style.overflow = '';
             gsap.set(menuItems, { y: 28 });
             menuItems.forEach(item => {
+                item.classList.remove('is-open');
                 const sub = item.querySelector('.menu-overlay__sub');
                 const lis = item.querySelectorAll('.menu-overlay__sub li');
                 if (sub) gsap.set(sub, { height: 0, paddingBottom: 0 });
@@ -155,15 +156,35 @@ menuItems.forEach(item => {
     const sub = item.querySelector('.menu-overlay__sub');
     if (!sub) return;
     const lis = sub.querySelectorAll('li');
+    const title = item.querySelector('.menu-overlay__title');
+    if (!title) return;
 
-    item.addEventListener('mouseenter', () => {
-        gsap.to(sub, { height: 'auto', paddingBottom: 10, duration: 0.38, ease: 'power3.out' });
-        gsap.to(lis, { opacity: 1, x: 0, duration: 0.3, stagger: 0.04, ease: 'power2.out' });
-    });
+    item.classList.add('menu-overlay__item--has-sub');
 
-    item.addEventListener('mouseleave', () => {
-        gsap.to(sub, { height: 0, paddingBottom: 0, duration: 0.28, ease: 'power2.in' });
-        gsap.to(lis, { opacity: 0, x: -8, duration: 0.18, stagger: 0.02 });
+    title.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = item.classList.contains('is-open');
+
+        // 다른 열린 항목 닫기
+        menuItems.forEach(other => {
+            if (other !== item && other.classList.contains('is-open')) {
+                other.classList.remove('is-open');
+                const otherSub = other.querySelector('.menu-overlay__sub');
+                const otherLis = other.querySelectorAll('.menu-overlay__sub li');
+                if (otherSub) gsap.to(otherSub, { height: 0, paddingBottom: 0, duration: 0.25, ease: 'power2.in' });
+                if (otherLis.length) gsap.set(otherLis, { opacity: 0, x: -8 });
+            }
+        });
+
+        if (isOpen) {
+            item.classList.remove('is-open');
+            gsap.to(sub, { height: 0, paddingBottom: 0, duration: 0.28, ease: 'power2.in' });
+            gsap.to(lis, { opacity: 0, x: -8, duration: 0.18, stagger: 0.02 });
+        } else {
+            item.classList.add('is-open');
+            gsap.to(sub, { height: 'auto', paddingBottom: 14, duration: 0.38, ease: 'power3.out' });
+            gsap.to(lis, { opacity: 1, x: 0, duration: 0.3, stagger: 0.05, ease: 'power2.out' });
+        }
     });
 });
 
@@ -738,15 +759,19 @@ function initUnitLayout() {
             for (let u = 1; u <= 6; u++) h += `<div class="ul-header-ho">${u}호</div>`;
             h += '</div>';
             for (let f = 32; f >= 1; f--) {
-                if (f === 3 || f === 2) continue;
+                if (f === 2) continue;
                 if (f === 14) {
                     h += `<div class="ul-floor-row" data-zone="refuge">
                         <div class="ul-floor-label">14F</div>
                         <div class="ul-refuge-cell" style="font-size:8px">피난안전구역</div></div>`;
                 } else if (f === 4) {
                     h += `<div class="ul-floor-row" data-zone="base">
-                        <div class="ul-floor-label" style="font-size:6px">2~4F</div>
-                        <div class="ul-merged-cell ul-merged-cell--podium" style="font-size:8px;padding:0 4px">생활형숙박시설 / 근린생활시설 / 커뮤니티</div></div>`;
+                        <div class="ul-floor-label">4F</div>
+                        <div class="ul-merged-cell ul-merged-cell--empty"></div></div>`;
+                } else if (f === 3) {
+                    h += `<div class="ul-floor-row" data-zone="base">
+                        <div class="ul-floor-label">2~3F</div>
+                        <div class="ul-merged-cell ul-merged-cell--podium">생활형숙박시설 · 근린생활시설 · 커뮤니티</div></div>`;
                 } else if (f === 1) {
                     h += `<div class="ul-floor-row" data-zone="base">
                         <div class="ul-floor-label">1F</div>
