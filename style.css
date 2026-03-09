@@ -592,11 +592,44 @@ button {
 }
 
 .menu-overlay__inner {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
   padding: 80px var(--margin) 0;
+}
+
+.menu-overlay__close {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 120;
+  color: rgba(245, 240, 235, 0.8);
+}
+
+.menu-overlay__close span {
+  position: absolute;
+  width: 20px;
+  height: 1px;
+  background: currentColor;
+}
+
+.menu-overlay__close span:first-child {
+  transform: rotate(45deg);
+}
+
+.menu-overlay__close span:last-child {
+  transform: rotate(-45deg);
+}
+
+.menu-overlay__close:hover {
+  color: var(--accent-gold);
 }
 
 .menu-overlay__nav {
@@ -754,6 +787,11 @@ button {
     padding-left: 24px;
     padding-right: 24px;
     padding-top: 86px;
+  }
+
+  .menu-overlay__close {
+    top: 22px;
+    right: 24px;
   }
 
   .menu-overlay__mobile-music {
@@ -4492,6 +4530,33 @@ button {
 /* 탭도 2개짜리로 너비 조정 */
 .ul-dong-tabs:has(.ul-dong-tab:nth-child(2):last-child) .ul-dong-tab {
   font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .ul-building-outer {
+    overflow-x: hidden;
+  }
+
+  .ul-building {
+    min-width: 0;
+  }
+
+  .ul-dual-grids {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ul-dual-sep {
+    display: none;
+  }
+
+  .ul-sub-grid {
+    width: 100%;
+  }
+
+  .ul-sub-grid .ul-unit {
+    font-size: 13px;
+  }
 }
 
 /* ══════════════════════════════════════════════════

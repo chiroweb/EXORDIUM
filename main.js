@@ -57,6 +57,7 @@ if (navLogo && isLanding) {
 const nav = document.getElementById('nav');
 const menuBtn = document.getElementById('menuBtn');
 const menuOverlay = document.getElementById('menuOverlay');
+const menuCloseBtn = document.getElementById('menuOverlayClose');
 const menuItems = menuOverlay.querySelectorAll('.menu-overlay__item');
 const menuFooter = menuOverlay.querySelector('.menu-overlay__footer');
 
@@ -145,6 +146,10 @@ menuBtn.addEventListener('click', () => {
     if (menuOpen) closeMenu();
     else openMenu();
 });
+
+if (menuCloseBtn) {
+    menuCloseBtn.addEventListener('click', closeMenu);
+}
 
 menuItems.forEach(item => {
     const sub = item.querySelector('.menu-overlay__sub');

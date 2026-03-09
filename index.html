@@ -85,7 +85,7 @@
     </a>
     <ul class="nav__list">
       <li class="nav__item">
-        <a href="overview.html" class="nav__link">OVERVIEW</a>
+        <a href="overview.html" class="nav__link">사업개요</a>
         <ul class="nav__dropdown">
           <li><a href="overview.html#brand">브랜드</a></li>
           <li><a href="overview.html#project">사업개요</a></li>
@@ -95,7 +95,7 @@
         </ul>
       </li>
       <li class="nav__item">
-        <a href="complex.html" class="nav__link">COMPLEX PLAN</a>
+        <a href="complex.html" class="nav__link">단지안내</a>
         <ul class="nav__dropdown">
           <li><a href="complex.html#design">단지설계</a></li>
           <li><a href="complex.html#site-plan">단지 배치도</a></li>
@@ -104,7 +104,7 @@
         </ul>
       </li>
       <li class="nav__item">
-        <a href="limited.html" class="nav__link">LIMITED EDITION</a>
+        <a href="limited.html" class="nav__link">프리미엄</a>
         <ul class="nav__dropdown">
           <li><a href="limited.html#sky">SKY AMENITY</a></li>
           <li><a href="limited.html#summit">SUMMIT LOUNGE</a></li>
@@ -112,7 +112,7 @@
         </ul>
       </li>
       <li class="nav__item">
-        <a href="plans.html" class="nav__link">UNIT PLAN</a>
+        <a href="plans.html" class="nav__link">세대안내</a>
         <ul class="nav__dropdown">
           <li><a href="plans.html#special">SPECIAL ITEM</a></li>
           <li><a href="plans.html#units">세대안내</a></li>
@@ -120,7 +120,7 @@
         </ul>
       </li>
       <li class="nav__item">
-        <a href="info.html" class="nav__link">SALES INFO</a>
+        <a href="info.html" class="nav__link">분양정보</a>
         <ul class="nav__dropdown">
           <li><a href="info.html#schedule">분양일정</a></li>
           <li><a href="info.html#supply">공급안내</a></li>
@@ -128,14 +128,14 @@
         </ul>
       </li>
       <li class="nav__item">
-        <a href="subscription.html" class="nav__link">SUBSCRIPTION</a>
+        <a href="subscription.html" class="nav__link">청약안내</a>
         <ul class="nav__dropdown">
           <li><a href="subscription.html#docs">서류제출 안내문</a></li>
           <li><a href="subscription.html#contract">계약안내문</a></li>
         </ul>
       </li>
       <li class="nav__item">
-        <a href="pr.html" class="nav__link">PR ROOM</a>
+        <a href="pr.html" class="nav__link">홍보관</a>
         <ul class="nav__dropdown">
           <li><a href="pr.html#video">홍보영상</a></li>
           <li><a href="pr.html#press">언론보도</a></li>
@@ -165,6 +165,9 @@
   <!-- Fullscreen Menu Overlay -->
   <div class="menu-overlay" id="menuOverlay">
     <div class="menu-overlay__inner">
+      <button class="menu-overlay__close" id="menuOverlayClose" aria-label="메뉴 닫기">
+        <span></span><span></span>
+      </button>
       <button class="menu-overlay__mobile-music" id="musicBtnMobile" aria-label="배경음악 켜기/끄기">
         MUSIC <span id="musicStateMobile">ON</span>
       </button>
@@ -172,7 +175,7 @@
 
         <div class="menu-overlay__item">
           <a href="overview.html" class="menu-overlay__title">
-            <span class="menu-overlay__num">01</span>OVERVIEW
+            <span class="menu-overlay__num">01</span>사업개요
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="overview.html#brand">브랜드</a></li>
@@ -185,7 +188,7 @@
 
         <div class="menu-overlay__item">
           <a href="complex.html" class="menu-overlay__title">
-            <span class="menu-overlay__num">02</span>COMPLEX PLAN
+            <span class="menu-overlay__num">02</span>단지안내
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="complex.html#design">단지설계</a></li>
@@ -197,7 +200,7 @@
 
         <div class="menu-overlay__item">
           <a href="limited.html" class="menu-overlay__title">
-            <span class="menu-overlay__num">03</span>LIMITED EDITION
+            <span class="menu-overlay__num">03</span>프리미엄
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="limited.html#sky">SKY AMENITY</a></li>
@@ -208,7 +211,7 @@
 
         <div class="menu-overlay__item">
           <a href="plans.html" class="menu-overlay__title">
-            <span class="menu-overlay__num">04</span>UNIT PLAN
+            <span class="menu-overlay__num">04</span>세대안내
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="plans.html#special">SPECIAL ITEM</a></li>
@@ -219,7 +222,7 @@
 
         <div class="menu-overlay__item">
           <a href="info.html" class="menu-overlay__title">
-            <span class="menu-overlay__num">05</span>SALES INFO
+            <span class="menu-overlay__num">05</span>분양정보
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="info.html#schedule">분양일정</a></li>
@@ -230,7 +233,7 @@
 
         <div class="menu-overlay__item">
           <a href="subscription.html" class="menu-overlay__title">
-            <span class="menu-overlay__num">06</span>SUBSCRIPTION
+            <span class="menu-overlay__num">06</span>청약안내
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="subscription.html#docs">서류제출 안내문</a></li>
@@ -240,7 +243,7 @@
 
         <div class="menu-overlay__item">
           <a href="pr.html" class="menu-overlay__title">
-            <span class="menu-overlay__num">07</span>PR ROOM
+            <span class="menu-overlay__num">07</span>홍보관
           </a>
           <ul class="menu-overlay__sub">
             <li><a href="pr.html#video">홍보영상</a></li>
