@@ -800,7 +800,7 @@ button {
   }
 
   .menu-overlay__inner {
-    align-items: flex-end;
+    align-items: flex-start;
     padding-left: 24px;
     padding-right: 24px;
     padding-top: 86px;
@@ -821,7 +821,7 @@ button {
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: rgba(245, 240, 235, 0.78);
-    align-self: flex-end;
+    align-self: flex-start;
   }
 
   .menu-overlay__mobile-music span {
@@ -830,7 +830,7 @@ button {
   }
 
   .menu-overlay__nav {
-    width: min(100%, 420px);
+    width: 100%;
   }
 
   .menu-overlay__title {
@@ -4482,9 +4482,9 @@ button {
   white-space: nowrap;
 }
 
-.ul-tbadge--84A { background: rgba(59,130,246,0.18); color: #93c5fd; border: 1px solid rgba(59,130,246,0.38); }
-.ul-tbadge--59  { background: rgba(34,197,94,0.18);  color: #86efac; border: 1px solid rgba(34,197,94,0.38);  }
-.ul-tbadge--84B { background: rgba(168,85,247,0.18); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.38); }
+.ul-tbadge--84A { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(59,100,220,0.6); }
+.ul-tbadge--59  { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(30,160,80,0.6);  }
+.ul-tbadge--84B { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(220,45,45,0.6);  }
 
 /* 두 그리드를 나란히 */
 .ul-dual-grids {

@@ -194,6 +194,10 @@ menuOverlay.querySelectorAll('a').forEach(link => {
             e.preventDefault();
             return;
         }
+        // 서브 항목이 있는 상위 타이틀은 아코디언 토글만 — 메뉴 닫지 않음
+        if (link.classList.contains('menu-overlay__title') && link.closest('.menu-overlay__item--has-sub')) {
+            return;
+        }
         closeMenu();
     });
 });
@@ -796,18 +800,15 @@ function initUnitLayout() {
         building.innerHTML = `
         <div class="ul-dual-wrap">
           <div class="ul-dual-headers">
-            <div class="ul-dual-dong-hd">101동<em>162세대</em></div>
+            <div class="ul-dual-dong-hd">101 · 102동<em>각 162세대 · 동일 구조</em></div>
             <div class="ul-type-badges">
               <span class="ul-tbadge ul-tbadge--84A">84A</span>
               <span class="ul-tbadge ul-tbadge--59">59</span>
               <span class="ul-tbadge ul-tbadge--84B">84B</span>
             </div>
-            <div class="ul-dual-dong-hd">102동<em>162세대</em></div>
           </div>
           <div class="ul-dual-grids">
             <div class="ul-sub-grid">${floorRowsHTML('101')}</div>
-            <div class="ul-dual-sep"></div>
-            <div class="ul-sub-grid">${floorRowsHTML('102')}</div>
           </div>
         </div>`;
 
