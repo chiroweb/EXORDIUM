@@ -1059,7 +1059,9 @@ initFloatCTAs();
 function initMusicPlayer() {
     const audio    = document.getElementById('bgMusic');
     const btn      = document.getElementById('musicBtn');
+    const mobileBtn = document.getElementById('musicBtnMobile');
     const stateEl  = document.getElementById('musicState');
+    const stateElMobile = document.getElementById('musicStateMobile');
     if (!audio || !btn || !stateEl) return;
 
     audio.volume = 0.45;
@@ -1070,8 +1072,25 @@ function initMusicPlayer() {
     function setPlaying(playing) {
         isPlaying = playing;
         stateEl.textContent = playing ? 'ON' : 'OFF';
+        if (stateElMobile) stateElMobile.textContent = playing ? 'ON' : 'OFF';
         btn.classList.toggle('is-playing', playing);
         btn.classList.toggle('is-muted', !playing);
+    }
+
+    function toggleMusic(e) {
+        if (e) e.stopPropagation();
+
+        // 자동재생 대기 중이었다면 취소 (첫 클릭은 토글로 사용)
+        if (interactionPending) {
+            interactionPending = false;
+        }
+
+        if (isPlaying) {
+            audio.pause();
+            setPlaying(false);
+        } else {
+            audio.play().then(() => setPlaying(true)).catch(() => {});
+        }
     }
 
     // 자동재생 시도
@@ -1104,21 +1123,8 @@ function initMusicPlayer() {
     }
 
     // 버튼 토글
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation(); // document click 이벤트 전파 차단
-
-        // 자동재생 대기 중이었다면 취소 (첫 클릭은 토글로 사용)
-        if (interactionPending) {
-            interactionPending = false;
-        }
-
-        if (isPlaying) {
-            audio.pause();
-            setPlaying(false);
-        } else {
-            audio.play().then(() => setPlaying(true)).catch(() => {});
-        }
-    });
+    btn.addEventListener('click', toggleMusic);
+    if (mobileBtn) mobileBtn.addEventListener('click', toggleMusic);
 }
 
 initMusicPlayer();
