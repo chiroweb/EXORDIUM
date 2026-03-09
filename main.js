@@ -26,8 +26,8 @@ window.scrollTo(0, 0);
    ══════════════════════════════════════════════════ */
 
 const lenis = new Lenis({
-    duration: 1.4,
-    wheelMultiplier: document.getElementById('heroSeq') ? 0.4 : 1,
+    duration: 1.1,
+    wheelMultiplier: document.getElementById('heroSeq') ? 0.7 : 1,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
 });
 
@@ -228,10 +228,15 @@ function initHeroSequence() {
     // heroSeq pin spacer가 생성된 뒤 bldgSeq를 초기화해야 위치가 올바르게 계산됨
     entrance.eventCallback('onComplete', () => {
         initScrollTL();
-        // 다음 프레임에 spacer 반영 완료 후 bldgSeq 등록
+        // RAF 1: heroSeq pin spacer가 DOM에 삽입된 뒤 bldgSeq 등록
         requestAnimationFrame(() => {
             initBldgSeq();
             initBldgPopup();
+            // RAF 2: bldgSeq spacer까지 DOM 반영 완료 후 전체 위치 재계산
+            // (window.load refresh는 entrance 애니메이션 완료 전에 실행되므로 여기서 다시 호출)
+            requestAnimationFrame(() => {
+                ScrollTrigger.refresh();
+            });
         });
     });
 
@@ -271,6 +276,11 @@ function initHeroSequence() {
                             break;
                         }
                     }
+                },
+                // snap 완료 후 Lenis 내부 scroll position 재동기화
+                // Lenis targetScroll vs GSAP snap scrollTo 충돌(튐) 방지
+                onSnapComplete: () => {
+                    lenis.scrollTo(window.scrollY, { immediate: true });
                 },
                 invalidateOnRefresh: true,
             }
@@ -379,22 +389,6 @@ function initBldgSeq() {
             end: `+=${SCROLL_SPACE}`,
             pin: true,
             scrub: 1.5,
-            snap: {
-                snapTo: (progress) => {
-                    const idx = BLDG_SNAPS.indexOf(bldgLastSnap);
-                    if (idx === -1) return BLDG_SNAPS[0];
-                    if (progress > bldgLastSnap + 0.03) {
-                        return BLDG_SNAPS[Math.min(idx + 1, BLDG_SNAPS.length - 1)];
-                    }
-                    if (progress < bldgLastSnap - 0.03) {
-                        return BLDG_SNAPS[Math.max(idx - 1, 0)];
-                    }
-                    return bldgLastSnap;
-                },
-                duration: { min: 0.4, max: 1.2 },
-                delay: 0.08,
-                ease: 'power2.inOut',
-            },
             onUpdate: (self) => {
                 for (const p of BLDG_SNAPS) {
                     if (Math.abs(self.progress - p) < 0.015) {
@@ -508,6 +502,12 @@ function initBldgPopup() {
         },
     ];
 
+    // 첫 탭에서 이미지 공백이 보이지 않도록 미리 로드
+    POPUP_DATA.forEach((item) => {
+        const preloadImg = new Image();
+        preloadImg.src = item.img;
+    });
+
     const popup      = document.getElementById('bpop');
     const popupBox   = document.getElementById('bpopBox');
     const content    = document.getElementById('bpopContent');
@@ -530,16 +530,25 @@ function initBldgPopup() {
         const hsX = hsRect.left - seqRect.left + hsRect.width  / 2;
         const hsY = hsRect.top  - seqRect.top  + hsRect.height / 2;
 
-        const popW = 600;
-        const popH = 530;
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const popW = isMobile ? Math.min(seq.offsetWidth - 20, 520) : 600;
+        const popH = isMobile ? 460 : 530;
         const onLeft = hsX > seq.offsetWidth * 0.5;
         let pX = onLeft ? hsX - popW - 36 : hsX + 36;
         let pY = hsY - 40;
         pX = Math.max(12, Math.min(pX, seq.offsetWidth  - popW - 12));
         pY = Math.max(12, Math.min(pY, seq.offsetHeight - popH - 12));
 
-        popup.style.left = pX + 'px';
-        popup.style.top  = pY + 'px';
+        if (isMobile) {
+            // 모바일에서는 CSS 하단 고정 레이아웃 사용
+            popup.style.left = '';
+            popup.style.top = '';
+            popup.style.width = '';
+        } else {
+            popup.style.left = pX + 'px';
+            popup.style.top = pY + 'px';
+            popup.style.width = popW + 'px';
+        }
         popup.classList.add('is-open');
 
         // 이미지 교체
@@ -547,15 +556,20 @@ function initBldgPopup() {
         if (popImg) { popImg.src = data.img; popImg.alt = data.name; }
 
         // 커넥터 라인 좌표
-        const lineEndX = onLeft ? pX + popW : pX;
-        const lineEndY = pY + 18;
-        const len = Math.hypot(lineEndX - hsX, lineEndY - hsY);
-        connLine.setAttribute('x1', hsX);
-        connLine.setAttribute('y1', hsY);
-        connLine.setAttribute('x2', lineEndX);
-        connLine.setAttribute('y2', lineEndY);
-        connLine.setAttribute('stroke-dasharray', len);
-        connLine.setAttribute('stroke-dashoffset', len);
+        let len = 0;
+        if (!isMobile) {
+            const lineEndX = onLeft ? pX + popW : pX;
+            const lineEndY = pY + 18;
+            len = Math.hypot(lineEndX - hsX, lineEndY - hsY);
+            connLine.setAttribute('x1', hsX);
+            connLine.setAttribute('y1', hsY);
+            connLine.setAttribute('x2', lineEndX);
+            connLine.setAttribute('y2', lineEndY);
+            connLine.setAttribute('stroke-dasharray', len);
+            connLine.setAttribute('stroke-dashoffset', len);
+        } else {
+            gsap.set(connLine, { opacity: 0 });
+        }
 
         // 팝업 콘텐츠
         content.innerHTML = `
@@ -569,9 +583,11 @@ function initBldgPopup() {
         const tl = gsap.timeline();
 
         // Step 1: 커넥터 라인 드로잉
-        gsap.set(connLine, { strokeDashoffset: len });
+        gsap.set(connLine, { strokeDashoffset: len, opacity: isMobile ? 0 : 1 });
         tl.to(popup, { opacity: 1, duration: 0.01 }, 0);
-        tl.to(connLine, { strokeDashoffset: 0, duration: 0.32, ease: 'power2.out' }, 0);
+        if (!isMobile) {
+            tl.to(connLine, { strokeDashoffset: 0, duration: 0.32, ease: 'power2.out' }, 0);
+        }
 
         // Step 2: 박스 확장
         gsap.set(popupBox, { scaleY: 0, transformOrigin: 'top left' });
@@ -626,6 +642,7 @@ function initBldgPopup() {
     seq.querySelectorAll('.bhs').forEach((hs, i) => {
         hs.addEventListener('click', (e) => { e.stopPropagation(); openPopup(hs, i); });
     });
+    popup.addEventListener('click', (e) => e.stopPropagation());
     seq.addEventListener('click', () => closePopup());
 }
 
@@ -968,16 +985,11 @@ function initLocBrief() {
     // ── 단일 트리거: 스냅 + 리빌 동시 처리 ──
     ScrollTrigger.create({
         trigger: section,
-        start: 'top 62%',
+        start: 'top 30%',
         once: true,
         onEnter: () => {
             // 배경 영상 lazy load + 재생
             if (locVid) { locVid.load(); locVid.play(); }
-            // 마그네틱 스냅
-            lenis.scrollTo(section, {
-                duration: 0.82,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            });
             // 리빌은 스냅 시작 직후 함께 실행
             gsap.delayedCall(0.2, playReveal);
         },
