@@ -2547,23 +2547,37 @@ button {
 
 .plan-type__visual {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: clamp(40px, 5vw, 80px);
+  grid-template-columns: 45% 45%;
+  gap: 0;
+  justify-content: center;
   align-items: start;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: clamp(32px, 4vh, 60px);
+}
+
+.plan-type__iso {
+  overflow: hidden;
 }
 
 .plan-type__iso img {
   width: 100%;
-  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.08));
+  height: auto;
+  display: block;
 }
 
 .plan-type__floor {
-  padding-top: 20px;
+  padding-top: 0;
+  overflow: hidden;
 }
 
 .plan-type__floor img {
   width: 100%;
-  margin-bottom: 20px;
+  height: auto;
+  display: block;
+  margin-bottom: 0;
 }
 
 .plan-type__floor-caption {
@@ -3058,8 +3072,8 @@ button {
   }
 
   .plan-type__visual {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
   }
 
   .info-contract {
@@ -3563,6 +3577,8 @@ button {
   aspect-ratio: 3 / 2;
   overflow: hidden;
   background: var(--surface-sand);
+  position: relative;
+  z-index: 1;
 }
 
 .amenity-hero__img img {
@@ -3573,8 +3589,8 @@ button {
 
 .amenity-hero__label {
   font-family: var(--font-display);
-  font-size: 11px;
-  letter-spacing: 0.22em;
+  font-size: 14px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent-gold);
   display: block;
@@ -3584,7 +3600,7 @@ button {
 .amenity-hero__title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 48px);
+  font-size: clamp(36px, 4.5vw, 60px);
   letter-spacing: -0.01em;
   color: var(--text-dark);
   line-height: 1.2;
@@ -3592,8 +3608,8 @@ button {
 }
 
 .amenity-hero__desc {
-  font-size: clamp(14px, 1.3vw, 16px);
-  line-height: 2;
+  font-size: clamp(16px, 1.5vw, 18px);
+  line-height: 1.9;
   color: var(--neutral-mid);
   margin-bottom: 32px;
 }
@@ -3602,13 +3618,13 @@ button {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .amenity-feature-list li {
   font-family: var(--font-display);
-  font-size: 12px;
-  letter-spacing: 0.1em;
+  font-size: 15px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-dark);
   display: flex;
