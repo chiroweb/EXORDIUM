@@ -2984,6 +2984,39 @@ button {
   line-height: 1.7;
 }
 
+.location-visit-card__address {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 18px 20px;
+  border: 1.5px solid #1A1A1A;
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.4vw, 18px);
+  font-style: normal;
+  font-weight: 600;
+  color: #1A1A1A;
+  line-height: 1.5;
+}
+
+.location-visit-card__address-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #1A1A1A;
+  opacity: 0.45;
+  margin-bottom: 2px;
+}
+
+.location-visit-card__address-sub {
+  font-size: 13px;
+  font-weight: 400;
+  color: #1A1A1A;
+  opacity: 0.55;
+  margin-top: 2px;
+}
+
 .location-visit-card__media {
   margin-top: 18px;
   border: 1px solid var(--border-light);
