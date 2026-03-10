@@ -4341,9 +4341,9 @@ button {
   letter-spacing: 0.06em;
 }
 
-.ul-info__type-badge--84A { background: transparent; color: #1a3fa0; border: 1.5px solid rgba(59,100,220,0.6); }
+.ul-info__type-badge--84A { background: transparent; color: #8a6210; border: 1.5px solid rgba(210,155,20,0.6); }
 .ul-info__type-badge--59  { background: transparent; color: #a01a1a; border: 1.5px solid rgba(220,45,45,0.6);  }
-.ul-info__type-badge--84B { background: transparent; color: #1a6b38; border: 1.5px solid rgba(30,160,80,0.6);  }
+.ul-info__type-badge--84B { background: transparent; color: #1a3fa0; border: 1.5px solid rgba(59,100,220,0.6);  }
 
 .ul-info__link {
   display: inline-block;
@@ -4597,9 +4597,9 @@ button {
   white-space: nowrap;
 }
 
-.ul-tbadge--84A { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(59,100,220,0.6); }
+.ul-tbadge--84A { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(210,155,20,0.6); }
 .ul-tbadge--59  { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(220,45,45,0.6);  }
-.ul-tbadge--84B { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(30,160,80,0.6);   }
+.ul-tbadge--84B { background: #ffffff; color: #1A1A1A; border: 1.5px solid rgba(59,100,220,0.6);  }
 
 /* 두 그리드를 나란히 */
 .ul-dual-grids {
@@ -4719,11 +4719,11 @@ button {
 
 /* ─ 호수별 스트로크 색상 ─ */
 
-/* 1,4호 — 84A (파란색) */
+/* 1,4호 — 84A (노란색) */
 .ul-building-light .ul-unit[data-ho="1"],
 .ul-building-light .ul-unit[data-ho="4"] {
   background: transparent;
-  border-color: rgba(59, 100, 220, 0.6);
+  border-color: rgba(210, 155, 20, 0.6);
   color: #1A1A1A;
 }
 
@@ -4735,11 +4735,11 @@ button {
   color: #1A1A1A;
 }
 
-/* 5,6호 — 84B (초록색) */
+/* 5,6호 — 84B (파란색) */
 .ul-building-light .ul-unit[data-ho="5"],
 .ul-building-light .ul-unit[data-ho="6"] {
   background: transparent;
-  border-color: rgba(30, 160, 80, 0.6);
+  border-color: rgba(59, 100, 220, 0.6);
   color: #1A1A1A;
 }
 
