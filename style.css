@@ -5127,7 +5127,7 @@ button {
 /* Pre-text */
 .bldg-pretext {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   text-align: center;
   z-index: 6;
@@ -5137,7 +5137,7 @@ button {
 
 @media (min-width: 769px) {
   .bldg-pretext {
-    top: 6%;
+    top: 11%;
   }
 }
 
@@ -5182,7 +5182,7 @@ button {
   position: absolute;
   bottom: 0;
   left: 50%;
-  width: clamp(220px, 38vw, 580px);
+  width: clamp(209px, 36.1vw, 551px);
   z-index: 8;
 }
 
