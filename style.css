@@ -4719,27 +4719,27 @@ button {
 
 /* ─ 호수별 스트로크 색상 ─ */
 
-/* 1,4호 — 84A (노란색) */
+/* 1,2호 — 파란색 */
 .ul-building-light .ul-unit[data-ho="1"],
-.ul-building-light .ul-unit[data-ho="4"] {
+.ul-building-light .ul-unit[data-ho="2"] {
+  background: transparent;
+  border-color: rgba(59, 100, 220, 0.6);
+  color: #1A1A1A;
+}
+
+/* 3,6호 — 84A (노란색) */
+.ul-building-light .ul-unit[data-ho="3"],
+.ul-building-light .ul-unit[data-ho="6"] {
   background: transparent;
   border-color: rgba(210, 155, 20, 0.6);
   color: #1A1A1A;
 }
 
-/* 2,3호 — 59 (빨간색) */
-.ul-building-light .ul-unit[data-ho="2"],
-.ul-building-light .ul-unit[data-ho="3"] {
+/* 4,5호 — 59 (빨간색) */
+.ul-building-light .ul-unit[data-ho="4"],
+.ul-building-light .ul-unit[data-ho="5"] {
   background: transparent;
   border-color: rgba(220, 45, 45, 0.6);
-  color: #1A1A1A;
-}
-
-/* 5,6호 — 84B (파란색) */
-.ul-building-light .ul-unit[data-ho="5"],
-.ul-building-light .ul-unit[data-ho="6"] {
-  background: transparent;
-  border-color: rgba(59, 100, 220, 0.6);
   color: #1A1A1A;
 }
 
