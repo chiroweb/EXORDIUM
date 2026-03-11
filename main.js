@@ -1169,6 +1169,113 @@ function initMusicPlayer() {
 
 initMusicPlayer();
 
+/* ══════════════════════════════════════════════════
+   PREMIUM — Editorial Reveal
+   ══════════════════════════════════════════════════ */
+function initPremEditorial() {
+    const lines = document.querySelectorAll('.prem-editorial__line');
+    if (!lines.length) return;
+
+    lines.forEach((line, i) => {
+        gsap.set(line, { y: '110%' });
+        ScrollTrigger.create({
+            trigger: line,
+            start: 'top 88%',
+            onEnter: () => {
+                gsap.to(line, {
+                    y: '0%',
+                    duration: 0.9,
+                    delay: (i % 2) * 0.1,
+                    ease: 'power3.out'
+                });
+            },
+            once: true
+        });
+    });
+
+    const collage = document.querySelector('.prem-editorial__collage');
+    if (collage) {
+        gsap.set(collage, { opacity: 0, y: 40 });
+        ScrollTrigger.create({
+            trigger: collage,
+            start: 'top 80%',
+            onEnter: () => {
+                gsap.to(collage, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' });
+            },
+            once: true
+        });
+    }
+}
+
+initPremEditorial();
+
+/* ══════════════════════════════════════════════════
+   PAGE-WIDE — Image Reveal (subpage)
+   ══════════════════════════════════════════════════ */
+function initImgReveal() {
+    // gallery items (cinematic gallery)
+    const galleryItems = document.querySelectorAll('[data-gallery]');
+    galleryItems.forEach((el, i) => {
+        gsap.set(el, { opacity: 0, y: 32 });
+        ScrollTrigger.create({
+            trigger: el,
+            start: 'top 90%',
+            onEnter: () => {
+                gsap.to(el, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.1,
+                    delay: (i % 3) * 0.13,
+                    ease: 'power3.out',
+                    onComplete: () => el.classList.add('is-revealed')
+                });
+            },
+            once: true
+        });
+    });
+
+    // 4-column feature card images
+    const featImgs = document.querySelectorAll('.prem-feat-card__img');
+    featImgs.forEach((img, i) => {
+        gsap.set(img, { opacity: 0, y: 24 });
+        ScrollTrigger.create({
+            trigger: img,
+            start: 'top 90%',
+            onEnter: () => {
+                gsap.to(img, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.9,
+                    delay: i * 0.1,
+                    ease: 'power3.out'
+                });
+            },
+            once: true
+        });
+    });
+
+    // panoramic divider
+    const dividerImg = document.querySelector('.prem-divider__img');
+    if (dividerImg) {
+        gsap.set(dividerImg, { opacity: 0, scale: 1.04 });
+        ScrollTrigger.create({
+            trigger: dividerImg,
+            start: 'top 90%',
+            onEnter: () => {
+                gsap.to(dividerImg, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1.4,
+                    ease: 'power3.out'
+                });
+            },
+            once: true
+        });
+    }
+}
+
+initImgReveal();
+
 
 /* ══════════════════════════════════════════════════
    INITIAL LOAD
