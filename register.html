@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관심고객 사전등록 — EXORDIUM SIGNATURE HAEUNDAE</title>
+  <meta name="description" content="엑소디움 시그니처 해운대 관심고객 사전등록. 프리미엄 분양 정보를 가장 먼저 받아보세요." />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:site_name"    content="EXORDIUM SIGNATURE HAEUNDAE" />
+  <meta property="og:title"        content="당신의 시그니처, 당신의 해운대." />
+  <meta property="og:description"  content="송정해수욕장의 바다를 소유하는 유일한 방법." />
+  <meta property="og:image"        content="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/ogtag.png" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="600" />
+  <meta property="og:image:alt"    content="EXORDIUM SIGNATURE HAEUNDAE — 엑소디움 시그니처 해운대" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="당신의 시그니처, 당신의 해운대." />
+  <meta name="twitter:description" content="송정해수욕장의 바다를 소유하는 유일한 방법." />
+  <meta name="twitter:image"       content="https://chiro-web.s3.ap-northeast-2.amazonaws.com/public/ogtag.png" />
+
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════ NAVIGATION ═══════════ -->
+  <nav class="nav" id="nav">
+    <a href="/" class="nav__logo">
+      <img src="https://chiro-web.s3.ap-northeast-2.amazonaws.com/other/public/logo-exordium.png" alt="EXORDIUM" class="nav__logo-img" />
+    </a>
+    <ul class="nav__list">
+      <li class="nav__item">
+        <a href="overview.html" class="nav__link">사업개요</a>
+        <ul class="nav__dropdown">
+          <li><a href="overview.html#brand">브랜드</a></li>
+          <li><a href="overview.html#project">사업개요</a></li>
+          <li><a href="overview.html#partner">파트너</a></li>
+          <li><a href="overview.html#location">입지안내</a></li>
+        </ul>
+      </li>
+      <li class="nav__item">
+        <a href="complex.html" class="nav__link">단지안내</a>
+        <ul class="nav__dropdown">
+          <li><a href="complex.html#design">단지설계</a></li>
+          <li><a href="complex.html#unit-layout">단지/동호수 배치도</a></li>
+          <li><a href="complex.html#system">시스템</a></li>
+        </ul>
+      </li>
+      <li class="nav__item">
+        <a href="limited.html" class="nav__link">어메니티</a>
+      </li>
+      <li class="nav__item">
+        <a href="plans.html" class="nav__link">세대안내</a>
+        <ul class="nav__dropdown">
+          <li><a href="plans.html#special">SPECIAL ITEM</a></li>
+          <li><a href="plans.html#units">세대안내</a></li>
+          <li><a href="plans.html#interior">인테리어</a></li>
+        </ul>
+      </li>
+      <li class="nav__item">
+        <a href="info.html" class="nav__link">분양정보</a>
+        <ul class="nav__dropdown">
+          <li><a href="info.html#schedule">분양일정</a></li>
+          <li><a href="info.html#supply">공급안내</a></li>
+          <li><a href="info.html#notice">모집공고</a></li>
+        </ul>
+      </li>
+      <li class="nav__item">
+        <a href="subscription.html" class="nav__link">청약안내</a>
+        <ul class="nav__dropdown">
+          <li><a href="subscription.html#docs">서류제출 안내문</a></li>
+          <li><a href="subscription.html#contract">계약안내문</a></li>
+        </ul>
+      </li>
+      <li class="nav__item">
+        <a href="pr.html" class="nav__link">홍보관</a>
+        <ul class="nav__dropdown">
+          <li><a href="pr.html#video">홍보영상</a></li>
+          <li><a href="pr.html#press">언론보도</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="nav__right">
+      <a href="tel:16610299" class="nav__tel">1661-0299</a>
+      <a href="register.html" class="nav__cta">관심고객 등록</a>
+      <button class="nav__menu-btn" id="menuBtn" aria-label="메뉴 열기">
+        <span class="nav__menu-line"></span>
+        <span class="nav__menu-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Fullscreen Menu Overlay -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-overlay__inner">
+      <button class="menu-overlay__close" id="menuOverlayClose" aria-label="메뉴 닫기">
+        <span></span><span></span>
+      </button>
+      <nav class="menu-overlay__nav">
+
+        <div class="menu-overlay__item">
+          <a href="overview.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">01</span>사업개요
+          </a>
+          <ul class="menu-overlay__sub">
+            <li><a href="overview.html#brand">브랜드</a></li>
+            <li><a href="overview.html#project">사업개요</a></li>
+            <li><a href="overview.html#partner">파트너</a></li>
+            <li><a href="overview.html#location">입지안내</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-overlay__item">
+          <a href="complex.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">02</span>단지안내
+          </a>
+          <ul class="menu-overlay__sub">
+            <li><a href="complex.html#design">단지설계</a></li>
+            <li><a href="complex.html#unit-layout">단지/동호수 배치도</a></li>
+            <li><a href="complex.html#system">시스템</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-overlay__item">
+          <a href="limited.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">03</span>어메니티
+          </a>
+        </div>
+
+        <div class="menu-overlay__item">
+          <a href="plans.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">04</span>세대안내
+          </a>
+          <ul class="menu-overlay__sub">
+            <li><a href="plans.html#special">SPECIAL ITEM</a></li>
+            <li><a href="plans.html#units">세대안내</a></li>
+            <li><a href="plans.html#interior">인테리어</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-overlay__item">
+          <a href="info.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">05</span>분양정보
+          </a>
+          <ul class="menu-overlay__sub">
+            <li><a href="info.html#schedule">분양일정</a></li>
+            <li><a href="info.html#supply">공급안내</a></li>
+            <li><a href="info.html#notice">모집공고</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-overlay__item">
+          <a href="subscription.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">06</span>청약안내
+          </a>
+          <ul class="menu-overlay__sub">
+            <li><a href="subscription.html#docs">서류제출 안내문</a></li>
+            <li><a href="subscription.html#contract">계약안내문</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-overlay__item">
+          <a href="pr.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">07</span>홍보관
+          </a>
+          <ul class="menu-overlay__sub">
+            <li><a href="pr.html#video">홍보영상</a></li>
+            <li><a href="pr.html#press">언론보도</a></li>
+          </ul>
+        </div>
+
+        <div class="menu-overlay__item">
+          <a href="location.html" class="menu-overlay__title">
+            <span class="menu-overlay__num">08</span>오시는 길
+          </a>
+        </div>
+
+      </nav>
+      <div class="menu-overlay__footer">
+        <a href="tel:16610299" class="menu-overlay__tel">1661-0299</a>
+        <span class="menu-overlay__footer-info">견본주택 · 부산 해운대구 우동 655-5<br>운영시간 10:00 – 20:00</span>
+        <a href="register.html" class="menu-overlay__vip">VIP 고객등록</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SUBPAGE HERO ═══════════ -->
+  <div class="subpage-hero">
+    <div class="subpage-hero__bg">
+      <img src="https://nbpkorea-assets.s3.ap-northeast-2.amazonaws.com/songung/hero-premium.webp" alt="" />
+    </div>
+    <p class="subpage-hero__eyebrow">Pre-Registration</p>
+    <h1 class="subpage-hero__title">관심고객 등록</h1>
+  </div>
+
+  <!-- ═══════════ CONTENT ═══════════ -->
+  <div class="subpage-content">
+    <div class="subpage-content__inner">
+
+      <!-- 폼 래퍼 -->
+      <div class="reg-wrap">
+
+        <!-- 폼 본체 -->
+        <form class="reg-form" id="regForm" novalidate>
+
+          <!-- STEP 1: 개인정보 처리방침 -->
+          <div class="reg-section">
+            <div class="reg-section__head">
+              <span class="reg-section__label">Step 01</span>
+              <h2 class="reg-section__title">개인정보 처리방침</h2>
+              <p class="reg-section__desc">서비스 이용을 위해 아래 개인정보 처리방침을 확인해 주세요.</p>
+            </div>
+            <div class="reg-policy-box">
+              <p><strong>수집 항목</strong> 이름, 연락처, 이메일 주소, 관심 타입, 문의사항</p>
+              <p><strong>수집 목적</strong> 분양 상담 및 안내, 프리미엄 정보 우선 제공</p>
+              <p><strong>보유 기간</strong> 분양 완료 후 1년간 보관 후 파기</p>
+              <p><strong>위탁 내용</strong> 수집된 개인정보는 제3자에게 제공되지 않습니다.</p>
+              <p><strong>문의</strong> 개인정보 관련 문의사항은 고객센터 <a href="tel:16610299" style="color:var(--accent-gold)">1661-0299</a> 로 연락 주시기 바랍니다.</p>
+            </div>
+          </div>
+
+          <!-- STEP 2: 개인정보 입력 -->
+          <div class="reg-section">
+            <div class="reg-section__head">
+              <span class="reg-section__label">Step 02</span>
+              <h2 class="reg-section__title">개인정보 입력</h2>
+              <p class="reg-section__desc">서비스 이용을 위해 필요한 정보를 입력해 주세요.</p>
+            </div>
+
+            <div class="reg-field-row">
+              <div class="reg-field">
+                <label class="reg-label" for="reg-name">이름 <span class="reg-required">*</span></label>
+                <input class="reg-input" type="text" id="reg-name" placeholder="홍길동" autocomplete="name" />
+              </div>
+              <div class="reg-field">
+                <label class="reg-label" for="reg-phone">연락처 <span class="reg-required">*</span></label>
+                <input class="reg-input" type="tel" id="reg-phone" placeholder="010-0000-0000" autocomplete="tel" />
+              </div>
+            </div>
+
+            <div class="reg-field">
+              <label class="reg-label" for="reg-email">이메일</label>
+              <input class="reg-input" type="email" id="reg-email" placeholder="example@email.com" autocomplete="email" />
+            </div>
+
+            <div class="reg-field">
+              <label class="reg-label" for="reg-type">관심 타입 <span class="reg-required">*</span></label>
+              <select class="reg-select" id="reg-type">
+                <option value="" disabled selected>선택해 주세요</option>
+                <option value="59">59타입</option>
+                <option value="84A">84A타입</option>
+                <option value="84B">84B타입</option>
+              </select>
+            </div>
+
+            <div class="reg-field">
+              <label class="reg-label" for="reg-source">유입 경로</label>
+              <select class="reg-select" id="reg-source">
+                <option value="" disabled selected>어떻게 알게 되셨나요?</option>
+                <option value="인터넷 검색">인터넷 검색</option>
+                <option value="SNS / 유튜브">SNS / 유튜브</option>
+                <option value="지인 소개">지인 소개</option>
+                <option value="현장 방문">현장 방문</option>
+                <option value="전단지 / 광고">전단지 / 광고</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+
+            <div class="reg-field">
+              <label class="reg-label" for="reg-message">문의사항</label>
+              <textarea class="reg-textarea" id="reg-message" placeholder="추가 문의사항이 있으시면 자유롭게 작성해 주세요."></textarea>
+            </div>
+          </div>
+
+          <!-- STEP 3: 동의 항목 -->
+          <div class="reg-section">
+            <div class="reg-section__head">
+              <span class="reg-section__label">Step 03</span>
+              <h2 class="reg-section__title">동의 항목</h2>
+            </div>
+
+            <!-- 필수 동의 -->
+            <div class="reg-consent-group">
+              <p class="reg-consent-group__title">필수 동의 항목</p>
+              <label class="reg-consent-item reg-consent-item--required">
+                <input class="reg-checkbox" type="checkbox" id="reg-consent-required" />
+                <span class="reg-consent-check"></span>
+                <span class="reg-consent-text">
+                  <strong>개인정보 수집 및 이용에 동의합니다</strong>
+                  <em>이름, 연락처, 이메일을 분양 안내 목적으로 수집하며, 분양 완료 후 1년간 보유합니다.</em>
+                </span>
+              </label>
+            </div>
+
+            <!-- 선택 동의 -->
+            <div class="reg-consent-group">
+              <p class="reg-consent-group__title">선택 동의 항목</p>
+              <div class="reg-consent-item">
+                <span class="reg-consent-text">
+                  <strong>마케팅 정보 수신 동의</strong>
+                  <em>이벤트, 프로모션, 신규 정보 안내를 받으시겠습니까?</em>
+                </span>
+                <div class="reg-radio-group">
+                  <label class="reg-radio-label">
+                    <input type="radio" name="marketing" value="동의" id="reg-marketing-yes" />
+                    <span class="reg-radio-btn">동의</span>
+                  </label>
+                  <label class="reg-radio-label">
+                    <input type="radio" name="marketing" value="부동의" id="reg-marketing-no" checked />
+                    <span class="reg-radio-btn">부동의</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 에러 메시지 -->
+            <p class="reg-error" id="regError"></p>
+          </div>
+
+          <!-- 제출 버튼 -->
+          <button type="button" class="reg-submit" id="regSubmit" onclick="handleRegSubmit()">
+            <span class="reg-submit__text">사전등록 신청</span>
+          </button>
+
+        </form>
+
+        <!-- 완료 화면 -->
+        <div class="reg-success" id="regSuccess">
+          <div class="reg-success__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="reg-success__eyebrow">Thank you</p>
+          <h2 class="reg-success__title">등록이 완료되었습니다</h2>
+          <p class="reg-success__desc">관심고객으로 등록해 주셔서 감사합니다.<br>빠른 시일 내에 담당자가 직접 연락드리겠습니다.</p>
+          <button class="reg-reset" onclick="handleGoHome()">홈페이지로 돌아가기</button>
+        </div>
+
+      </div><!-- /.reg-wrap -->
+
+    </div>
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div class="footer__info">
+      <span>사업주체: 주식회사 수영산업개발</span>
+      <span>시공예정사: 대우산업개발 주식회사</span>
+      <span>대표전화: 1661-0299</span>
+    </div>
+    <div class="footer__info">
+      <span>온라인대행: 디지털우주대작전주식회사</span>
+      <span>242-86-02886</span>
+      <span>서울시 강남구 봉은사로 57길 5, 201호(삼성동)</span>
+    </div>
+    <p class="footer__legal">
+      본 홈페이지의 이미지 및 콘텐츠는 소비자의 이해를 돕기 위한 것으로 실제와 차이가 있을 수 있습니다.<br />
+      © 2026 EXORDIUM SIGNATURE HAEUNDAE. All Rights Reserved.
+    </p>
+  </footer>
+
+  <script type="module" src="/main.js"></script>
+  <script>
+    /* ============================================================
+     * ★★★ 아래 URL을 Google Apps Script 배포 URL로 교체하세요 ★★★
+     * 예: https://script.google.com/macros/s/AKfycbx.../exec
+     * ============================================================ */
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFG9h32xsS9J_ml5-QSNNK9yOMH9I_1H07voxt_1o0HLD3jvsrYmbN8tJwo7m3pUFb7Q/exec';
+    const WEBHOOK_URL = '';
+
+    function submitToAppsScript(url, payload) {
+      if (!url) {
+        return Promise.reject(new Error('ENDPOINT_MISSING'));
+      }
+
+      return fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        },
+        body: new URLSearchParams(payload).toString(),
+      }).then(() => undefined);
+    }
+
+    function sendWebhook(url, payload) {
+      if (!url) return Promise.resolve();
+
+      const body = JSON.stringify(payload);
+      if (navigator.sendBeacon) {
+        const ok = navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));
+        if (ok) return Promise.resolve();
+      }
+
+      return fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body,
+      }).then(() => undefined);
+    }
+
+    async function handleRegSubmit() {
+      const btn = document.getElementById('regSubmit');
+      const errEl = document.getElementById('regError');
+
+      const name  = document.getElementById('reg-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const type  = document.getElementById('reg-type').value;
+      const consent = document.getElementById('reg-consent-required').checked;
+
+      errEl.textContent = '';
+
+      if (!name || !phone || !type) {
+        errEl.textContent = '필수 항목(이름, 연락처, 관심 타입)을 모두 입력해 주세요.';
+        return;
+      }
+      if (!consent) {
+        errEl.textContent = '개인정보 수집 및 이용에 동의해 주세요.';
+        return;
+      }
+      const phoneClean = phone.replace(/[^0-9]/g, '');
+      if (phoneClean.length < 10 || phoneClean.length > 11) {
+        errEl.textContent = '올바른 연락처를 입력해 주세요.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.classList.add('reg-submit--loading');
+
+      const marketing = document.querySelector('input[name="marketing"]:checked')?.value || '부동의';
+
+      const payload = {
+        name,
+        phone,
+        email:    document.getElementById('reg-email').value.trim(),
+        roomType: type,
+        source:   document.getElementById('reg-source').value || '',
+        message:  document.getElementById('reg-message').value.trim(),
+        marketing,
+        pageUrl: window.location.href,
+        submittedAt: new Date().toISOString(),
+      };
+
+      try {
+        await submitToAppsScript(APPS_SCRIPT_URL, payload);
+        await sendWebhook(WEBHOOK_URL, payload);
+        document.getElementById('regForm').style.display = 'none';
+        document.getElementById('regSuccess').style.display = 'flex';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {
+        console.error('관심고객 등록 전송 실패', e);
+        errEl.textContent = '전송에 실패했습니다. 연동 URL 또는 Apps Script 배포 설정을 확인해 주세요.';
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('reg-submit--loading');
+      }
+    }
+
+    function handleGoHome() {
+      window.location.href = '/';
+    }
+
+    document.getElementById('reg-phone').addEventListener('input', function (e) {
+      let v = e.target.value.replace(/[^0-9]/g, '').slice(0, 11);
+      if (v.length > 7) v = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7);
+      else if (v.length > 3) v = v.slice(0,3) + '-' + v.slice(3);
+      e.target.value = v;
+    });
+  </script>
+
+</body>
+</html>
