@@ -33,6 +33,12 @@ window.matchMedia(MOBILE_QUERY).addEventListener('change', () => {
 if (IS_MOBILE && document.getElementById('heroSeq')) {
     document.documentElement.classList.add('m-slides-active');
     document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px');
+    // 히어로 영상 조기 자동재생 시도 — 엔진 초기화(입장 ~1.5s 후)를 기다리지 않고
+    // 로드 직후 시도해 iOS 재생버튼 노출 시간을 최소화.
+    document.querySelectorAll('#heroSeq video').forEach(v => {
+        v.muted = true; v.playsInline = true; v.setAttribute('playsinline', '');
+        const p = v.play(); if (p && p.catch) p.catch(() => {});
+    });
 }
 
 // 새로고침 시 최상단 강제 이동
