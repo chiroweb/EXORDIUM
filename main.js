@@ -1384,6 +1384,31 @@ initFloatCTAs();
 
 
 /* ══════════════════════════════════════════════════
+   MOBILE CALL BUTTON — 전 페이지, 모바일 전용
+   누르면 대표번호(051-711-2508) 즉시 연결
+   ══════════════════════════════════════════════════ */
+
+function initMobileCall() {
+    if (!IS_MOBILE) return;
+    if (document.querySelector('.fcall')) return;
+
+    const a = document.createElement('a');
+    a.href = 'tel:0517112508';
+    a.className = 'fcall';
+    a.setAttribute('aria-label', '대표번호 전화 연결 051-711-2508');
+    a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 15.5a12.8 12.8 0 0 1-4-.6 1.1 1.1 0 0 0-1.1.3l-1.8 1.8a15.2 15.2 0 0 1-6.6-6.6l1.8-1.8a1.1 1.1 0 0 0 .3-1.1 12.8 12.8 0 0 1-.6-4A1.1 1.1 0 0 0 6.9 3H4a1 1 0 0 0-1 1 17 17 0 0 0 17 17 1 1 0 0 0 1-1v-2.9a1.1 1.1 0 0 0-1-1.1z"/></svg>';
+
+    // 등록 CTA가 있는 페이지(index)에서는 그 원형 버튼 위로 스택
+    if (document.getElementById('fctaRegister')) {
+        a.style.bottom = '132px';
+    }
+    document.body.appendChild(a);
+}
+
+initMobileCall();
+
+
+/* ══════════════════════════════════════════════════
    BACKGROUND MUSIC — 자동재생 + ON/OFF 토글
    ══════════════════════════════════════════════════ */
 

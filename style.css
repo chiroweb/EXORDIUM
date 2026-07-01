@@ -2586,6 +2586,24 @@ button {
   gap: 6px;
 }
 
+/* 모바일: ISO 렌더 숨기고 내려다본 평면(top-down)만 단일 표시 (답답함 해소) */
+@media (max-width: 768px) {
+  .plan-type__visual {
+    grid-template-columns: 1fr;
+    width: 100%;
+    left: 0;
+    transform: none;
+    padding: 0 var(--margin);
+  }
+  .plan-type__iso {
+    display: none;
+  }
+  .plan-type__floor {
+    max-width: 460px;
+    margin: 0 auto;
+  }
+}
+
 
 /* ══════════════════════════════════════════════════
    SUBPAGE: INFO — Sales Guide
@@ -5664,6 +5682,31 @@ button {
     font-size: 11px;
     padding: 10px 17px 10px 13px;
   }
+}
+
+/* ─── 모바일 전화 플로팅 버튼 (누르면 대표번호 즉시 연결) ─── */
+.fcall { display: none; }
+
+@media (max-width: 768px) {
+  .fcall {
+    position: fixed;
+    right: 20px;
+    bottom: 28px;            /* index에서는 JS가 등록 CTA 위(132px)로 올림 */
+    z-index: 901;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-gold, #C8A97E);
+    color: #0D0D0D;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fcall svg { width: 24px; height: 24px; display: block; }
+  .fcall:active { transform: scale(0.94); }
 }
 
 
