@@ -547,9 +547,15 @@ function initMobileSlides({ heroTL, bldgTL }) {
     }
 
     // ── 5) 입력: 현재 슬라이드가 내부 스크롤 가능한지 판단 ──
+    // 반드시 overflow-y:auto/scroll 인 슬라이드(loc/footer)만 내부 스크롤로 취급.
+    // 빌딩/히어로는 overflow:hidden이라 실제로 스크롤 불가 → 무조건 스와이프 전진.
+    // (이 판별을 빼면 빌딩이 scrollHeight>clientHeight로 오판돼 다음으로 못 넘어감)
     function scrollEl() {
         const el = sections[STOPS[cur].sec];
-        return el && el.scrollHeight > el.clientHeight + 4 ? el : null;
+        if (!el) return null;
+        const oy = getComputedStyle(el).overflowY;
+        if (oy !== 'auto' && oy !== 'scroll') return null;
+        return el.scrollHeight > el.clientHeight + 4 ? el : null;
     }
     function atEdge(el, dir) {
         // dir < 0: 다음(위로 스와이프), dir > 0: 이전(아래로 스와이프)
@@ -614,6 +620,21 @@ function initMobileSlides({ heroTL, bldgTL }) {
         clearTimeout(rz);
         rz = setTimeout(() => { setAppH(); translateTo(STOPS[cur].sec, false); }, 150);
     });
+
+    // iOS 인라인 muted 자동재생 보장 (재생버튼 방지) — 속성만으론 불충분해 JS로 강제
+    const heroVids = heroSeq.querySelectorAll('video');
+    function kickVideos() {
+        heroVids.forEach(v => {
+            v.muted = true;
+            v.playsInline = true;
+            v.setAttribute('playsinline', '');
+            const p = v.play();
+            if (p && p.catch) p.catch(() => {});
+        });
+    }
+    kickVideos();
+    // 자동재생이 정책상 막히면 첫 터치에서 재생
+    document.addEventListener('touchstart', kickVideos, { once: true, passive: true });
 
     // ── 6) 초기화 ──
     translateTo(0, false);

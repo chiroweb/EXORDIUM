@@ -5414,9 +5414,19 @@ button {
 }
 
 @media (max-width: 768px) {
+  /* 모바일: 좌우 대신 상단 밴드에 2열 컴팩트로 표시 (건물 크라운 위 여백) */
   .bldg-side {
-    display: none;
+    top: 82px;
+    transform: none;
+    z-index: 12;
+    max-width: 46vw;
   }
+  .bldg-side--left  { left: 18px; }
+  .bldg-side--right { right: 18px; }
+  .bldg-side .bs__label { font-size: 8px; letter-spacing: 0.14em; }
+  .bldg-side .bs__value { font-size: 11.5px; line-height: 1.35; }
+  .bldg-side .bs__desc  { display: none; }   /* 모바일은 라벨+값만 (밀도 관리) */
+  .bldg-side .bs__gap   { margin-top: 11px; }
 
   .bldg-img-wrap {
     width: 75vw;
