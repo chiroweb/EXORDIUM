@@ -460,14 +460,13 @@ function initMobileSlides({ heroTL, bldgTL }) {
     }
     setAppH();
 
-    // ── 3) STOP 정의 ──
-    // 히어로: 인트로 → (패널 축소+재확장을 한 번에) 풀스크린 두 번째 히어로.
-    //         0.42(반쪽 검은 패널)를 정지점으로 두지 않아, 한 번의 스와이프에
-    //         "스르륵 밀렸다 다시 들어오는" 연속 모션으로 처리 → 검은 반쪽 잔상 없음.
-    // 빌딩: 모바일은 사이드 스펙이 숨겨져 중간 장면이 거의 동일하므로 2장으로 축약.
-    //       0.82(커튼+타이틀+건물 등장) → 1.0(핫스팟).
+    // ── 3) STOP 정의 — 한 스와이프 = 한 섹션 전체가 2초 안에 완전히 등장 ──
+    // 섹션을 잘게 쪼개면 '안 바뀌는데 멈춤' 오해가 생기므로 섹션당 1스톱으로 통합.
+    // 히어로만 예외: 인트로(로드 시 이미 표시) + 두 번째 히어로(패널 축소+재확장을
+    //   한 번에 연속 재생, 반쪽 검은 패널 정지 없음) 2스톱.
+    // 빌딩/로케이션/푸터: 각각 1스톱, 진입하면 그 섹션의 모든 연출이 2초 내 캐스케이드.
     const HERO_PROG = [0, 1.0];
-    const BLDG_PROG = [0.82, 1.0];
+    const BLDG_PROG = [1.0];       // 0→1.0 전체(커튼·타이틀·건물·핫스팟)를 2초에 한 번에
     const STOPS = [];
     HERO_PROG.forEach(p => STOPS.push({ sec: idxOf(heroSeq), tl: heroTL, prog: p }));
     if (bldgTL && bldgSeq) BLDG_PROG.forEach(p => STOPS.push({ sec: idxOf(bldgSeq), tl: bldgTL, prog: p }));
@@ -509,9 +508,9 @@ function initMobileSlides({ heroTL, bldgTL }) {
     function playContent(to, secChanged) {
         applyNav(to.sec);
         if (to.tl) {
-            const dur = secChanged ? AUTOPLAY : AUTOPLAY * 0.8;
+            // 섹션 전체 연출을 일관되게 2초에 캐스케이드 (같은 섹션 전환도 동일)
             to.tl.tweenTo(to.tl.duration() * to.prog, {
-                duration: dur, ease: 'power2.inOut', onComplete: unlock,
+                duration: AUTOPLAY, ease: 'power2.inOut', onComplete: unlock,
             });
         } else if (to.kind === 'loc') {
             if (typeof locEnter === 'function') locEnter();
