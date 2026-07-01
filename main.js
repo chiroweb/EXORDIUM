@@ -460,10 +460,14 @@ function initMobileSlides({ heroTL, bldgTL }) {
     }
     setAppH();
 
-    // ── 3) STOP 정의 (내부 장면까지 분해) ──
-    // 히어로/빌딩은 데스크탑 스냅 지점을 그대로 '장면'으로 승격.
-    const HERO_PROG = [0, 0.42, 0.84];
-    const BLDG_PROG = [0.55, 0.82, 1.0];
+    // ── 3) STOP 정의 ──
+    // 히어로: 인트로 → (패널 축소+재확장을 한 번에) 풀스크린 두 번째 히어로.
+    //         0.42(반쪽 검은 패널)를 정지점으로 두지 않아, 한 번의 스와이프에
+    //         "스르륵 밀렸다 다시 들어오는" 연속 모션으로 처리 → 검은 반쪽 잔상 없음.
+    // 빌딩: 모바일은 사이드 스펙이 숨겨져 중간 장면이 거의 동일하므로 2장으로 축약.
+    //       0.82(커튼+타이틀+건물 등장) → 1.0(핫스팟).
+    const HERO_PROG = [0, 1.0];
+    const BLDG_PROG = [0.82, 1.0];
     const STOPS = [];
     HERO_PROG.forEach(p => STOPS.push({ sec: idxOf(heroSeq), tl: heroTL, prog: p }));
     if (bldgTL && bldgSeq) BLDG_PROG.forEach(p => STOPS.push({ sec: idxOf(bldgSeq), tl: bldgTL, prog: p }));
@@ -520,6 +524,7 @@ function initMobileSlides({ heroTL, bldgTL }) {
         }
     }
 
+    let watchdog = null;
     function goTo(target) {
         if (locked) return;
         target = Math.max(0, Math.min(STOPS.length - 1, target));
@@ -529,6 +534,10 @@ function initMobileSlides({ heroTL, bldgTL }) {
         const secChanged = to.sec !== from.sec;
         locked = true;
         cur = target;
+
+        // 실패-안전장치: 어떤 콜백이 누락돼도 최대 시간 후 반드시 잠금 해제
+        if (watchdog) watchdog.kill();
+        watchdog = gsap.delayedCall(AUTOPLAY + T_DELAY + 1.2, unlock);
 
         if (secChanged) {
             translateTo(to.sec, true);
@@ -569,8 +578,7 @@ function initMobileSlides({ heroTL, bldgTL }) {
     wrap.addEventListener('touchend', (e) => {
         if (locked || popupOpen()) return;
         const dy = e.changedTouches[0].clientY - ty;
-        const dt = Date.now() - tt;
-        if (Math.abs(dy) < 44 || dt > 700) return;   // 탭/느린 드래그 무시
+        if (Math.abs(dy) < 40) return;   // 탭/미세 이동만 무시 (느린 스와이프도 인정)
         const el = scrollEl();
         if (dy < 0) { if (atEdge(el, -1)) goTo(cur + 1); }
         else        { if (atEdge(el, 1))  goTo(cur - 1); }
