@@ -6838,3 +6838,55 @@ button {
     margin-top: 0;
   }
 }
+
+
+/* ══════════════════════════════════════════════════
+   MOBILE SLIDE ENGINE — 이산 풀페이지 슬라이드 (index 전용)
+   JS(initMobileSlides)가 .m-slides-active 를 <html>에 부여할 때만 활성.
+   높이 표준: --app-h = 실측 innerHeight (JS 동기, dvh 폴백).
+   ══════════════════════════════════════════════════ */
+html.m-slides-active,
+html.m-slides-active body {
+  height: 100vh;
+  height: 100dvh;
+  height: var(--app-h, 100dvh);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#mSlides {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  will-change: transform;
+}
+
+/* 각 슬라이드 = 정확히 1뷰포트 높이 */
+.m-slides-active #mSlides > .hero-seq,
+.m-slides-active #mSlides > .bldg-seq,
+.m-slides-active #mSlides > .loc-brief,
+.m-slides-active #mSlides > .footer {
+  height: var(--app-h, 100dvh);
+  min-height: 0;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* 정보량이 많은 슬라이드는 내부 세로 스크롤 허용 (경계에서만 다음 슬라이드로) */
+.m-slides-active #mSlides > .loc-brief {
+  display: block;                 /* grid → 단순 세로 스택 */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.m-slides-active #mSlides > .footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
