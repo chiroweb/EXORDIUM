@@ -15,6 +15,7 @@ export default defineConfig({
         limited: resolve(__dirname, 'limited.html'),
         subscription: resolve(__dirname, 'subscription.html'),
         register: resolve(__dirname, 'register.html'),
+        notice: resolve(__dirname, 'notice.html'),
       },
     },
   },
