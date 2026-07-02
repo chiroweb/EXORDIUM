@@ -295,11 +295,11 @@ function initHeroSequence() {
     // ── 입장 완료 후 초기화 ──
     entrance.eventCallback('onComplete', () => {
         if (IS_MOBILE) {
-            // 모바일: pin/scrub 없이 타임라인만 paused로 구성 → 이산 슬라이드 엔진에 위임
-            const heroTL = buildHeroTimeline();
+            // 모바일: 가로 마스크 연출(옆으로 밀리는 검은 패널)을 쓰지 않는다.
+            //   두 번째 히어로는 슬라이드 엔진이 독립 섹션으로 세로 슬라이드 등장시킨다.
             const bldgTL = initBldgSeq();   // 모바일: paused 타임라인 반환
             initBldgPopup();
-            initMobileSlides({ heroTL, bldgTL });
+            initMobileSlides({ bldgTL });
         } else {
             // 데스크탑: 기존 pin/scrub 시퀀스 그대로
             // heroSeq pin spacer가 생성된 뒤 bldgSeq를 초기화해야 위치가 올바르게 계산됨
@@ -437,17 +437,55 @@ initHeroSequence();
    2초 자동재생 → 다시 스와이프 가능. 데스크탑 스크럽과 완전 분리.
    ══════════════════════════════════════════════════ */
 
-function initMobileSlides({ heroTL, bldgTL }) {
+function initMobileSlides({ bldgTL }) {
     const heroSeq  = document.getElementById('heroSeq');
     const bldgSeq  = document.getElementById('bldgSeq');
     const locBrief = document.getElementById('locBrief');
     const footer   = document.querySelector('.footer');
     if (!heroSeq) return;
 
+    // ── 0) 두 번째 히어로를 독립 섹션(heroSeq2)으로 분리 (모바일 전용) ──
+    // 데스크탑의 가로 마스크 연출(옆으로 밀리며 검은 배경이 드러나는 전환)을 없애고,
+    // 영상B + hs2 카피를 담은 별도 풀스크린 섹션으로 만들어 세로 슬라이드로 등장시킨다.
+    const hs2El  = document.getElementById('hs2');
+    const vidBEl = document.getElementById('hvmVidB');
+    let heroSeq2 = null;
+    if (hs2El) {
+        heroSeq2 = document.createElement('section');
+        heroSeq2.className = 'hero-seq hero-seq2';
+        heroSeq2.id = 'heroSeq2';
+        if (vidBEl) {
+            const vbg = document.createElement('div');
+            vbg.className = 'hero-seq2__bg';
+            vidBEl.parentNode.removeChild(vidBEl);
+            gsap.set(vidBEl, { opacity: 1 });   // hvm에서 opacity:0으로 숨겨졌던 것 복구
+            vbg.appendChild(vidBEl);
+            const ov = document.createElement('div');
+            ov.className = 'hvm__overlay';
+            vbg.appendChild(ov);
+            heroSeq2.appendChild(vbg);
+        }
+        hs2El.parentNode.removeChild(hs2El);
+        heroSeq2.appendChild(hs2El);
+    }
+
+    // 두 번째 히어로 진입 시 재생할 hs2 리빌(세로 마스크 등장). fromTo로 매번 은닉→등장.
+    const hs2Lines = heroSeq2 ? heroSeq2.querySelectorAll('.hs2__line') : [];
+    const hs2Sub   = heroSeq2 ? heroSeq2.querySelector('.hs2__sub')  : null;
+    const hs2Body  = heroSeq2 ? heroSeq2.querySelector('.hs2__body') : null;
+    function hero2Reveal() {
+        const rt = PREFERS_REDUCED ? 0.01 : null;
+        const tl = gsap.timeline();
+        if (hs2Lines.length) tl.fromTo(hs2Lines, { yPercent: 110 }, { yPercent: 0, duration: rt || 0.7, ease: 'power3.out' }, 0.1);
+        if (hs2Sub)  tl.fromTo(hs2Sub,  { yPercent: 110 }, { yPercent: 0, duration: rt || 0.6, ease: 'power3.out' }, 0.28);
+        if (hs2Body) tl.fromTo(hs2Body, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: rt || 0.6, ease: 'power2.out' }, 0.45);
+        return tl;
+    }
+
     // ── 1) 슬라이드 섹션을 고정 wrapper로 이동 ──
     const wrap = document.createElement('div');
     wrap.id = 'mSlides';
-    const sections = [heroSeq, bldgSeq, locBrief, footer].filter(Boolean);
+    const sections = [heroSeq, heroSeq2, bldgSeq, locBrief, footer].filter(Boolean);
     heroSeq.parentNode.insertBefore(wrap, heroSeq);
     sections.forEach(s => wrap.appendChild(s));
     document.documentElement.classList.add('m-slides-active');
@@ -466,22 +504,20 @@ function initMobileSlides({ heroTL, bldgTL }) {
     }
     setAppH();
 
-    // ── 3) STOP 정의 — 한 스와이프 = 한 섹션 전체가 2초 안에 완전히 등장 ──
-    // 섹션을 잘게 쪼개면 '안 바뀌는데 멈춤' 오해가 생기므로 섹션당 1스톱으로 통합.
-    // 히어로만 예외: 인트로(로드 시 이미 표시) + 두 번째 히어로(패널 축소+재확장을
-    //   한 번에 연속 재생, 반쪽 검은 패널 정지 없음) 2스톱.
-    // 빌딩/로케이션/푸터: 각각 1스톱, 진입하면 그 섹션의 모든 연출이 2초 내 캐스케이드.
-    const HERO_PROG = [0, 1.0];
-    const BLDG_PROG = [1.0];       // 0→1.0 전체(커튼·타이틀·건물·핫스팟)를 2초에 한 번에
+    // ── 3) STOP 정의 — 한 스와이프 = 한 섹션 ──
+    // 히어로1(영상A+타이틀, 로드 시 표시) → 세로 슬라이드 → 히어로2(영상B+hs2 카피)
+    //   → 빌딩 → 로케이션 → 푸터. 모든 전환이 세로 슬라이드다(가로 마스크 없음).
     const STOPS = [];
-    HERO_PROG.forEach(p => STOPS.push({ sec: idxOf(heroSeq), tl: heroTL, prog: p }));
-    if (bldgTL && bldgSeq) BLDG_PROG.forEach(p => STOPS.push({ sec: idxOf(bldgSeq), tl: bldgTL, prog: p }));
+    STOPS.push({ sec: idxOf(heroSeq), kind: 'hero1' });
+    if (heroSeq2) STOPS.push({ sec: idxOf(heroSeq2), kind: 'hero2' });
+    if (bldgTL && bldgSeq) STOPS.push({ sec: idxOf(bldgSeq), tl: bldgTL, prog: 1.0 });
     if (locBrief) STOPS.push({ sec: idxOf(locBrief), kind: 'loc' });
     if (footer)   STOPS.push({ sec: idxOf(footer),   kind: 'footer' });
 
     // 섹션 배경 밝기 → nav 다크 여부
     const SEC_DARK = {};
     SEC_DARK[idxOf(heroSeq)] = true;              // #0D0D0D
+    if (heroSeq2) SEC_DARK[idxOf(heroSeq2)] = true;   // 영상B + 다크 오버레이
     if (bldgSeq)  SEC_DARK[idxOf(bldgSeq)]  = false;  // 베이지
     if (locBrief) SEC_DARK[idxOf(locBrief)] = true;   // #0D0D0D
     if (footer)   SEC_DARK[idxOf(footer)]   = true;   // surface-dark
@@ -518,6 +554,10 @@ function initMobileSlides({ heroTL, bldgTL }) {
             to.tl.tweenTo(to.tl.duration() * to.prog, {
                 duration: AUTOPLAY, ease: 'power2.inOut', onComplete: unlock,
             });
+        } else if (to.kind === 'hero2') {
+            // 두 번째 히어로: 세로 슬라이드로 진입 완료 후 hs2 카피 리빌
+            hero2Reveal();
+            gsap.delayedCall(AUTOPLAY, unlock);
         } else if (to.kind === 'loc') {
             if (typeof locEnter === 'function') locEnter();
             gsap.delayedCall(AUTOPLAY, unlock);
@@ -628,7 +668,11 @@ function initMobileSlides({ heroTL, bldgTL }) {
     });
 
     // iOS 인라인 muted 자동재생 보장 (재생버튼 방지) — 속성만으론 불충분해 JS로 강제
-    const heroVids = heroSeq.querySelectorAll('video');
+    // 영상B는 heroSeq2로 옮겨졌으므로 두 섹션의 비디오를 모두 포함
+    const heroVids = [
+        ...heroSeq.querySelectorAll('video'),
+        ...(heroSeq2 ? heroSeq2.querySelectorAll('video') : []),
+    ];
     function kickVideos() {
         heroVids.forEach(v => {
             v.muted = true;

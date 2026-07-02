@@ -5092,6 +5092,18 @@ button {
   }
 }
 
+/* ── 모바일 전용: 두 번째 히어로 섹션 (영상B 풀스크린 배경 + hs2 카피) ──
+   JS(initMobileSlides)가 heroSeq2를 모바일에서만 생성하므로 데스크탑엔 영향 없음 */
+.hero-seq2__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+.hero-seq2__bg .hvm__vid {
+  opacity: 1;
+}
+
 
 /* ══════════════════════════════════════════════════
    BUILDING SECTION
