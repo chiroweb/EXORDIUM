@@ -702,6 +702,16 @@ function initBldgSeq() {
     const seq = document.getElementById('bldgSeq');
     if (!seq) return;
 
+    // 배경 영상: 재생 가능한 소스가 없으면 요소를 숨긴다.
+    // 카카오톡/안드로이드 WebView 등 모바일 인앱 브라우저는 소스 없는 빈 <video>를
+    // 거대한 재생버튼 플레이스홀더로 렌더링해 섹션 전체를 덮어버린다.
+    // (실제 URL을 넣으면 hasSrc가 true가 되어 자동으로 다시 표시됨)
+    const bgVid = document.getElementById('bldgBgVid');
+    if (bgVid) {
+        const hasSrc = !!bgVid.getAttribute('src') || !!bgVid.querySelector('source[src]');
+        bgVid.style.display = hasSrc ? '' : 'none';
+    }
+
     const curtainT  = document.getElementById('bldgCurtainT');
     const curtainB  = document.getElementById('bldgCurtainB');
     const lines     = seq.querySelectorAll('.bldg-line');
